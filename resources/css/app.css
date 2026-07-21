@@ -1,0 +1,11 @@
+
+
+/* EDMA Website Design System */
+@import "./website/variables.css";
+@import "./website/base.css";
+@import "./website/topbar.css";
+@import "./website/navbar.css";
+@import "./website/hero.css";
+
+/* Capa visual y ambiente de color */
+@import "./website/vibrance.css";

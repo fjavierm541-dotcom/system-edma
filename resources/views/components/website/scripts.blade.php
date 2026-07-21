@@ -1,0 +1,1 @@
+{{-- Scripts globales del sitio web --}}

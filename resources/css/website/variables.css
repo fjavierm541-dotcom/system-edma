@@ -1,0 +1,182 @@
+:root {
+    /*
+    |--------------------------------------------------------------------------
+    | Paleta institucional EDMA
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-white: #ffffff;
+
+    --edma-yellow: #ffb51c;
+    --edma-yellow-light: #ffd46b;
+    --edma-yellow-soft: rgba(255, 181, 28, 0.14);
+
+    --edma-orange: #e97c15;
+    --edma-orange-light: #f39a42;
+    --edma-orange-dark: #c95f08;
+    --edma-orange-soft: rgba(233, 124, 21, 0.14);
+
+    --edma-red: #bf161b;
+    --edma-red-light: #d83b40;
+    --edma-red-dark: #941014;
+    --edma-red-soft: rgba(191, 22, 27, 0.12);
+
+    --edma-blue: #001749;
+    --edma-blue-light: #0c3275;
+    --edma-blue-medium: #08265f;
+    --edma-blue-dark: #000d2d;
+    --edma-blue-soft: rgba(0, 23, 73, 0.1);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Alias principales del sistema
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-primary: var(--edma-blue);
+    --edma-primary-dark: var(--edma-blue-dark);
+    --edma-primary-deep: var(--edma-blue-dark);
+    --edma-primary-light: var(--edma-blue-light);
+    --edma-primary-electric: var(--edma-blue-medium);
+
+    --edma-accent: var(--edma-yellow);
+    --edma-accent-light: var(--edma-yellow-light);
+    --edma-accent-dark: var(--edma-orange);
+
+    --edma-danger: var(--edma-red);
+    --edma-success: #2f9f73;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Colores de interfaz
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-background: #f7f8fb;
+    --edma-background-warm: #fffaf1;
+
+    --edma-surface: #ffffff;
+    --edma-surface-soft: rgba(255, 255, 255, 0.72);
+    --edma-surface-glass: rgba(255, 255, 255, 0.64);
+
+    --edma-text: #101c36;
+    --edma-text-strong: var(--edma-blue);
+    --edma-text-muted: #69738a;
+
+    --edma-border: rgba(0, 23, 73, 0.12);
+    --edma-border-light: rgba(255, 255, 255, 0.7);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Gradientes institucionales
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-gradient-primary:
+        linear-gradient(
+            135deg,
+            var(--edma-blue),
+            var(--edma-blue-light)
+        );
+
+    --edma-gradient-warm:
+        linear-gradient(
+            135deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+
+    --edma-gradient-accent:
+        linear-gradient(
+            135deg,
+            var(--edma-yellow),
+            var(--edma-orange),
+            var(--edma-red)
+        );
+
+    --edma-gradient-brand:
+        linear-gradient(
+            110deg,
+            var(--edma-blue) 0%,
+            var(--edma-blue-light) 30%,
+            var(--edma-yellow) 58%,
+            var(--edma-orange) 78%,
+            var(--edma-red) 100%
+        );
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tipografía
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-font-primary:
+        "Inter",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Bordes
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-radius-xs: 0.375rem;
+    --edma-radius-sm: 0.5rem;
+    --edma-radius-md: 0.875rem;
+    --edma-radius-lg: 1.25rem;
+    --edma-radius-xl: 1.75rem;
+    --edma-radius-pill: 999px;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sombras
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-shadow-xs:
+        0 4px 12px rgba(0, 23, 73, 0.06);
+
+    --edma-shadow-sm:
+        0 8px 24px rgba(0, 23, 73, 0.09);
+
+    --edma-shadow-md:
+        0 20px 55px rgba(0, 23, 73, 0.15);
+
+    --edma-shadow-lg:
+        0 35px 90px rgba(0, 23, 73, 0.2);
+
+    --edma-shadow-warm:
+        0 18px 45px rgba(233, 124, 21, 0.22);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Glassmorphism
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-glass-background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.82),
+            rgba(255, 255, 255, 0.58)
+        );
+
+    --edma-glass-border:
+        1px solid rgba(255, 255, 255, 0.72);
+
+    --edma-glass-blur: blur(22px) saturate(145%);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Transiciones
+    |--------------------------------------------------------------------------
+    */
+
+    --edma-transition-fast: 180ms ease;
+    --edma-transition-normal: 300ms ease;
+    --edma-transition-slow: 500ms ease;
+}
