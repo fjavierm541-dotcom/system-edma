@@ -4,24 +4,42 @@
 
 @section(
     'description',
-    'Aprende inglés con una metodología moderna, práctica y orientada a resultados.'
+    'Aprende inglés con una metodología moderna, práctica y orientada a resultados en Edumerican Academy Honduras.'
 )
 
 @section('content')
 
     <section class="edma-hero">
 
-        <div class="edma-hero__glow edma-hero__glow--one"></div>
-        <div class="edma-hero__glow edma-hero__glow--two"></div>
-        <div class="edma-hero__grid"></div>
+        {{-- Decoración ambiental --}}
+        <div
+            class="edma-hero__glow edma-hero__glow--left"
+            aria-hidden="true"
+        ></div>
+
+        <div
+            class="edma-hero__glow edma-hero__glow--right"
+            aria-hidden="true"
+        ></div>
+
+        <div
+            class="edma-hero__grid"
+            aria-hidden="true"
+        ></div>
 
         <div class="edma-container">
-            <div class="edma-hero__layout">
+
+            {{-- Contenido principal --}}
+            <div class="edma-hero__main">
 
                 <div class="edma-hero__content">
 
                     <div class="edma-hero__eyebrow">
-                        <span class="edma-hero__eyebrow-dot"></span>
+                        <span
+                            class="edma-hero__eyebrow-dot"
+                            aria-hidden="true"
+                        ></span>
+
                         Educación diseñada para avanzar
                     </div>
 
@@ -31,9 +49,9 @@
                     </h1>
 
                     <p class="edma-hero__description">
-                        Aprende con una experiencia académica moderna,
-                        práctica y cercana, diseñada para ayudarte a
-                        comunicarte con confianza en el mundo real.
+                        Desarrolla las habilidades que necesitas para comunicarte
+                        con confianza mediante una experiencia académica moderna,
+                        práctica y cercana.
                     </p>
 
                     <div class="edma-hero__actions">
@@ -42,105 +60,198 @@
                             href="{{ route('website.admissions') }}"
                             class="edma-hero__button edma-hero__button--primary"
                         >
-                            Solicitar inscripción
-                            <i class="bi bi-arrow-up-right"></i>
+                            <span>Solicitar inscripción</span>
+
+                            <i
+                                class="bi bi-arrow-up-right"
+                                aria-hidden="true"
+                            ></i>
                         </a>
 
                         <a
                             href="{{ route('website.courses') }}"
                             class="edma-hero__button edma-hero__button--secondary"
                         >
-                            Explorar programas
-                            <i class="bi bi-play-circle"></i>
+                            <span>Explorar programas</span>
+
+                            <i
+                                class="bi bi-arrow-right"
+                                aria-hidden="true"
+                            ></i>
                         </a>
 
                     </div>
 
-                    <div class="edma-hero__trust">
+                    <div class="edma-hero__support">
 
-                        <div class="edma-hero__trust-item">
-                            <strong>7</strong>
-                            <span>Niveles formativos</span>
+                        <div class="edma-hero__support-icon">
+                            <i
+                                class="bi bi-check2"
+                                aria-hidden="true"
+                            ></i>
                         </div>
 
-                        <div class="edma-hero__trust-divider"></div>
-
-                        <div class="edma-hero__trust-item">
-                            <strong>12</strong>
-                            <span>Semanas por nivel</span>
-                        </div>
-
-                        <div class="edma-hero__trust-divider"></div>
-
-                        <div class="edma-hero__trust-item">
-                            <strong>100%</strong>
-                            <span>Enfoque comunicativo</span>
-                        </div>
+                        <p>
+                            Programas para niños, jóvenes y adultos.
+                        </p>
 
                     </div>
 
                 </div>
 
+                {{-- Fotografía principal --}}
                 <div class="edma-hero__visual">
 
-                    <div class="edma-hero__visual-orbit"></div>
+                    <div
+                        class="edma-hero__visual-shape"
+                        aria-hidden="true"
+                    ></div>
 
-                    <div class="edma-hero__image-card">
+                    <figure class="edma-hero__image-card">
 
-                        <div class="edma-hero__image-placeholder">
-                            <i class="bi bi-people-fill"></i>
-                            <span>Imagen institucional</span>
-                        </div>
+                        <img
+                            src="{{ asset('images/website/hero-students.jpg') }}"
+                            alt="Estudiantes aprendiendo inglés en Edumerican Academy"
+                            class="edma-hero__image"
+                        >
 
-                        <div class="edma-hero__image-overlay"></div>
+                        <div
+                            class="edma-hero__image-overlay"
+                            aria-hidden="true"
+                        ></div>
 
-                        <div class="edma-hero__image-label">
-                            <span class="edma-hero__image-label-icon">
-                                <i class="bi bi-translate"></i>
+                        <figcaption class="edma-hero__image-caption">
+
+                            <span class="edma-hero__caption-icon">
+                                <i
+                                    class="bi bi-chat-dots-fill"
+                                    aria-hidden="true"
+                                ></i>
                             </span>
 
-                            <span>
-                                <small>Experiencia EDMA</small>
-                                Aprende haciendo
+                            <span class="edma-hero__caption-content">
+                                <small>Metodología comunicativa</small>
+                                <strong>Aprende usando el idioma</strong>
                             </span>
+
+                        </figcaption>
+
+                        <div class="edma-hero__badge">
+
+                            <span class="edma-hero__badge-number">
+                                7
+                            </span>
+
+                            <span class="edma-hero__badge-text">
+                                Niveles<br>
+                                formativos
+                            </span>
+
                         </div>
 
-                    </div>
-
-                    <article class="edma-floating-card edma-floating-card--level">
-                        <div class="edma-floating-card__icon">
-                            <i class="bi bi-bar-chart-fill"></i>
-                        </div>
-
-                        <div>
-                            <small>Tu progreso</small>
-                            <strong>Nivel B1</strong>
-                        </div>
-                    </article>
-
-                    <article class="edma-floating-card edma-floating-card--campus">
-                        <div class="edma-floating-card__icon">
-                            <i class="bi bi-laptop"></i>
-                        </div>
-
-                        <div>
-                            <small>Aprende donde estés</small>
-                            <strong>EDMA Campus</strong>
-                        </div>
-                    </article>
-
-                    <article class="edma-floating-card edma-floating-card--schedule">
-                        <span class="edma-floating-card__status"></span>
-
-                        <div>
-                            <small>Próximo inicio</small>
-                            <strong>Nuevos grupos</strong>
-                        </div>
-                    </article>
+                    </figure>
 
                 </div>
 
             </div>
+
+            {{-- Tarjetas de beneficios --}}
+            <div class="edma-hero__features">
+
+                <article class="edma-feature-card">
+
+                    <span class="edma-feature-card__number">
+                        01
+                    </span>
+
+                    <span class="edma-feature-card__icon">
+                        <i
+                            class="bi bi-mortarboard-fill"
+                            aria-hidden="true"
+                        ></i>
+                    </span>
+
+                    <div class="edma-feature-card__content">
+                        <h2>Programa completo</h2>
+
+                        <p>
+                            Formación progresiva organizada en niveles.
+                        </p>
+                    </div>
+
+                </article>
+
+                <article class="edma-feature-card">
+
+                    <span class="edma-feature-card__number">
+                        02
+                    </span>
+
+                    <span class="edma-feature-card__icon">
+                        <i
+                            class="bi bi-people-fill"
+                            aria-hidden="true"
+                        ></i>
+                    </span>
+
+                    <div class="edma-feature-card__content">
+                        <h2>Aprendizaje práctico</h2>
+
+                        <p>
+                            Clases orientadas a la comunicación real.
+                        </p>
+                    </div>
+
+                </article>
+
+                <article class="edma-feature-card">
+
+                    <span class="edma-feature-card__number">
+                        03
+                    </span>
+
+                    <span class="edma-feature-card__icon">
+                        <i
+                            class="bi bi-laptop-fill"
+                            aria-hidden="true"
+                        ></i>
+                    </span>
+
+                    <div class="edma-feature-card__content">
+                        <h2>EDMA Campus</h2>
+
+                        <p>
+                            Recursos académicos disponibles en línea.
+                        </p>
+                    </div>
+
+                </article>
+
+                <article class="edma-feature-card">
+
+                    <span class="edma-feature-card__number">
+                        04
+                    </span>
+
+                    <span class="edma-feature-card__icon">
+                        <i
+                            class="bi bi-calendar2-check-fill"
+                            aria-hidden="true"
+                        ></i>
+                    </span>
+
+                    <div class="edma-feature-card__content">
+                        <h2>Horarios accesibles</h2>
+
+                        <p>
+                            Opciones para distintas edades y rutinas.
+                        </p>
+                    </div>
+
+                </article>
+
+            </div>
+
         </div>
 
     </section>
