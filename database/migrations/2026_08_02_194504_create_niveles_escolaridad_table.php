@@ -8,25 +8,23 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('niveles_escolaridad', function (Blueprint $table) {
             $table->id();
 
-            $table->string('email', 150)->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-
+            $table->string('codigo', 50)->unique();
+            $table->string('nombre', 100);
+            $table->unsignedTinyInteger('orden')->nullable();
             $table->boolean('activo')->default(true);
-            $table->timestamp('ultimo_acceso_at')->nullable();
 
-            $table->rememberToken();
             $table->timestamps();
 
             $table->index('activo');
+            $table->index('orden');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('niveles_escolaridad');
     }
 };
