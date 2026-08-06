@@ -25,6 +25,12 @@ return new class extends Migration
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
+                $table->foreignId('grupo_autorizado_id')
+                ->nullable()
+                ->constrained('grupos')
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
             // Cómo conoció la academia
             $table->foreignId('fuente_referencia_id')
                 ->nullable()

@@ -8,3 +8,14 @@
 
 /* Capa visual y ambiente de color */
 @import "./website/vibrance.css";
+
+
+
+/* =========================================================
+   EDMA Portal
+   ========================================================= */
+
+@import "./portal/portal.css";
+@import "./portal/sidebar.css";
+@import "./portal/navbar.css";
+@import "./portal/components.css";
