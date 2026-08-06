@@ -172,7 +172,7 @@
                     </a>
 
                     <a
-                        href="#"
+                        href="{{ route('portal.personas.create') }}"
                         class="portal-quick-action"
                     >
                         <span>

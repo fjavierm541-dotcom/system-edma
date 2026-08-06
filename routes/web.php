@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,14 @@ Route::prefix('portal')
     ->group(function () {
         Route::view('/', 'portal.dashboard')
             ->name('dashboard');
+
+        Route::patch(
+            'personas/{persona}/estado',
+            [PersonaController::class, 'cambiarEstado']
+        )->name('personas.cambiar-estado');
+
+        Route::resource('personas', PersonaController::class)
+            ->except('destroy');
     });
 
 /*
@@ -48,4 +57,7 @@ Route::prefix('portal')
 
 Route::get('/campus', [WebsiteController::class, 'campus'])
     ->name('website.campus');
-    //npm run dev
+
+
+        //para dise;os    npm run dev
+        // para fotos   php artisan storage:link

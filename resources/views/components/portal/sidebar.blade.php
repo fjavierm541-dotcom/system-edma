@@ -48,8 +48,9 @@
             </span>
 
             <a
-                href="#"
-                class="portal-menu-link"
+                href="{{ route('portal.personas.index') }}"
+                class="portal-menu-link
+                    {{ request()->routeIs('portal.personas.*') ? 'active' : '' }}"
             >
                 <i class="bi bi-person-vcard"></i>
 
