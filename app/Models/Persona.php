@@ -40,13 +40,13 @@ class Persona extends Model
         'estado',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'fecha_nacimiento' => 'date',
-            'telefono_movil_whatsapp' => 'boolean',
-        ];
-    }
+    /**
+     * Conversión automática de tipos.
+     */
+    protected $casts = [
+        'fecha_nacimiento' => 'date',
+        'telefono_movil_whatsapp' => 'boolean',
+    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -84,25 +84,45 @@ class Persona extends Model
             $this->primer_apellido,
             $this->segundo_apellido,
         ])
-            ->filter()
+            ->filter(fn ($valor) => filled($valor))
             ->implode(' ');
     }
 
     public function getInicialesAttribute(): string
     {
-        return strtoupper(
-            mb_substr($this->primer_nombre ?? '', 0, 1)
-            . mb_substr($this->primer_apellido ?? '', 0, 1)
+        $inicialNombre = mb_substr(
+            $this->primer_nombre ?? '',
+            0,
+            1
+        );
+
+        $inicialApellido = mb_substr(
+            $this->primer_apellido ?? '',
+            0,
+            1
+        );
+
+        return mb_strtoupper(
+            $inicialNombre . $inicialApellido
         );
     }
 
     public function getDocumentoCompletoAttribute(): ?string
     {
-        if (!$this->tipo_documento || !$this->numero_documento) {
+        if (
+            blank($this->tipo_documento) ||
+            blank($this->numero_documento)
+        ) {
             return null;
         }
 
-        return "{$this->tipo_documento}: {$this->numero_documento}";
+        return sprintf(
+            '%s: %s',
+            str($this->tipo_documento)
+                ->replace('_', ' ')
+                ->title(),
+            $this->numero_documento
+        );
     }
 
     /*
@@ -131,16 +151,18 @@ class Persona extends Model
 
         $termino = trim($termino);
 
-        return $query->where(function (Builder $subquery) use ($termino) {
-            $subquery
-                ->where('primer_nombre', 'like', "%{$termino}%")
-                ->orWhere('segundo_nombre', 'like', "%{$termino}%")
-                ->orWhere('primer_apellido', 'like', "%{$termino}%")
-                ->orWhere('segundo_apellido', 'like', "%{$termino}%")
-                ->orWhere('numero_documento', 'like', "%{$termino}%")
-                ->orWhere('rtn', 'like', "%{$termino}%")
-                ->orWhere('correo_personal', 'like', "%{$termino}%")
-                ->orWhere('telefono_movil', 'like', "%{$termino}%");
-        });
+        return $query->where(
+            function (Builder $subquery) use ($termino): void {
+                $subquery
+                    ->where('primer_nombre', 'like', "%{$termino}%")
+                    ->orWhere('segundo_nombre', 'like', "%{$termino}%")
+                    ->orWhere('primer_apellido', 'like', "%{$termino}%")
+                    ->orWhere('segundo_apellido', 'like', "%{$termino}%")
+                    ->orWhere('numero_documento', 'like', "%{$termino}%")
+                    ->orWhere('rtn', 'like', "%{$termino}%")
+                    ->orWhere('correo_personal', 'like', "%{$termino}%")
+                    ->orWhere('telefono_movil', 'like', "%{$termino}%");
+            }
+        );
     }
 }

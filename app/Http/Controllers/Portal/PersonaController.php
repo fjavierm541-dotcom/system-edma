@@ -57,11 +57,16 @@ class PersonaController extends Controller
 
     /**
      * Mostrar el formulario de registro.
-     */
-    public function create(): View
+        */
+        public function create(): View
     {
+        $paisPredeterminado = Pais::query()
+            ->where('codigo_iso2', 'HN')
+            ->value('id');
+
         return view('portal.personas.create', [
             'paises' => $this->obtenerPaises(),
+            'paisPredeterminado' => $paisPredeterminado,
             'tiposDocumento' => $this->tiposDocumento(),
             'sexos' => $this->sexos(),
             'estadosCiviles' => $this->estadosCiviles(),
@@ -144,6 +149,7 @@ class PersonaController extends Controller
             'tiposDocumento' => $this->tiposDocumento(),
             'sexos' => $this->sexos(),
             'estadosCiviles' => $this->estadosCiviles(),
+            'paisPredeterminado' => null,
         ]);
     }
 

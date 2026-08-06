@@ -2,23 +2,23 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Persona;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StorePersonaRequest extends FormRequest
+class UpdatePersonaRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        /*
-         * Temporalmente se permite la solicitud.
-         * Cuando implementemos autenticación y Policies,
-         * esta autorización será controlada por permisos.
-         */
         return true;
     }
 
     protected function prepareForValidation(): void
     {
+        $tipoDocumento = $this->normalizeNullableText(
+            $this->input('tipo_documento')
+        );
+
         $this->merge([
             'primer_nombre' => $this->normalizeText(
                 $this->input('primer_nombre')
@@ -36,15 +36,14 @@ class StorePersonaRequest extends FormRequest
                 $this->input('segundo_apellido')
             ),
 
-            'tipo_documento' => $this->normalizeNullableText(
-                $this->input('tipo_documento')
-            ),
+            'tipo_documento' => $tipoDocumento,
 
             'numero_documento' => $this->normalizeDocument(
-                $this->input('numero_documento')
+                $this->input('numero_documento'),
+                $tipoDocumento
             ),
 
-            'rtn' => $this->normalizeDocument(
+            'rtn' => $this->normalizeNumericDocument(
                 $this->input('rtn')
             ),
 
@@ -52,11 +51,11 @@ class StorePersonaRequest extends FormRequest
                 $this->input('correo_personal')
             ),
 
-            'telefono_movil' => $this->normalizeNullableText(
+            'telefono_movil' => $this->normalizePhone(
                 $this->input('telefono_movil')
             ),
 
-            'telefono_fijo' => $this->normalizeNullableText(
+            'telefono_fijo' => $this->normalizePhone(
                 $this->input('telefono_fijo')
             ),
 
@@ -79,11 +78,23 @@ class StorePersonaRequest extends FormRequest
             'telefono_movil_whatsapp' => $this->boolean(
                 'telefono_movil_whatsapp'
             ),
+
+            'eliminar_foto_perfil' => $this->boolean(
+                'eliminar_foto_perfil'
+            ),
         ]);
     }
 
     public function rules(): array
     {
+        $persona = $this->route('persona');
+
+        $personaId = $persona instanceof Persona
+            ? $persona->getKey()
+            : $persona;
+
+        $tipoDocumento = $this->input('tipo_documento');
+
         return [
             /*
             |--------------------------------------------------------------------------
@@ -158,20 +169,31 @@ class StorePersonaRequest extends FormRequest
                 'max:50',
                 'required_with:tipo_documento',
 
+                Rule::when(
+                    in_array(
+                        $tipoDocumento,
+                        ['dni', 'identidad_menor'],
+                        true
+                    ),
+                    ['digits:13']
+                ),
+
                 Rule::unique('personas', 'numero_documento')
                     ->where(
                         fn ($query) => $query->where(
                             'tipo_documento',
-                            $this->input('tipo_documento')
+                            $tipoDocumento
                         )
-                    ),
+                    )
+                    ->ignore($personaId),
             ],
 
             'rtn' => [
                 'nullable',
-                'string',
-                'max:30',
-                Rule::unique('personas', 'rtn'),
+                'digits:14',
+
+                Rule::unique('personas', 'rtn')
+                    ->ignore($personaId),
             ],
 
             /*
@@ -188,14 +210,13 @@ class StorePersonaRequest extends FormRequest
 
             'telefono_movil' => [
                 'nullable',
-                'string',
-                'max:30',
+                'regex:/^\d{8,15}$/',
+                'required_if:telefono_movil_whatsapp,1',
             ],
 
             'telefono_fijo' => [
                 'nullable',
-                'string',
-                'max:30',
+                'regex:/^\d{8,15}$/',
             ],
 
             'telefono_movil_whatsapp' => [
@@ -214,13 +235,17 @@ class StorePersonaRequest extends FormRequest
 
                 Rule::exists('paises', 'id')
                     ->where(
-                        fn ($query) => $query->where('activo', true)
+                        fn ($query) => $query->where(
+                            'activo',
+                            true
+                        )
                     ),
             ],
 
             'direccion' => [
                 'nullable',
                 'string',
+                'max:500',
             ],
 
             'ciudad_municipio' => [
@@ -248,8 +273,13 @@ class StorePersonaRequest extends FormRequest
                 'max:3072',
             ],
 
-            'estado' => [
+            'eliminar_foto_perfil' => [
                 'nullable',
+                'boolean',
+            ],
+
+            'estado' => [
+                'required',
                 Rule::in([
                     'activo',
                     'inactivo',
@@ -291,8 +321,14 @@ class StorePersonaRequest extends FormRequest
             'numero_documento.required_with' =>
                 'Debe ingresar el número del documento.',
 
+            'numero_documento.digits' =>
+                'El DNI o identidad de menor debe contener exactamente 13 dígitos.',
+
             'numero_documento.unique' =>
-                'Ya existe una persona registrada con este tipo y número de documento.',
+                'Ya existe otra persona registrada con este tipo y número de documento.',
+
+            'rtn.digits' =>
+                'El RTN debe contener exactamente 14 dígitos.',
 
             'rtn.unique' =>
                 'El RTN ingresado ya pertenece a otra persona.',
@@ -300,8 +336,20 @@ class StorePersonaRequest extends FormRequest
             'correo_personal.email' =>
                 'El correo personal no tiene un formato válido.',
 
+            'telefono_movil.required_if' =>
+                'Debe ingresar un teléfono móvil para indicar que está disponible en WhatsApp.',
+
+            'telefono_movil.regex' =>
+                'El teléfono móvil debe contener entre 8 y 15 dígitos.',
+
+            'telefono_fijo.regex' =>
+                'El teléfono fijo debe contener entre 8 y 15 dígitos.',
+
             'pais_residencia_id.exists' =>
                 'El país de residencia seleccionado no es válido o está inactivo.',
+
+            'direccion.max' =>
+                'La dirección no puede superar los 500 caracteres.',
 
             'foto_perfil.image' =>
                 'El archivo seleccionado debe ser una imagen.',
@@ -311,6 +359,9 @@ class StorePersonaRequest extends FormRequest
 
             'foto_perfil.max' =>
                 'La fotografía no puede superar los 3 MB.',
+
+            'estado.required' =>
+                'Debe seleccionar el estado de la persona.',
 
             'estado.in' =>
                 'El estado seleccionado no es válido.',
@@ -358,13 +409,52 @@ class StorePersonaRequest extends FormRequest
         return $value === '' ? null : $value;
     }
 
-    private function normalizeDocument(mixed $value): mixed
+    private function normalizeDocument(
+        mixed $value,
+        ?string $tipoDocumento = null
+    ): mixed {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $value = trim($value);
+
+        if ($value === '') {
+            return null;
+        }
+
+        if (
+            in_array(
+                $tipoDocumento,
+                ['dni', 'identidad_menor'],
+                true
+            )
+        ) {
+            return preg_replace('/\D+/', '', $value);
+        }
+
+        return mb_strtoupper($value);
+    }
+
+    private function normalizeNumericDocument(
+        mixed $value
+    ): mixed {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $value = preg_replace('/\D+/', '', trim($value));
+
+        return $value === '' ? null : $value;
+    }
+
+    private function normalizePhone(mixed $value): mixed
     {
         if (!is_string($value)) {
             return $value;
         }
 
-        $value = mb_strtoupper(trim($value));
+        $value = preg_replace('/\D+/', '', trim($value));
 
         return $value === '' ? null : $value;
     }
