@@ -58,8 +58,11 @@
             </a>
 
             <a
-                href="#"
-                class="portal-menu-link"
+                href="{{ route('portal.estudiantes.index') }}"
+                class="portal-menu-link
+                    {{ request()->routeIs('portal.estudiantes.*')
+                        ? 'active'
+                        : '' }}"
             >
                 <i class="bi bi-mortarboard"></i>
 

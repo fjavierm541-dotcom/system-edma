@@ -3,6 +3,8 @@
 use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Portal\EstudianteController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +35,7 @@ Route::get('/contacto', [WebsiteController::class, 'contact'])
 | Portal administrativo
 |--------------------------------------------------------------------------
 */
-
+//personas
 Route::prefix('portal')
     ->name('portal.')
     ->group(function () {
@@ -47,7 +49,24 @@ Route::prefix('portal')
 
         Route::resource('personas', PersonaController::class)
             ->except('destroy');
+
+             /*
+        |--------------------------------------------------------------------------
+        | Estudiantes
+        |--------------------------------------------------------------------------
+        */
+
+        Route::patch(
+            'estudiantes/{estudiante}/estado',
+            [EstudianteController::class, 'cambiarEstado']
+        )->name('estudiantes.cambiar-estado');
+
+        Route::resource(
+            'estudiantes',
+            EstudianteController::class
+        )->except('destroy');
     });
+
 
 /*
 |--------------------------------------------------------------------------

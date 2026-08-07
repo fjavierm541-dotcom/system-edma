@@ -157,6 +157,56 @@
                         <i class="bi bi-chevron-right"></i>
                     </a>
 
+                    @if ($persona->estudiante)
+
+                        <a
+                            href="{{ route(
+                                'portal.estudiantes.show',
+                                $persona->estudiante
+                            ) }}"
+                            class="portal-profile-action"
+                        >
+                            <span>
+                                <i class="bi bi-mortarboard"></i>
+                            </span>
+
+                            <div>
+                                <strong>Ver expediente estudiantil</strong>
+
+                                <small>
+                                    {{ $persona->estudiante->codigo_estudiante }}
+                                </small>
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                    @elseif ($persona->estado === 'activo')
+
+                        <a
+                            href="{{ route(
+                                'portal.estudiantes.create',
+                                ['persona' => $persona->id]
+                            ) }}"
+                            class="portal-profile-action"
+                        >
+                            <span>
+                                <i class="bi bi-person-plus"></i>
+                            </span>
+
+                            <div>
+                                <strong>Registrar como estudiante</strong>
+
+                                <small>
+                                    Crear expediente estudiantil
+                                </small>
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+                        </a>
+
+                    @endif
+
                     @if (
                         $persona->telefono_movil &&
                         $persona->telefono_movil_whatsapp
@@ -549,7 +599,7 @@
         <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content portal-modal">
-
+ 
                 <form
                     action="{{ route('portal.personas.cambiar-estado', $persona) }}"
                     method="POST"

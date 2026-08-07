@@ -128,10 +128,13 @@ class PersonaController extends Controller
     public function show(Persona $persona): View
     {
         $persona->load([
-            'paisResidencia',
-            'documentos' => fn ($query) => $query
-                ->orderByDesc('created_at'),
-        ]);
+    'paisResidencia',
+
+    'documentos' => fn ($query) => $query
+        ->orderByDesc('created_at'),
+
+    'estudiante',
+]);
 
         return view('portal.personas.show', [
             'persona' => $persona,
