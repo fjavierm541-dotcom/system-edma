@@ -1289,3 +1289,327 @@ textarea.portal-form-control {
         flex-wrap: wrap;
     }
 }
+
+
+/* =========================================================
+   Listado de estudiantes
+   ========================================================= */
+
+.portal-student-table {
+    min-width: 1100px;
+}
+
+.portal-student-code {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 9px;
+    border: 1px solid rgba(18, 61, 106, 0.1);
+    border-radius: 7px;
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary-dark);
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   Formulario de estudiantes
+   ========================================================= */
+
+.portal-student-person-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid var(--portal-border);
+    border-radius: 12px;
+    background: var(--portal-surface-soft);
+}
+
+.portal-student-person-avatar {
+    display: grid;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 14px;
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.portal-student-person-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.portal-student-person-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.portal-student-person-label {
+    display: block;
+    color: var(--portal-accent);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.portal-student-person-info h3 {
+    margin: 3px 0 7px;
+    color: var(--portal-primary-dark);
+    font-size: 0.95rem;
+    font-weight: 750;
+}
+
+.portal-student-person-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+}
+
+.portal-student-person-meta > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--portal-text-muted);
+    font-size: 0.7rem;
+}
+
+.portal-student-person-meta i {
+    color: var(--portal-primary);
+}
+
+.portal-student-code-panel {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 18px;
+    border: 1px solid rgba(18, 61, 106, 0.1);
+    border-radius: 12px;
+    background: var(--portal-primary-soft);
+    text-align: center;
+}
+
+.portal-student-code-panel > span {
+    color: var(--portal-text-muted);
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.portal-student-code-panel > strong {
+    margin: 7px 0;
+    color: var(--portal-primary-dark);
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    font-size: 0.92rem;
+}
+
+.portal-student-code-panel > small {
+    color: var(--portal-text-muted);
+    font-size: 0.68rem;
+}
+
+.portal-student-code-pending {
+    border-style: dashed;
+    background: var(--portal-surface-soft);
+}
+
+.portal-student-code-pending > strong {
+    font-family: inherit;
+    font-size: 0.78rem;
+}
+
+.portal-form-guidelines {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.portal-form-guidelines li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    color: var(--portal-text-muted);
+    font-size: 0.72rem;
+    line-height: 1.55;
+}
+
+.portal-form-guidelines i {
+    margin-top: 2px;
+    color: var(--portal-success);
+}
+
+.portal-inline-notice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 10px;
+}
+
+.portal-inline-notice > i {
+    flex-shrink: 0;
+    font-size: 1.2rem;
+}
+
+.portal-inline-notice > div {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+}
+
+.portal-inline-notice strong {
+    font-size: 0.76rem;
+}
+
+.portal-inline-notice span {
+    margin-top: 2px;
+    font-size: 0.69rem;
+}
+
+.portal-inline-notice-warning {
+    border: 1px solid rgba(213, 166, 46, 0.2);
+    background: var(--portal-accent-soft);
+    color: #80600d;
+}
+
+.portal-form-text-counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 6px;
+    color: #84919d;
+    font-size: 0.67rem;
+}
+
+@media (max-width: 767.98px) {
+    .portal-student-person-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .portal-student-person-card > .btn {
+        width: 100%;
+    }
+
+    .portal-student-person-meta {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .portal-inline-notice {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .portal-inline-notice .btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   Responsables del estudiante
+   ========================================================= */
+
+.portal-responsible-list {
+    padding: 8px;
+}
+
+.portal-responsible-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    border-radius: 10px;
+    transition: background var(--portal-transition);
+}
+
+.portal-responsible-item:hover {
+    background: var(--portal-surface-soft);
+}
+
+.portal-responsible-avatar {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary);
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.portal-responsible-info {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+}
+
+.portal-responsible-info strong {
+    color: var(--portal-primary-dark);
+    font-size: 0.78rem;
+}
+
+.portal-responsible-info span,
+.portal-responsible-info small {
+    color: var(--portal-text-muted);
+    font-size: 0.68rem;
+}
+
+.portal-responsible-badges {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.portal-small-badge {
+    display: inline-flex;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary);
+    font-size: 0.64rem;
+    font-weight: 700;
+}
+
+@media (max-width: 575.98px) {
+    .portal-responsible-item {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .portal-responsible-badges {
+        width: 100%;
+        justify-content: flex-start;
+        padding-left: 54px;
+    }
+}
