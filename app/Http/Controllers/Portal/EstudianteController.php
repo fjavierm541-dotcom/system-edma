@@ -145,26 +145,53 @@ class EstudianteController extends Controller
      * Mostrar el expediente del estudiante.
      */
     public function show(Estudiante $estudiante): View
-    {
-        $estudiante->load([
-            'persona.paisResidencia',
-            'persona.documentos' => fn ($query) => $query
-                ->orderByDesc('created_at'),
+{
+    $estudiante->load([
+        'persona.paisResidencia',
 
-            'nivelEscolaridad',
+        'persona.documentos' => fn ($query) => $query
+            ->orderByDesc('created_at'),
 
-            'responsables' => fn ($query) => $query
-                ->where('activo', true)
-                ->orderByDesc('es_principal')
-                ->orderBy('id'),
+        'nivelEscolaridad',
 
-            'responsables.personaResponsable',
+        'responsables' => fn ($query) => $query
+            ->orderByDesc('activo')
+            ->orderByDesc('es_principal')
+            ->orderBy('id'),
+
+        'responsables.personaResponsable',
+    ]);
+
+    $personasResponsablesDisponibles = Persona::query()
+        ->where('id', '!=', $estudiante->persona_id)
+        ->whereNull('deleted_at')
+        ->whereDoesntHave(
+            'responsabilidadesEstudiantiles',
+            fn (Builder $query) => $query->where(
+                'estudiante_id',
+                $estudiante->id
+            )
+        )
+        ->orderBy('primer_apellido')
+        ->orderBy('primer_nombre')
+        ->get([
+            'id',
+            'primer_nombre',
+            'segundo_nombre',
+            'primer_apellido',
+            'segundo_apellido',
+            'numero_documento',
+            'telefono_movil',
+            'correo_personal',
+            'foto_perfil',
         ]);
 
-        return view('portal.estudiantes.show', [
-            'estudiante' => $estudiante,
-        ]);
-    }
+    return view('portal.estudiantes.show', [
+        'estudiante' => $estudiante,
+        'personasResponsablesDisponibles' =>
+            $personasResponsablesDisponibles,
+    ]);
+}
 
     /**
      * Mostrar el formulario de edición.

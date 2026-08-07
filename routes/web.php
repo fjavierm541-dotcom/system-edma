@@ -4,6 +4,7 @@ use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Portal\EstudianteController;
+use App\Http\Controllers\Portal\EstudianteResponsableController;
 
 
 /*
@@ -65,6 +66,30 @@ Route::prefix('portal')
             'estudiantes',
             EstudianteController::class
         )->except('destroy');
+
+
+        /*
+|--------------------------------------------------------------------------
+| Responsables de estudiantes
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    'estudiantes/{estudiante}/responsables',
+    [EstudianteResponsableController::class, 'store']
+)->name('estudiantes.responsables.store');
+
+Route::put(
+    'estudiantes/{estudiante}/responsables/{responsable}',
+    [EstudianteResponsableController::class, 'update']
+)->name('estudiantes.responsables.update');
+
+Route::patch(
+    'estudiantes/{estudiante}/responsables/{responsable}/estado',
+    [EstudianteResponsableController::class, 'cambiarEstado']
+)->name('estudiantes.responsables.cambiar-estado');
+
+
     });
 
 
