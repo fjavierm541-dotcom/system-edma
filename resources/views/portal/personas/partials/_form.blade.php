@@ -409,12 +409,15 @@
                             value="{{ $valor('rtn') }}"
                             class="form-control portal-form-control
                                 @error('rtn') is-invalid @enderror"
-                            maxlength="30"
+                            maxlength="14"
+                            minlength="14"
+                            inputmode="numeric"
+                            pattern="[0-9]{14}"
                             autocomplete="off"
                         >
 
                         <div class="form-text portal-form-help">
-                            Campo opcional.
+                            Debe contener exactamente 14 dígitos.
                         </div>
 
                         @error('rtn')
@@ -498,9 +501,15 @@
                             value="{{ $valor('telefono_movil') }}"
                             class="form-control portal-form-control
                                 @error('telefono_movil') is-invalid @enderror"
-                            maxlength="30"
+                            maxlength="15"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
                             autocomplete="tel"
                         >
+
+                        <div class="form-text portal-form-help">
+                            Debe contener entre 8 y 15 dígitos.
+                        </div>
 
                         @error('telefono_movil')
                             <div class="invalid-feedback">
@@ -526,8 +535,14 @@
                             value="{{ $valor('telefono_fijo') }}"
                             class="form-control portal-form-control
                                 @error('telefono_fijo') is-invalid @enderror"
-                            maxlength="30"
+                            maxlength="15"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
                         >
+
+                        <div class="form-text portal-form-help">
+                            Debe contener entre 8 y 15 dígitos.
+                        </div>
 
                         @error('telefono_fijo')
                             <div class="invalid-feedback">
@@ -552,7 +567,6 @@
 
                             <div class="form-check form-switch m-0">
 
-                                {{-- Garantiza que se envíe 0 si está desmarcado --}}
                                 <input
                                     type="hidden"
                                     name="telefono_movil_whatsapp"
@@ -732,9 +746,14 @@
                             name="direccion"
                             id="direccion"
                             rows="3"
+                            maxlength="500"
                             class="form-control portal-form-control
                                 @error('direccion') is-invalid @enderror"
                         >{{ $valor('direccion') }}</textarea>
+
+                        <div class="form-text portal-form-help">
+                            Máximo 500 caracteres.
+                        </div>
 
                         @error('direccion')
                             <div class="invalid-feedback">
@@ -1019,9 +1038,15 @@
                 'telefono_movil'
             );
 
+            const fixedPhone = document.getElementById(
+                'telefono_fijo'
+            );
+
             const whatsappSwitch = document.getElementById(
                 'telefono_movil_whatsapp'
             );
+
+            const rtn = document.getElementById('rtn');
 
             const photoInput = document.getElementById(
                 'foto_perfil'
@@ -1041,6 +1066,25 @@
 
             /*
             |--------------------------------------------------------------------------
+            | Utilidades
+            |--------------------------------------------------------------------------
+            */
+
+            const allowOnlyDigits = (
+                element,
+                maximumLength
+            ) => {
+                if (!element) {
+                    return;
+                }
+
+                element.value = element.value
+                    .replace(/\D/g, '')
+                    .slice(0, maximumLength);
+            };
+
+            /*
+            |--------------------------------------------------------------------------
             | Documento de identificación
             |--------------------------------------------------------------------------
             */
@@ -1056,25 +1100,30 @@
 
                 const type = documentType.value;
 
+                const isHonduranIdentity = [
+                    'dni',
+                    'identidad_menor',
+                ].includes(type);
+
                 const settings = {
                     dni: {
-                        placeholder: 'Ejemplo: 0801-1998-12345',
-                        help: 'Ingrese el Documento Nacional de Identificación.',
+                        placeholder: 'Ejemplo: 0703199804911',
+                        help: 'Debe contener exactamente 13 dígitos, sin guiones.',
                     },
 
                     identidad_menor: {
-                        placeholder: 'Ingrese el número de identidad',
-                        help: 'Utilice el número de identidad asignado al menor.',
+                        placeholder: 'Ejemplo: 0703199804911',
+                        help: 'Debe contener exactamente 13 dígitos, sin guiones.',
                     },
 
                     pasaporte: {
                         placeholder: 'Ingrese el número de pasaporte',
-                        help: 'El pasaporte puede contener letras y números.',
+                        help: 'Puede contener letras y números.',
                     },
 
                     otro: {
                         placeholder: 'Ingrese el número del documento',
-                        help: 'Ingrese el número del documento presentado.',
+                        help: 'Puede contener letras y números.',
                     },
                 };
 
@@ -1082,6 +1131,18 @@
 
                 documentNumber.disabled = type === '';
                 documentNumber.required = type !== '';
+
+                documentNumber.inputMode = isHonduranIdentity
+                    ? 'numeric'
+                    : 'text';
+
+                documentNumber.maxLength = isHonduranIdentity
+                    ? 13
+                    : 50;
+
+                documentNumber.pattern = isHonduranIdentity
+                    ? '[0-9]{13}'
+                    : '';
 
                 documentNumber.placeholder = selected
                     ? selected.placeholder
@@ -1093,6 +1154,11 @@
 
                 if (type === '') {
                     documentNumber.value = '';
+                    return;
+                }
+
+                if (isHonduranIdentity) {
+                    allowOnlyDigits(documentNumber, 13);
                 }
             };
 
@@ -1113,11 +1179,6 @@
                 const selectedNationality =
                     selectedOption?.dataset.nationality ?? '';
 
-                /*
-                 * Solo se completa automáticamente cuando el campo
-                 * está vacío. Nunca reemplaza un valor escrito por
-                 * el usuario.
-                 */
                 if (
                     nationality.value.trim() === '' &&
                     selectedNationality !== ''
@@ -1249,17 +1310,75 @@
 
             documentType?.addEventListener(
                 'change',
-                updateDocumentField
+                () => {
+                    updateDocumentField();
+
+                    if (
+                        [
+                            'dni',
+                            'identidad_menor',
+                        ].includes(documentType.value)
+                    ) {
+                        allowOnlyDigits(
+                            documentNumber,
+                            13
+                        );
+                    }
+                }
+            );
+
+            documentNumber?.addEventListener(
+                'input',
+                () => {
+                    const type =
+                        documentType?.value ?? '';
+
+                    if (
+                        [
+                            'dni',
+                            'identidad_menor',
+                        ].includes(type)
+                    ) {
+                        allowOnlyDigits(
+                            documentNumber,
+                            13
+                        );
+                    }
+                }
+            );
+
+            rtn?.addEventListener(
+                'input',
+                () => {
+                    allowOnlyDigits(rtn, 14);
+                }
+            );
+
+            mobilePhone?.addEventListener(
+                'input',
+                () => {
+                    allowOnlyDigits(
+                        mobilePhone,
+                        15
+                    );
+
+                    updateWhatsappAvailability();
+                }
+            );
+
+            fixedPhone?.addEventListener(
+                'input',
+                () => {
+                    allowOnlyDigits(
+                        fixedPhone,
+                        15
+                    );
+                }
             );
 
             country?.addEventListener(
                 'change',
                 updateNationality
-            );
-
-            mobilePhone?.addEventListener(
-                'input',
-                updateWhatsappAvailability
             );
 
             photoInput?.addEventListener(
