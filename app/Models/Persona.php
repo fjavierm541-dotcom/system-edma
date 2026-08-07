@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Persona extends Model
 {
@@ -163,6 +164,14 @@ class Persona extends Model
                     ->orWhere('correo_personal', 'like', "%{$termino}%")
                     ->orWhere('telefono_movil', 'like', "%{$termino}%");
             }
+        );
+    }
+
+        public function estudiante(): HasOne
+    {
+        return $this->hasOne(
+            Estudiante::class,
+            'persona_id'
         );
     }
 }
