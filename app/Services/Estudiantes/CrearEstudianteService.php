@@ -21,15 +21,17 @@ class CrearEstudianteService
      *
      * @throws Throwable
      */
-    public function ejecutar(
-        array $datos,
-        CarbonInterface|string|null $fechaReferencia = null
-    ): Estudiante {
-        $fecha = $fechaReferencia
-            ? now()->parse($fechaReferencia)
-            : now();
+        public function ejecutar(
+            array $datos,
+            CarbonInterface|string|null $fechaReferencia = null
+        ): Estudiante {
+            $fecha = $fechaReferencia instanceof CarbonInterface
+                ? $fechaReferencia
+                : ($fechaReferencia
+                    ? \Illuminate\Support\Carbon::parse($fechaReferencia)
+                    : now());
 
-        $anio = (int) $fecha->format('Y');
+            $anio = (int) $fecha->format('Y');
 
         $nombreBloqueo = sprintf(
             'edma_codigo_estudiante_%d',
