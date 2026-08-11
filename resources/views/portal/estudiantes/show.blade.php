@@ -444,104 +444,295 @@
 
             </section>
 
-            {{-- Responsables --}}
-            <section class="portal-card portal-detail-card">
+           {{-- Responsables --}}
+<section class="portal-card portal-detail-card">
 
-                <div class="portal-form-section-header">
+    <div class="portal-form-section-header portal-section-header-actions">
 
-                    <div class="portal-form-section-icon">
-                        <i class="bi bi-people"></i>
-                    </div>
+        <div class="d-flex align-items-center gap-3">
 
-                    <div>
-                        <h2>Responsables</h2>
-                        <p>Personas responsables asociadas al estudiante.</p>
-                    </div>
+            <div class="portal-form-section-icon">
+                <i class="bi bi-people"></i>
+            </div>
 
-                </div>
+            <div>
+                <h2>Responsables</h2>
 
-                @if ($estudiante->responsables->isNotEmpty())
+                <p>
+                    Personas responsables asociadas al estudiante.
+                </p>
+            </div>
 
-                    <div class="portal-responsible-list">
+        </div>
 
-                        @foreach ($estudiante->responsables as $responsable)
+        <button
+            type="button"
+            class="btn portal-btn-secondary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#addResponsibleModal"
+            @disabled($personasResponsablesDisponibles->isEmpty())
+        >
+            <i class="bi bi-person-plus"></i>
+            Agregar responsable
+        </button>
 
-                            @php
-                                $personaResponsable =
-                                    $responsable->personaResponsable;
-                            @endphp
+    </div>
 
-                            <article class="portal-responsible-item">
+    @if ($estudiante->responsables->isNotEmpty())
 
-                                <div class="portal-responsible-avatar">
-                                    {{ $personaResponsable?->iniciales ?: 'RP' }}
-                                </div>
+        <div class="portal-responsible-list">
 
-                                <div class="portal-responsible-info">
+            @foreach ($estudiante->responsables as $responsable)
 
-                                    <strong>
-                                        {{ $personaResponsable?->nombre_completo
-                                            ?: 'Persona no disponible' }}
-                                    </strong>
+                @php
+                    $personaResponsable =
+                        $responsable->personaResponsable;
+                @endphp
 
-                                    <span>
-                                        {{ $responsable->parentesco
-                                            ? str($responsable->parentesco)
-                                                ->replace('_', ' ')
-                                                ->title()
-                                            : 'Parentesco no especificado' }}
-                                    </span>
+                <article
+                    class="portal-responsible-item
+                        {{ !$responsable->activo
+                            ? 'portal-responsible-item-inactive'
+                            : '' }}"
+                >
 
-                                    @if ($personaResponsable?->telefono_movil)
-                                        <small>
-                                            {{ $personaResponsable->telefono_movil }}
-                                        </small>
-                                    @endif
+                    <div class="portal-responsible-avatar">
 
-                                </div>
+                        @if ($personaResponsable?->foto_perfil)
 
-                                <div class="portal-responsible-badges">
+                            <img
+                                src="{{ asset(
+                                    'storage/' .
+                                    $personaResponsable->foto_perfil
+                                ) }}"
+                                alt="Fotografía de {{ $personaResponsable->nombre_completo }}"
+                            >
 
-                                    @if ($responsable->es_principal)
-                                        <span class="portal-status-badge portal-status-active">
-                                            Principal
-                                        </span>
-                                    @endif
+                        @else
 
-                                    @if ($responsable->recibe_notificaciones)
-                                        <span class="portal-small-badge">
-                                            Recibe notificaciones
-                                        </span>
-                                    @endif
+                            <span>
+                                {{ $personaResponsable?->iniciales ?: 'RP' }}
+                            </span>
 
-                                </div>
-
-                            </article>
-
-                        @endforeach
+                        @endif
 
                     </div>
 
-                @else
+                    <div class="portal-responsible-info">
 
-                    <div class="portal-empty-state portal-empty-state-documents">
+                        <div class="d-flex align-items-center flex-wrap gap-2">
 
-                        <div class="portal-empty-icon">
-                            <i class="bi bi-person-exclamation"></i>
+                            <strong>
+                                {{ $personaResponsable?->nombre_completo
+                                    ?: 'Persona no disponible' }}
+                            </strong>
+
+                            @if ($responsable->es_principal)
+
+                                <span class="portal-small-badge">
+                                    Principal
+                                </span>
+
+                            @endif
+
+                            @if (!$responsable->activo)
+
+                                <span class="portal-status-badge portal-status-inactive">
+                                    Inactivo
+                                </span>
+
+                            @endif
+
                         </div>
 
-                        <h3>No hay responsables registrados</h3>
+                        <span>
+                            {{ $responsable->parentesco
+                                ? str($responsable->parentesco)->title()
+                                : 'Relación no especificada' }}
+                        </span>
 
-                        <p>
-                            Los responsables se agregarán cuando corresponda,
-                            especialmente para estudiantes menores de edad.
-                        </p>
+                        <div class="portal-responsible-contact">
+
+                            @if ($personaResponsable?->telefono_movil)
+
+                                <small>
+                                    <i class="bi bi-phone"></i>
+                                    {{ $personaResponsable->telefono_movil }}
+                                </small>
+
+                            @endif
+
+                            @if ($personaResponsable?->correo_personal)
+
+                                <small>
+                                    <i class="bi bi-envelope"></i>
+                                    {{ $personaResponsable->correo_personal }}
+                                </small>
+
+                            @endif
+
+                        </div>
 
                     </div>
 
-                @endif
+                    <div class="portal-responsible-badges">
 
-            </section>
+                        @if (
+                            $responsable->recibe_notificaciones &&
+                            $responsable->activo
+                        )
+
+                            <span class="portal-small-badge">
+                                <i class="bi bi-bell"></i>
+                                Recibe notificaciones
+                            </span>
+
+                        @endif
+
+                        <div class="dropdown">
+
+                            <button
+                                type="button"
+                                class="portal-table-action"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                aria-label="Opciones del responsable"
+                            >
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end portal-actions-menu">
+
+                                @if ($personaResponsable)
+
+                                    <li>
+                                        <a
+                                            href="{{ route(
+                                                'portal.personas.show',
+                                                $personaResponsable
+                                            ) }}"
+                                            class="dropdown-item"
+                                        >
+                                            <i class="bi bi-person-vcard"></i>
+                                            Ver datos personales
+                                        </a>
+                                    </li>
+
+                                @endif
+
+                                <li>
+                                    <button
+                                        type="button"
+                                        class="dropdown-item"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editResponsibleModal"
+                                        data-id="{{ $responsable->id }}"
+                                        data-person-id="{{ $responsable->responsable_persona_id }}"
+                                        data-name="{{ $personaResponsable?->nombre_completo }}"
+                                        data-parentesco="{{ $responsable->parentesco }}"
+                                        data-principal="{{ $responsable->es_principal ? '1' : '0' }}"
+                                        data-notifications="{{ $responsable->recibe_notificaciones ? '1' : '0' }}"
+                                        data-active="{{ $responsable->activo ? '1' : '0' }}"
+                                        data-action="{{ route(
+                                            'portal.estudiantes.responsables.update',
+                                            [
+                                                $estudiante,
+                                                $responsable
+                                            ]
+                                        ) }}"
+                                    >
+                                        <i class="bi bi-pencil-square"></i>
+                                        Editar relación
+                                    </button>
+                                </li>
+
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <li>
+
+                                    <form
+                                        action="{{ route(
+                                            'portal.estudiantes.responsables.cambiar-estado',
+                                            [
+                                                $estudiante,
+                                                $responsable
+                                            ]
+                                        ) }}"
+                                        method="POST"
+                                    >
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <button
+                                            type="submit"
+                                            class="dropdown-item
+                                                {{ $responsable->activo
+                                                    ? 'text-warning-emphasis'
+                                                    : 'text-success' }}"
+                                        >
+                                            <i class="bi
+                                                {{ $responsable->activo
+                                                    ? 'bi-person-dash'
+                                                    : 'bi-person-check' }}">
+                                            </i>
+
+                                            {{ $responsable->activo
+                                                ? 'Desactivar responsable'
+                                                : 'Activar responsable' }}
+                                        </button>
+
+                                    </form>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            @endforeach
+
+        </div>
+
+    @else
+
+        <div class="portal-empty-state portal-empty-state-documents">
+
+            <div class="portal-empty-icon">
+                <i class="bi bi-person-exclamation"></i>
+            </div>
+
+            <h3>No hay responsables registrados</h3>
+
+            <p>
+                Puede asociar un padre, madre, tutor u otra persona
+                responsable cuando corresponda.
+            </p>
+
+            @if ($personasResponsablesDisponibles->isNotEmpty())
+
+                <button
+                    type="button"
+                    class="btn portal-btn-secondary mt-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addResponsibleModal"
+                >
+                    <i class="bi bi-person-plus"></i>
+                    Agregar responsable
+                </button>
+
+            @endif
+
+        </div>
+
+    @endif
+
+</section>
 
             {{-- Secciones académicas futuras --}}
             <section class="portal-card portal-detail-card mb-0">
@@ -579,6 +770,408 @@
         </div>
 
     </div>
+
+    {{-- Modal para agregar responsable --}}
+<div
+    class="modal fade"
+    id="addResponsibleModal"
+    tabindex="-1"
+    aria-labelledby="addResponsibleModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                action="{{ route(
+                    'portal.estudiantes.responsables.store',
+                    $estudiante
+                ) }}"
+                method="POST"
+            >
+                @csrf
+
+                <div class="modal-header">
+
+                    <div>
+                        <span class="portal-modal-eyebrow">
+                            Expediente estudiantil
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="addResponsibleModalLabel"
+                        >
+                            Agregar responsable
+                        </h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+
+                            <label
+                                for="responsable_persona_id"
+                                class="form-label portal-form-label"
+                            >
+                                Persona responsable
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <select
+                                name="responsable_persona_id"
+                                id="responsable_persona_id"
+                                class="form-select portal-form-control
+                                    @error('responsable_persona_id') is-invalid @enderror"
+                                required
+                            >
+                                <option value="">
+                                    Seleccione una persona
+                                </option>
+
+                                @foreach (
+                                    $personasResponsablesDisponibles
+                                    as $personaDisponible
+                                )
+
+                                    <option
+                                        value="{{ $personaDisponible->id }}"
+                                        @selected(
+                                            (string) old(
+                                                'responsable_persona_id'
+                                            ) ===
+                                            (string) $personaDisponible->id
+                                        )
+                                    >
+                                        {{ $personaDisponible->nombre_completo }}
+
+                                        @if ($personaDisponible->numero_documento)
+                                            — {{ $personaDisponible->numero_documento }}
+                                        @endif
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                            @error('responsable_persona_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                            <div class="portal-form-help">
+                                Si la persona no existe, debe registrarse
+                                primero desde el módulo Personas.
+                            </div>
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="parentesco"
+                                class="form-label portal-form-label"
+                            >
+                                Parentesco o relación
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                name="parentesco"
+                                id="parentesco"
+                                value="{{ old('parentesco') }}"
+                                class="form-control portal-form-control
+                                    @error('parentesco') is-invalid @enderror"
+                                maxlength="50"
+                                placeholder="Ej. Madre, padre, tutor..."
+                                required
+                            >
+
+                            @error('parentesco')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <div class="portal-responsible-options">
+
+                                <div class="form-check form-switch">
+
+                                    <input
+                                        type="checkbox"
+                                        name="es_principal"
+                                        value="1"
+                                        id="es_principal"
+                                        class="form-check-input"
+                                        @checked(old('es_principal'))
+                                    >
+
+                                    <label
+                                        for="es_principal"
+                                        class="form-check-label"
+                                    >
+                                        Responsable principal
+                                    </label>
+
+                                    <small>
+                                        Será el contacto principal relacionado
+                                        con el estudiante.
+                                    </small>
+
+                                </div>
+
+                                <div class="form-check form-switch">
+
+                                    <input
+                                        type="checkbox"
+                                        name="recibe_notificaciones"
+                                        value="1"
+                                        id="recibe_notificaciones"
+                                        class="form-check-input"
+                                        @checked(
+                                            old(
+                                                'recibe_notificaciones',
+                                                true
+                                            )
+                                        )
+                                    >
+
+                                    <label
+                                        for="recibe_notificaciones"
+                                        class="form-check-label"
+                                    >
+                                        Recibir notificaciones
+                                    </label>
+
+                                    <small>
+                                        Podrá recibir comunicaciones relacionadas
+                                        con el estudiante.
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="activo"
+                        value="1"
+                    >
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                    >
+                        <i class="bi bi-person-plus"></i>
+                        Agregar responsable
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{{-- Modal para editar responsable --}}
+<div
+    class="modal fade"
+    id="editResponsibleModal"
+    tabindex="-1"
+    aria-labelledby="editResponsibleModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                method="POST"
+                id="editResponsibleForm"
+            >
+                @csrf
+                @method('PUT')
+
+                <input
+                    type="hidden"
+                    name="responsable_persona_id"
+                    id="edit_responsable_persona_id"
+                >
+
+                <div class="modal-header">
+
+                    <div>
+                        <span class="portal-modal-eyebrow">
+                            Responsable
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="editResponsibleModalLabel"
+                        >
+                            Editar relación
+                        </h2>
+
+                        <small id="editResponsibleName"></small>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-4">
+
+                        <label
+                            for="edit_parentesco"
+                            class="form-label portal-form-label"
+                        >
+                            Parentesco o relación
+                            <span class="portal-required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="parentesco"
+                            id="edit_parentesco"
+                            maxlength="50"
+                            class="form-control portal-form-control"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="portal-responsible-options">
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                type="checkbox"
+                                name="es_principal"
+                                value="1"
+                                id="edit_es_principal"
+                                class="form-check-input"
+                            >
+
+                            <label
+                                for="edit_es_principal"
+                                class="form-check-label"
+                            >
+                                Responsable principal
+                            </label>
+
+                        </div>
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                type="checkbox"
+                                name="recibe_notificaciones"
+                                value="1"
+                                id="edit_recibe_notificaciones"
+                                class="form-check-input"
+                            >
+
+                            <label
+                                for="edit_recibe_notificaciones"
+                                class="form-check-label"
+                            >
+                                Recibir notificaciones
+                            </label>
+
+                        </div>
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                type="checkbox"
+                                name="activo"
+                                value="1"
+                                id="edit_activo"
+                                class="form-check-input"
+                            >
+
+                            <label
+                                for="edit_activo"
+                                class="form-check-label"
+                            >
+                                Relación activa
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                    >
+                        <i class="bi bi-check2-circle"></i>
+                        Guardar cambios
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
 
     {{-- Modal de estado --}}
     <div
@@ -683,5 +1276,79 @@
 
         </div>
     </div>
+
+
+
+    @push('scripts')
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const editModal = document.getElementById(
+            'editResponsibleModal'
+        );
+
+        if (!editModal) {
+            return;
+        }
+
+        editModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+
+            if (!button) {
+                return;
+            }
+
+            const form = document.getElementById(
+                'editResponsibleForm'
+            );
+
+            const personId = document.getElementById(
+                'edit_responsable_persona_id'
+            );
+
+            const name = document.getElementById(
+                'editResponsibleName'
+            );
+
+            const relationship = document.getElementById(
+                'edit_parentesco'
+            );
+
+            const principal = document.getElementById(
+                'edit_es_principal'
+            );
+
+            const notifications = document.getElementById(
+                'edit_recibe_notificaciones'
+            );
+
+            const active = document.getElementById(
+                'edit_activo'
+            );
+
+            form.action = button.dataset.action;
+
+            personId.value =
+                button.dataset.personId;
+
+            name.textContent =
+                button.dataset.name || '';
+
+            relationship.value =
+                button.dataset.parentesco || '';
+
+            principal.checked =
+                button.dataset.principal === '1';
+
+            notifications.checked =
+                button.dataset.notifications === '1';
+
+            active.checked =
+                button.dataset.active === '1';
+        });
+    });
+</script>
+
+@endpush
 
 @endsection

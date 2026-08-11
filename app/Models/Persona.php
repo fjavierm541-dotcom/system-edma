@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+
+
 
 class Persona extends Model
 {
@@ -167,11 +168,19 @@ class Persona extends Model
         );
     }
 
-        public function estudiante(): HasOne
-    {
-        return $this->hasOne(
-            Estudiante::class,
-            'persona_id'
-        );
-    }
+    public function estudiante(): HasOne
+{
+    return $this->hasOne(
+        Estudiante::class,
+        'persona_id'
+    );
+}
+
+public function responsabilidadesEstudiantiles(): HasMany
+{
+    return $this->hasMany(
+        EstudianteResponsable::class,
+        'responsable_persona_id'
+    );
+}
 }

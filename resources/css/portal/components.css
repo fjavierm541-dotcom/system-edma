@@ -1613,3 +1613,93 @@ textarea.portal-form-control {
         padding-left: 54px;
     }
 }
+
+
+
+/* =========================================================
+   Gestión de responsables
+   ========================================================= */
+
+.portal-section-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.portal-responsible-avatar {
+    overflow: hidden;
+}
+
+.portal-responsible-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.portal-responsible-contact {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px 14px;
+    margin-top: 4px;
+}
+
+.portal-responsible-contact small {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.portal-responsible-contact i {
+    color: var(--portal-primary);
+}
+
+.portal-responsible-item-inactive {
+    opacity: 0.65;
+}
+
+.portal-responsible-options {
+    display: grid;
+    gap: 10px;
+}
+
+.portal-responsible-options .form-check {
+    position: relative;
+    min-height: 58px;
+    margin: 0;
+    padding: 11px 14px 11px 52px;
+    border: 1px solid var(--portal-border);
+    border-radius: 10px;
+    background: var(--portal-surface-soft);
+}
+
+.portal-responsible-options .form-check-input {
+    margin-left: -36px;
+}
+
+.portal-responsible-options .form-check-label {
+    display: block;
+    color: var(--portal-primary-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.portal-responsible-options small {
+    display: block;
+    margin-top: 2px;
+    color: var(--portal-text-muted);
+    font-size: 0.67rem;
+    line-height: 1.45;
+}
+
+@media (max-width: 575.98px) {
+    .portal-section-header-actions {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .portal-section-header-actions > .btn {
+        width: 100%;
+    }
+}
