@@ -1703,3 +1703,128 @@ textarea.portal-form-control {
         width: 100%;
     }
 }
+
+
+
+/* =========================================================
+   Listado de empleados
+   ========================================================= */
+
+.portal-employee-table {
+    min-width: 1180px;
+}
+
+.portal-employee-code {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 9px;
+    border: 1px solid rgba(18, 61, 106, 0.1);
+    border-radius: 7px;
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary-dark);
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    font-size: 0.7rem;
+    font-weight: 750;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.portal-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #eef1f4;
+    color: #687581;
+    font-size: 0.68rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.portal-role-badge-teacher {
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary);
+}
+
+
+/* =========================================================
+   Expediente laboral
+   ========================================================= */
+
+.portal-academic-list,
+.portal-bank-list {
+    padding: 8px;
+}
+
+.portal-academic-item,
+.portal-bank-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px;
+    border-radius: 10px;
+    transition: background var(--portal-transition);
+}
+
+.portal-academic-item:hover,
+.portal-bank-item:hover {
+    background: var(--portal-surface-soft);
+}
+
+.portal-academic-icon,
+.portal-bank-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 10px;
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary);
+    font-size: 1rem;
+}
+
+.portal-academic-info,
+.portal-bank-info {
+    display: flex;
+    min-width: 0;
+    flex: 1;
+    flex-direction: column;
+}
+
+.portal-academic-info strong,
+.portal-bank-info strong {
+    color: var(--portal-primary-dark);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.portal-academic-info > span,
+.portal-bank-info > span {
+    color: var(--portal-text-muted);
+    font-size: 0.69rem;
+}
+
+.portal-academic-info small,
+.portal-bank-info small {
+    margin-top: 2px;
+    color: var(--portal-text-muted);
+    font-size: 0.67rem;
+}
+
+.portal-bank-item-inactive {
+    opacity: 0.65;
+}
+
+@media (max-width: 575.98px) {
+    .portal-academic-item,
+    .portal-bank-item {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}

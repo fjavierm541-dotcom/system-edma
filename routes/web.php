@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\Portal\EmpleadoController;
+use App\Http\Controllers\Portal\EstudianteController;
+use App\Http\Controllers\Portal\EstudianteResponsableController;
 use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Portal\EstudianteController;
-use App\Http\Controllers\Portal\EstudianteResponsableController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -36,22 +36,31 @@ Route::get('/contacto', [WebsiteController::class, 'contact'])
 | Portal administrativo
 |--------------------------------------------------------------------------
 */
-//personas
+
 Route::prefix('portal')
     ->name('portal.')
     ->group(function () {
+
         Route::view('/', 'portal.dashboard')
             ->name('dashboard');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Personas
+        |--------------------------------------------------------------------------
+        */
 
         Route::patch(
             'personas/{persona}/estado',
             [PersonaController::class, 'cambiarEstado']
         )->name('personas.cambiar-estado');
 
-        Route::resource('personas', PersonaController::class)
-            ->except('destroy');
+        Route::resource(
+            'personas',
+            PersonaController::class
+        )->except('destroy');
 
-             /*
+        /*
         |--------------------------------------------------------------------------
         | Estudiantes
         |--------------------------------------------------------------------------
@@ -67,31 +76,43 @@ Route::prefix('portal')
             EstudianteController::class
         )->except('destroy');
 
+        /*
+        |--------------------------------------------------------------------------
+        | Responsables de estudiantes
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            'estudiantes/{estudiante}/responsables',
+            [EstudianteResponsableController::class, 'store']
+        )->name('estudiantes.responsables.store');
+
+        Route::put(
+            'estudiantes/{estudiante}/responsables/{responsable}',
+            [EstudianteResponsableController::class, 'update']
+        )->name('estudiantes.responsables.update');
+
+        Route::patch(
+            'estudiantes/{estudiante}/responsables/{responsable}/estado',
+            [EstudianteResponsableController::class, 'cambiarEstado']
+        )->name('estudiantes.responsables.cambiar-estado');
 
         /*
-|--------------------------------------------------------------------------
-| Responsables de estudiantes
-|--------------------------------------------------------------------------
-*/
+        |--------------------------------------------------------------------------
+        | Empleados
+        |--------------------------------------------------------------------------
+        */
 
-Route::post(
-    'estudiantes/{estudiante}/responsables',
-    [EstudianteResponsableController::class, 'store']
-)->name('estudiantes.responsables.store');
+        Route::patch(
+            'empleados/{empleado}/estado',
+            [EmpleadoController::class, 'cambiarEstado']
+        )->name('empleados.cambiar-estado');
 
-Route::put(
-    'estudiantes/{estudiante}/responsables/{responsable}',
-    [EstudianteResponsableController::class, 'update']
-)->name('estudiantes.responsables.update');
-
-Route::patch(
-    'estudiantes/{estudiante}/responsables/{responsable}/estado',
-    [EstudianteResponsableController::class, 'cambiarEstado']
-)->name('estudiantes.responsables.cambiar-estado');
-
-
+        Route::resource(
+            'empleados',
+            EmpleadoController::class
+        )->except('destroy');
     });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +123,12 @@ Route::patch(
 Route::get('/campus', [WebsiteController::class, 'campus'])
     ->name('website.campus');
 
-
-        //para dise;os    npm run dev
-        // para fotos   php artisan storage:link
+/*
+|--------------------------------------------------------------------------
+| Comandos útiles de desarrollo
+|--------------------------------------------------------------------------
+|
+| npm run dev
+| php artisan storage:link
+|
+*/

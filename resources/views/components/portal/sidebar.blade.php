@@ -70,8 +70,11 @@
             </a>
 
             <a
-                href="#"
-                class="portal-menu-link"
+                href="{{ route('portal.empleados.index') }}"
+                class="portal-menu-link
+                    {{ request()->routeIs('portal.empleados.*')
+                        ? 'active'
+                        : '' }}"
             >
                 <i class="bi bi-briefcase"></i>
 

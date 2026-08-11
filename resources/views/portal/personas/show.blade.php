@@ -207,6 +207,56 @@
 
                     @endif
 
+                    @if ($persona->empleado)
+
+    <a
+        href="{{ route(
+            'portal.empleados.show',
+            $persona->empleado
+        ) }}"
+        class="portal-profile-action"
+    >
+        <span>
+            <i class="bi bi-briefcase"></i>
+        </span>
+
+        <div>
+            <strong>Ver expediente laboral</strong>
+
+            <small>
+                {{ $persona->empleado->codigo_empleado }}
+            </small>
+        </div>
+
+        <i class="bi bi-chevron-right"></i>
+    </a>
+
+@elseif ($persona->estado === 'activo')
+
+    <a
+        href="{{ route(
+            'portal.empleados.create',
+            ['persona' => $persona->id]
+        ) }}"
+        class="portal-profile-action"
+    >
+        <span>
+            <i class="bi bi-person-badge"></i>
+        </span>
+
+        <div>
+            <strong>Registrar como empleado</strong>
+
+            <small>
+                Crear expediente laboral
+            </small>
+        </div>
+
+        <i class="bi bi-chevron-right"></i>
+    </a>
+
+@endif
+
                     @if (
                         $persona->telefono_movil &&
                         $persona->telefono_movil_whatsapp

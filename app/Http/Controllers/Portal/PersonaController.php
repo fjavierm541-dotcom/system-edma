@@ -134,6 +134,7 @@ class PersonaController extends Controller
         ->orderByDesc('created_at'),
 
     'estudiante',
+    'empleado',
 ]);
 
         return view('portal.personas.show', [
