@@ -5,32 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class FormacionAcademica extends Model
+class InstitucionFinanciera extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
-    protected $table = 'formaciones_academicas';
+    protected $table = 'instituciones_financieras';
 
     protected $fillable = [
-        'persona_id',
-        'nivel_academico',
-        'titulo_obtenido',
-        'institucion_educativa',
-        'pais_id',
-        'anio_graduacion',
-        'documento_persona_id',
-        'es_principal',
-        'estado',
-        'observaciones',
+        'codigo',
+        'nombre',
+        'activo',
     ];
 
     protected $casts = [
-        'anio_graduacion' => 'integer',
-        'es_principal' => 'boolean',
+        'activo' => 'boolean',
     ];
 
     /*
@@ -39,27 +29,11 @@ class FormacionAcademica extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function persona(): BelongsTo
+    public function cuentasBancarias(): HasMany
     {
-        return $this->belongsTo(
-            Persona::class,
-            'persona_id'
-        );
-    }
-
-    public function pais(): BelongsTo
-    {
-        return $this->belongsTo(
-            Pais::class,
-            'pais_id'
-        );
-    }
-
-    public function documentoPersona(): BelongsTo
-    {
-        return $this->belongsTo(
-            DocumentoPersona::class,
-            'documento_persona_id'
+        return $this->hasMany(
+            CuentaBancaria::class,
+            'institucion_financiera_id'
         );
     }
 
@@ -71,11 +45,16 @@ class FormacionAcademica extends Model
 
     public function scopeActivas(Builder $query): Builder
     {
-        return $query->where('estado', 'activo');
+        return $query->where('activo', true);
     }
 
-    public function scopePrincipales(Builder $query): Builder
+    public function scopeInactivas(Builder $query): Builder
     {
-        return $query->where('es_principal', true);
+        return $query->where('activo', false);
+    }
+
+    public function scopeOrdenadas(Builder $query): Builder
+    {
+        return $query->orderBy('nombre');
     }
 }

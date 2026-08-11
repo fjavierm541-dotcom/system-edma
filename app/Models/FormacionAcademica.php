@@ -74,6 +74,11 @@ class FormacionAcademica extends Model
         return $query->where('estado', 'activo');
     }
 
+    public function scopeInactivas(Builder $query): Builder
+    {
+        return $query->where('estado', 'inactivo');
+    }
+
     public function scopePrincipales(Builder $query): Builder
     {
         return $query->where('es_principal', true);

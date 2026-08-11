@@ -7,6 +7,9 @@ use App\Http\Requests\StoreEmpleadoRequest;
 use App\Http\Requests\UpdateEmpleadoRequest;
 use App\Models\Empleado;
 use App\Models\Persona;
+use App\Models\InstitucionFinanciera;
+use App\Models\Pais;
+
 use App\Services\Empleados\CrearEmpleadoService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -153,7 +156,7 @@ class EmpleadoController extends Controller
         }
     }
 
-   /**
+  /**
  * Mostrar expediente del empleado.
  */
 public function show(Empleado $empleado): View
@@ -186,7 +189,7 @@ public function show(Empleado $empleado): View
         'docente',
     ]);
 
-    $paises = \App\Models\Pais::query()
+    $paises = Pais::query()
         ->activos()
         ->orderBy('nombre')
         ->get([
@@ -198,10 +201,22 @@ public function show(Empleado $empleado): View
         ->documentos
         ->values();
 
+    $institucionesFinancieras =
+        InstitucionFinanciera::query()
+            ->activas()
+            ->ordenadas()
+            ->get([
+                'id',
+                'codigo',
+                'nombre',
+            ]);
+
     return view('portal.empleados.show', [
         'empleado' => $empleado,
         'paises' => $paises,
         'documentosPersona' => $documentosPersona,
+        'institucionesFinancieras' =>
+            $institucionesFinancieras,
     ]);
 }
 

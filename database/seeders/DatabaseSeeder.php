@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PaisSeeder::class,
             NivelEscolaridadSeeder::class,
+            InstitucionFinancieraSeeder::class,
         ]);
     }
 }

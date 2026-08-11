@@ -7,6 +7,8 @@ use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Portal\FormacionAcademicaController;
+use App\Http\Controllers\Portal\CuentaBancariaController;
+
 /*
 |--------------------------------------------------------------------------
 | Página web institucional
@@ -134,6 +136,29 @@ Route::patch(
     'empleados/{empleado}/formaciones-academicas/{formacion}/estado',
     [FormacionAcademicaController::class, 'cambiarEstado']
 )->name('empleados.formaciones-academicas.cambiar-estado');
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Cuentas bancarias
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    'empleados/{empleado}/cuentas-bancarias',
+    [CuentaBancariaController::class, 'store']
+)->name('empleados.cuentas-bancarias.store');
+
+Route::put(
+    'empleados/{empleado}/cuentas-bancarias/{cuenta}',
+    [CuentaBancariaController::class, 'update']
+)->name('empleados.cuentas-bancarias.update');
+
+Route::patch(
+    'empleados/{empleado}/cuentas-bancarias/{cuenta}/estado',
+    [CuentaBancariaController::class, 'cambiarEstado']
+)->name('empleados.cuentas-bancarias.cambiar-estado');
 
 
 
