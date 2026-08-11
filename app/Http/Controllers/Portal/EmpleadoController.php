@@ -153,38 +153,57 @@ class EmpleadoController extends Controller
         }
     }
 
-    /**
-     * Mostrar expediente del empleado.
-     */
-    public function show(Empleado $empleado): View
-    {
-        $empleado->load([
-            'persona.paisResidencia',
+   /**
+ * Mostrar expediente del empleado.
+ */
+public function show(Empleado $empleado): View
+{
+    $empleado->load([
+        'persona.paisResidencia',
 
-            'persona.formacionesAcademicas' =>
-                fn ($query) => $query
-                    ->orderByDesc('es_principal')
-                    ->orderByDesc('anio_graduacion'),
+        'persona.documentos' =>
+            fn ($query) => $query
+                ->orderByDesc('created_at'),
 
-            'persona.formacionesAcademicas.pais',
+        'persona.formacionesAcademicas' =>
+            fn ($query) => $query
+                ->orderByDesc('es_principal')
+                ->orderByDesc('anio_graduacion')
+                ->orderByDesc('id'),
 
-            'persona.formacionesAcademicas.documentoPersona',
+        'persona.formacionesAcademicas.pais',
 
-            'cuentasBancarias' =>
-                fn ($query) => $query
-                    ->orderByDesc('activo')
-                    ->orderByDesc('es_principal')
-                    ->orderByDesc('id'),
+        'persona.formacionesAcademicas.documentoPersona',
 
-            'cuentasBancarias.institucionFinanciera',
+        'cuentasBancarias' =>
+            fn ($query) => $query
+                ->orderByDesc('activo')
+                ->orderByDesc('es_principal')
+                ->orderByDesc('id'),
 
-            'docente',
+        'cuentasBancarias.institucionFinanciera',
+
+        'docente',
+    ]);
+
+    $paises = \App\Models\Pais::query()
+        ->activos()
+        ->orderBy('nombre')
+        ->get([
+            'id',
+            'nombre',
         ]);
 
-        return view('portal.empleados.show', [
-            'empleado' => $empleado,
-        ]);
-    }
+    $documentosPersona = $empleado->persona
+        ->documentos
+        ->values();
+
+    return view('portal.empleados.show', [
+        'empleado' => $empleado,
+        'paises' => $paises,
+        'documentosPersona' => $documentosPersona,
+    ]);
+}
 
     /**
      * Mostrar formulario de edición.

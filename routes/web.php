@@ -6,7 +6,7 @@ use App\Http\Controllers\Portal\EstudianteResponsableController;
 use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Portal\FormacionAcademicaController;
 /*
 |--------------------------------------------------------------------------
 | Página web institucional
@@ -112,6 +112,31 @@ Route::prefix('portal')
             'empleados',
             EmpleadoController::class
         )->except('destroy');
+
+
+        /*
+|--------------------------------------------------------------------------
+| Formación académica
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    'empleados/{empleado}/formaciones-academicas',
+    [FormacionAcademicaController::class, 'store']
+)->name('empleados.formaciones-academicas.store');
+
+Route::put(
+    'empleados/{empleado}/formaciones-academicas/{formacion}',
+    [FormacionAcademicaController::class, 'update']
+)->name('empleados.formaciones-academicas.update');
+
+Route::patch(
+    'empleados/{empleado}/formaciones-academicas/{formacion}/estado',
+    [FormacionAcademicaController::class, 'cambiarEstado']
+)->name('empleados.formaciones-academicas.cambiar-estado');
+
+
+
     });
 
 /*

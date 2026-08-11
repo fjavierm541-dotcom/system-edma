@@ -1828,3 +1828,6 @@ textarea.portal-form-control {
         flex-wrap: wrap;
     }
 }
+.portal-academic-item-inactive {
+    opacity: 0.65;
+}
