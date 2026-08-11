@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 
 
@@ -181,6 +183,22 @@ public function responsabilidadesEstudiantiles(): HasMany
     return $this->hasMany(
         EstudianteResponsable::class,
         'responsable_persona_id'
+    );
+}
+
+public function empleado(): HasOne
+{
+    return $this->hasOne(
+        Empleado::class,
+        'persona_id'
+    );
+}
+
+public function formacionesAcademicas(): HasMany
+{
+    return $this->hasMany(
+        FormacionAcademica::class,
+        'persona_id'
     );
 }
 }
