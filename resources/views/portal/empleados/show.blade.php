@@ -819,129 +819,261 @@
             </section>
 
             {{-- Cuentas bancarias --}}
-            <section class="portal-card portal-detail-card">
+<section class="portal-card portal-detail-card">
 
-                <div class="portal-form-section-header portal-section-header-actions">
+    <div class="portal-form-section-header portal-section-header-actions">
 
-                    <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
 
-                        <div class="portal-form-section-icon">
-                            <i class="bi bi-bank"></i>
-                        </div>
+            <div class="portal-form-section-icon">
+                <i class="bi bi-bank"></i>
+            </div>
 
-                        <div>
-                            <h2>Cuentas bancarias</h2>
+            <div>
+                <h2>Cuentas bancarias</h2>
 
-                            <p>
-                                Información financiera vinculada al empleado.
-                            </p>
-                        </div>
+                <p>
+                    Información financiera vinculada al empleado.
+                </p>
+            </div>
 
+        </div>
+
+        <button
+            type="button"
+            class="btn portal-btn-secondary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#addBankAccountModal"
+            @disabled($institucionesFinancieras->isEmpty())
+        >
+            <i class="bi bi-plus-circle"></i>
+            Agregar cuenta
+        </button>
+
+    </div>
+
+    @if ($empleado->cuentasBancarias->isNotEmpty())
+
+        <div class="portal-bank-list">
+
+            @foreach ($empleado->cuentasBancarias as $cuenta)
+
+                <article
+                    class="portal-bank-item
+                        {{ !$cuenta->activo
+                            ? 'portal-bank-item-inactive'
+                            : '' }}"
+                >
+
+                    <div class="portal-bank-icon">
+                        <i class="bi bi-bank"></i>
                     </div>
 
-                    <span class="portal-results-count">
-                        {{ $empleado->cuentasBancarias->count() }}
-                    </span>
+                    <div class="portal-bank-info">
 
-                </div>
+                        <div class="d-flex align-items-center flex-wrap gap-2">
 
-                @if ($empleado->cuentasBancarias->isNotEmpty())
+                            <strong>
+                                {{ $cuenta->institucionFinanciera?->nombre
+                                    ?: 'Institución no disponible' }}
+                            </strong>
 
-                    <div class="portal-bank-list">
+                            @if ($cuenta->es_principal)
 
-                        @foreach (
-                            $empleado->cuentasBancarias
-                            as $cuenta
+                                <span class="portal-small-badge">
+                                    Principal
+                                </span>
+
+                            @endif
+
+                            @if (!$cuenta->activo)
+
+                                <span class="portal-status-badge portal-status-inactive">
+                                    Inactiva
+                                </span>
+
+                            @endif
+
+                        </div>
+
+                        <span>
+                            {{ str($cuenta->tipo_cuenta)
+                                ->replace('_', ' ')
+                                ->title() }}
+                        </span>
+
+                        <small>
+                            Cuenta:
+                            {{ $cuenta->numero_cuenta }}
+
+                            @if ($cuenta->moneda)
+                                · {{ $cuenta->moneda }}
+                            @endif
+                        </small>
+
+                        @if ($cuenta->nombre_titular)
+
+                            <small>
+                                Titular:
+                                {{ $cuenta->nombre_titular }}
+                            </small>
+
+                        @endif
+
+                        @if (
+                            $cuenta->fecha_inicio ||
+                            $cuenta->fecha_fin
                         )
 
-                            <article
-                                class="portal-bank-item
-                                    {{ !$cuenta->activo
-                                        ? 'portal-bank-item-inactive'
-                                        : '' }}"
-                            >
+                            <small>
+                                Vigencia:
 
-                                <div class="portal-bank-icon">
-                                    <i class="bi bi-bank"></i>
-                                </div>
+                                {{ $cuenta->fecha_inicio
+                                    ? $cuenta->fecha_inicio
+                                        ->translatedFormat('d M Y')
+                                    : 'Sin fecha inicial' }}
 
-                                <div class="portal-bank-info">
+                                —
 
-                                    <div class="d-flex align-items-center flex-wrap gap-2">
+                                {{ $cuenta->fecha_fin
+                                    ? $cuenta->fecha_fin
+                                        ->translatedFormat('d M Y')
+                                    : 'Actual' }}
+                            </small>
 
-                                        <strong>
-                                            {{ $cuenta->institucionFinanciera?->nombre
-                                                ?: 'Institución no disponible' }}
-                                        </strong>
-
-                                        @if ($cuenta->es_principal)
-
-                                            <span class="portal-small-badge">
-                                                Principal
-                                            </span>
-
-                                        @endif
-
-                                        @if (!$cuenta->activo)
-
-                                            <span class="portal-status-badge portal-status-inactive">
-                                                Inactiva
-                                            </span>
-
-                                        @endif
-
-                                    </div>
-
-                                    <span>
-                                        {{ str($cuenta->tipo_cuenta)
-                                            ->replace('_', ' ')
-                                            ->title() }}
-                                    </span>
-
-                                    <small>
-                                        {{ $cuenta->numero_cuenta }}
-                                        @if ($cuenta->moneda)
-                                            · {{ $cuenta->moneda }}
-                                        @endif
-                                    </small>
-
-                                    @if ($cuenta->nombre_titular)
-
-                                        <small>
-                                            Titular:
-                                            {{ $cuenta->nombre_titular }}
-                                        </small>
-
-                                    @endif
-
-                                </div>
-
-                            </article>
-
-                        @endforeach
+                        @endif
 
                     </div>
 
-                @else
+                    <div class="dropdown">
 
-                    <div class="portal-empty-state portal-empty-state-documents">
+                        <button
+                            type="button"
+                            class="portal-table-action"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-label="Opciones de la cuenta bancaria"
+                        >
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
 
-                        <div class="portal-empty-icon">
-                            <i class="bi bi-bank"></i>
-                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end portal-actions-menu">
 
-                        <h3>No hay cuentas bancarias registradas</h3>
+                            <li>
+                                <button
+                                    type="button"
+                                    class="dropdown-item"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editBankAccountModal"
 
-                        <p>
-                            La información bancaria del empleado
-                            podrá agregarse posteriormente.
-                        </p>
+                                    data-action="{{ route(
+                                        'portal.empleados.cuentas-bancarias.update',
+                                        [
+                                            $empleado,
+                                            $cuenta
+                                        ]
+                                    ) }}"
+
+                                    data-institucion="{{ $cuenta->institucion_financiera_id }}"
+                                    data-numero="{{ $cuenta->numero_cuenta }}"
+                                    data-tipo="{{ $cuenta->tipo_cuenta }}"
+                                    data-moneda="{{ $cuenta->moneda }}"
+                                    data-titular="{{ $cuenta->nombre_titular }}"
+                                    data-principal="{{ $cuenta->es_principal ? '1' : '0' }}"
+                                    data-activo="{{ $cuenta->activo ? '1' : '0' }}"
+                                    data-inicio="{{ $cuenta->fecha_inicio?->format('Y-m-d') }}"
+                                    data-fin="{{ $cuenta->fecha_fin?->format('Y-m-d') }}"
+                                >
+                                    <i class="bi bi-pencil-square"></i>
+                                    Editar cuenta
+                                </button>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+
+                                <form
+                                    action="{{ route(
+                                        'portal.empleados.cuentas-bancarias.cambiar-estado',
+                                        [
+                                            $empleado,
+                                            $cuenta
+                                        ]
+                                    ) }}"
+                                    method="POST"
+                                >
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button
+                                        type="submit"
+                                        class="dropdown-item
+                                            {{ $cuenta->activo
+                                                ? 'text-warning-emphasis'
+                                                : 'text-success' }}"
+                                    >
+                                        <i class="bi
+                                            {{ $cuenta->activo
+                                                ? 'bi-toggle-off'
+                                                : 'bi-toggle-on' }}">
+                                        </i>
+
+                                        {{ $cuenta->activo
+                                            ? 'Desactivar cuenta'
+                                            : 'Activar cuenta' }}
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+                        </ul>
 
                     </div>
 
-                @endif
+                </article>
 
-            </section>
+            @endforeach
+
+        </div>
+
+    @else
+
+        <div class="portal-empty-state portal-empty-state-documents">
+
+            <div class="portal-empty-icon">
+                <i class="bi bi-bank"></i>
+            </div>
+
+            <h3>No hay cuentas bancarias registradas</h3>
+
+            <p>
+                Agregue la información bancaria utilizada
+                para los procesos administrativos del empleado.
+            </p>
+
+            @if ($institucionesFinancieras->isNotEmpty())
+
+                <button
+                    type="button"
+                    class="btn portal-btn-secondary mt-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addBankAccountModal"
+                >
+                    <i class="bi bi-plus-circle"></i>
+                    Agregar cuenta
+                </button>
+
+            @endif
+
+        </div>
+
+    @endif
+
+</section>
 
             {{-- Docencia --}}
             <section class="portal-card portal-detail-card mb-0">
@@ -1684,7 +1816,687 @@
     </div>
 </div>
 
+{{-- Modal para agregar cuenta bancaria --}}
+<div
+    class="modal fade"
+    id="addBankAccountModal"
+    tabindex="-1"
+    aria-labelledby="addBankAccountModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
 
+        <div class="modal-content portal-modal">
+
+            <form
+                action="{{ route(
+                    'portal.empleados.cuentas-bancarias.store',
+                    $empleado
+                ) }}"
+                method="POST"
+            >
+                @csrf
+
+                <div class="modal-header">
+
+                    <div>
+                        <span class="portal-modal-eyebrow">
+                            Información financiera
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="addBankAccountModalLabel"
+                        >
+                            Agregar cuenta bancaria
+                        </h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+
+                            <label
+                                for="institucion_financiera_id"
+                                class="form-label portal-form-label"
+                            >
+                                Institución financiera
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <select
+                                name="institucion_financiera_id"
+                                id="institucion_financiera_id"
+                                class="form-select portal-form-control
+                                    @error('institucion_financiera_id') is-invalid @enderror"
+                                required
+                            >
+                                <option value="">
+                                    Seleccione una institución
+                                </option>
+
+                                @foreach ($institucionesFinancieras as $institucion)
+
+                                    <option
+                                        value="{{ $institucion->id }}"
+                                        @selected(
+                                            (string) old(
+                                                'institucion_financiera_id'
+                                            )
+                                            === (string) $institucion->id
+                                        )
+                                    >
+                                        {{ $institucion->nombre }}
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                            @error('institucion_financiera_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="numero_cuenta"
+                                class="form-label portal-form-label"
+                            >
+                                Número de cuenta
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                name="numero_cuenta"
+                                id="numero_cuenta"
+                                value="{{ old('numero_cuenta') }}"
+                                class="form-control portal-form-control
+                                    @error('numero_cuenta') is-invalid @enderror"
+                                maxlength="50"
+                                autocomplete="off"
+                                required
+                            >
+
+                            @error('numero_cuenta')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="tipo_cuenta"
+                                class="form-label portal-form-label"
+                            >
+                                Tipo de cuenta
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <select
+                                name="tipo_cuenta"
+                                id="tipo_cuenta"
+                                class="form-select portal-form-control
+                                    @error('tipo_cuenta') is-invalid @enderror"
+                                required
+                            >
+                                <option value="">
+                                    Seleccione una opción
+                                </option>
+
+                                <option
+                                    value="ahorros"
+                                    @selected(old('tipo_cuenta') === 'ahorros')
+                                >
+                                    Cuenta de ahorros
+                                </option>
+
+                                <option
+                                    value="cheques"
+                                    @selected(old('tipo_cuenta') === 'cheques')
+                                >
+                                    Cuenta de cheques
+                                </option>
+
+                                <option
+                                    value="corriente"
+                                    @selected(old('tipo_cuenta') === 'corriente')
+                                >
+                                    Cuenta corriente
+                                </option>
+
+                                <option
+                                    value="otro"
+                                    @selected(old('tipo_cuenta') === 'otro')
+                                >
+                                    Otro tipo
+                                </option>
+                            </select>
+
+                            @error('tipo_cuenta')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <div class="col-12 col-md-4">
+
+                            <label
+                                for="moneda"
+                                class="form-label portal-form-label"
+                            >
+                                Moneda
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <select
+                                name="moneda"
+                                id="moneda"
+                                class="form-select portal-form-control
+                                    @error('moneda') is-invalid @enderror"
+                                required
+                            >
+                                <option
+                                    value="HNL"
+                                    @selected(
+                                        old('moneda', 'HNL') === 'HNL'
+                                    )
+                                >
+                                    Lempiras (HNL)
+                                </option>
+
+                                <option
+                                    value="USD"
+                                    @selected(old('moneda') === 'USD')
+                                >
+                                    Dólares (USD)
+                                </option>
+
+                                <option
+                                    value="EUR"
+                                    @selected(old('moneda') === 'EUR')
+                                >
+                                    Euros (EUR)
+                                </option>
+                            </select>
+
+                            @error('moneda')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <div class="col-12 col-md-8">
+
+                            <label
+                                for="nombre_titular"
+                                class="form-label portal-form-label"
+                            >
+                                Nombre del titular
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                name="nombre_titular"
+                                id="nombre_titular"
+                                value="{{ old(
+                                    'nombre_titular',
+                                    $persona->nombre_completo
+                                ) }}"
+                                class="form-control portal-form-control
+                                    @error('nombre_titular') is-invalid @enderror"
+                                maxlength="180"
+                                required
+                            >
+
+                            @error('nombre_titular')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="fecha_inicio_cuenta"
+                                class="form-label portal-form-label"
+                            >
+                                Fecha de inicio
+                            </label>
+
+                            <input
+                                type="date"
+                                name="fecha_inicio"
+                                id="fecha_inicio_cuenta"
+                                value="{{ old('fecha_inicio') }}"
+                                class="form-control portal-form-control
+                                    @error('fecha_inicio') is-invalid @enderror"
+                            >
+
+                            @error('fecha_inicio')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="fecha_fin_cuenta"
+                                class="form-label portal-form-label"
+                            >
+                                Fecha de finalización
+                            </label>
+
+                            <input
+                                type="date"
+                                name="fecha_fin"
+                                id="fecha_fin_cuenta"
+                                value="{{ old('fecha_fin') }}"
+                                class="form-control portal-form-control
+                                    @error('fecha_fin') is-invalid @enderror"
+                            >
+
+                            @error('fecha_fin')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+
+                            <div class="portal-form-help">
+                                Déjela vacía si la cuenta continúa vigente.
+                            </div>
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <div class="portal-responsible-options">
+
+                                <div class="form-check form-switch">
+
+                                    <input
+                                        type="checkbox"
+                                        name="es_principal"
+                                        value="1"
+                                        id="bank_es_principal"
+                                        class="form-check-input"
+                                        @checked(old('es_principal'))
+                                    >
+
+                                    <label
+                                        for="bank_es_principal"
+                                        class="form-check-label"
+                                    >
+                                        Cuenta principal
+                                    </label>
+
+                                    <small>
+                                        Será la cuenta bancaria principal
+                                        del empleado.
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="activo"
+                        value="1"
+                    >
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                    >
+                        <i class="bi bi-check2-circle"></i>
+                        Guardar cuenta
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+
+{{-- Modal para editar cuenta bancaria --}}
+<div
+    class="modal fade"
+    id="editBankAccountModal"
+    tabindex="-1"
+    aria-labelledby="editBankAccountModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                method="POST"
+                id="editBankAccountForm"
+            >
+                @csrf
+                @method('PUT')
+
+                <div class="modal-header">
+
+                    <div>
+                        <span class="portal-modal-eyebrow">
+                            Información financiera
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="editBankAccountModalLabel"
+                        >
+                            Editar cuenta bancaria
+                        </h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+
+                            <label
+                                for="edit_institucion_financiera_id"
+                                class="form-label portal-form-label"
+                            >
+                                Institución financiera
+                            </label>
+
+                            <select
+                                name="institucion_financiera_id"
+                                id="edit_institucion_financiera_id"
+                                class="form-select portal-form-control"
+                                required
+                            >
+                                @foreach ($institucionesFinancieras as $institucion)
+
+                                    <option value="{{ $institucion->id }}">
+                                        {{ $institucion->nombre }}
+                                    </option>
+
+                                @endforeach
+                            </select>
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="edit_numero_cuenta"
+                                class="form-label portal-form-label"
+                            >
+                                Número de cuenta
+                            </label>
+
+                            <input
+                                type="text"
+                                name="numero_cuenta"
+                                id="edit_numero_cuenta"
+                                maxlength="50"
+                                class="form-control portal-form-control"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="edit_tipo_cuenta"
+                                class="form-label portal-form-label"
+                            >
+                                Tipo de cuenta
+                            </label>
+
+                            <select
+                                name="tipo_cuenta"
+                                id="edit_tipo_cuenta"
+                                class="form-select portal-form-control"
+                                required
+                            >
+                                <option value="ahorros">
+                                    Cuenta de ahorros
+                                </option>
+
+                                <option value="cheques">
+                                    Cuenta de cheques
+                                </option>
+
+                                <option value="corriente">
+                                    Cuenta corriente
+                                </option>
+
+                                <option value="otro">
+                                    Otro tipo
+                                </option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-12 col-md-4">
+
+                            <label
+                                for="edit_moneda"
+                                class="form-label portal-form-label"
+                            >
+                                Moneda
+                            </label>
+
+                            <select
+                                name="moneda"
+                                id="edit_moneda"
+                                class="form-select portal-form-control"
+                                required
+                            >
+                                <option value="HNL">
+                                    Lempiras (HNL)
+                                </option>
+
+                                <option value="USD">
+                                    Dólares (USD)
+                                </option>
+
+                                <option value="EUR">
+                                    Euros (EUR)
+                                </option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-12 col-md-8">
+
+                            <label
+                                for="edit_nombre_titular"
+                                class="form-label portal-form-label"
+                            >
+                                Nombre del titular
+                            </label>
+
+                            <input
+                                type="text"
+                                name="nombre_titular"
+                                id="edit_nombre_titular"
+                                maxlength="180"
+                                class="form-control portal-form-control"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="edit_fecha_inicio_cuenta"
+                                class="form-label portal-form-label"
+                            >
+                                Fecha de inicio
+                            </label>
+
+                            <input
+                                type="date"
+                                name="fecha_inicio"
+                                id="edit_fecha_inicio_cuenta"
+                                class="form-control portal-form-control"
+                            >
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="edit_fecha_fin_cuenta"
+                                class="form-label portal-form-label"
+                            >
+                                Fecha de finalización
+                            </label>
+
+                            <input
+                                type="date"
+                                name="fecha_fin"
+                                id="edit_fecha_fin_cuenta"
+                                class="form-control portal-form-control"
+                            >
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <div class="portal-responsible-options">
+
+                                <div class="form-check form-switch">
+
+                                    <input
+                                        type="checkbox"
+                                        name="es_principal"
+                                        value="1"
+                                        id="edit_bank_es_principal"
+                                        class="form-check-input"
+                                    >
+
+                                    <label
+                                        for="edit_bank_es_principal"
+                                        class="form-check-label"
+                                    >
+                                        Cuenta principal
+                                    </label>
+
+                                </div>
+
+                                <div class="form-check form-switch">
+
+                                    <input
+                                        type="checkbox"
+                                        name="activo"
+                                        value="1"
+                                        id="edit_bank_activo"
+                                        class="form-check-input"
+                                    >
+
+                                    <label
+                                        for="edit_bank_activo"
+                                        class="form-check-label"
+                                    >
+                                        Cuenta activa
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                    >
+                        <i class="bi bi-check2-circle"></i>
+                        Guardar cambios
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
 
     {{-- =====================================================
          Modal de cambio de estado
@@ -1893,6 +2705,134 @@
                 'edit_academic_observaciones'
             ).value =
                 button.dataset.observaciones || '';
+        });
+    });
+</script>
+
+@endpush
+
+@push('scripts')
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const editModal = document.getElementById(
+            'editBankAccountModal'
+        );
+
+        const createStartDate = document.getElementById(
+            'fecha_inicio_cuenta'
+        );
+
+        const createEndDate = document.getElementById(
+            'fecha_fin_cuenta'
+        );
+
+        const updateCreateEndDateMinimum = () => {
+            if (
+                !createStartDate ||
+                !createEndDate
+            ) {
+                return;
+            }
+
+            createEndDate.min =
+                createStartDate.value || '';
+        };
+
+        createStartDate?.addEventListener(
+            'change',
+            updateCreateEndDateMinimum
+        );
+
+        updateCreateEndDateMinimum();
+
+        if (!editModal) {
+            return;
+        }
+
+        editModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+
+            if (!button) {
+                return;
+            }
+
+            const form = document.getElementById(
+                'editBankAccountForm'
+            );
+
+            const institution = document.getElementById(
+                'edit_institucion_financiera_id'
+            );
+
+            const accountNumber = document.getElementById(
+                'edit_numero_cuenta'
+            );
+
+            const accountType = document.getElementById(
+                'edit_tipo_cuenta'
+            );
+
+            const currency = document.getElementById(
+                'edit_moneda'
+            );
+
+            const holder = document.getElementById(
+                'edit_nombre_titular'
+            );
+
+            const principal = document.getElementById(
+                'edit_bank_es_principal'
+            );
+
+            const active = document.getElementById(
+                'edit_bank_activo'
+            );
+
+            const startDate = document.getElementById(
+                'edit_fecha_inicio_cuenta'
+            );
+
+            const endDate = document.getElementById(
+                'edit_fecha_fin_cuenta'
+            );
+
+            form.action = button.dataset.action;
+
+            institution.value =
+                button.dataset.institucion || '';
+
+            accountNumber.value =
+                button.dataset.numero || '';
+
+            accountType.value =
+                button.dataset.tipo || '';
+
+            currency.value =
+                button.dataset.moneda || 'HNL';
+
+            holder.value =
+                button.dataset.titular || '';
+
+            principal.checked =
+                button.dataset.principal === '1';
+
+            active.checked =
+                button.dataset.activo === '1';
+
+            startDate.value =
+                button.dataset.inicio || '';
+
+            endDate.value =
+                button.dataset.fin || '';
+
+            endDate.min =
+                startDate.value || '';
+
+            startDate.onchange = () => {
+                endDate.min =
+                    startDate.value || '';
+            };
         });
     });
 </script>

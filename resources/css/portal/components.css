@@ -1831,3 +1831,10 @@ textarea.portal-form-control {
 .portal-academic-item-inactive {
     opacity: 0.65;
 }
+.portal-bank-item .dropdown {
+    flex-shrink: 0;
+}
+
+.portal-bank-info small + small {
+    margin-top: 3px;
+}
