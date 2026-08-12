@@ -234,47 +234,76 @@
 
                     @endif
 
-                    @if ($empleado->docente)
 
-                        <div class="portal-profile-action">
 
-                            <span>
-                                <i class="bi bi-easel"></i>
-                            </span>
+                   @if ($empleado->docente)
 
-                            <div>
-                                <strong>También es docente</strong>
+    <a
+        href="{{ route(
+            'portal.docentes.show',
+            $empleado->docente
+        ) }}"
+        class="portal-profile-action"
+    >
+        <span>
+            <i class="bi bi-easel"></i>
+        </span>
 
-                                <small>
-                                    {{ $empleado->docente->codigo_docente }}
-                                </small>
-                            </div>
+        <div>
+            <strong>Ver perfil docente</strong>
 
-                            <i class="bi bi-check-circle"></i>
+            <small>
+                {{ $empleado->docente->codigo_docente }}
+            </small>
+        </div>
 
-                        </div>
+        <i class="bi bi-chevron-right"></i>
+    </a>
 
-                    @else
+@elseif ($empleado->estado === 'activo')
 
-                        <div class="portal-profile-action">
+    <a
+        href="{{ route(
+            'portal.docentes.create',
+            ['empleado' => $empleado->id]
+        ) }}"
+        class="portal-profile-action"
+    >
+        <span>
+            <i class="bi bi-person-video3"></i>
+        </span>
 
-                            <span>
-                                <i class="bi bi-easel"></i>
-                            </span>
+        <div>
+            <strong>Registrar como docente</strong>
 
-                            <div>
-                                <strong>No registrado como docente</strong>
+            <small>
+                Crear perfil docente
+            </small>
+        </div>
 
-                                <small>
-                                    Podrá asociarse desde el módulo Docentes.
-                                </small>
-                            </div>
+        <i class="bi bi-chevron-right"></i>
+    </a>
 
-                            <i class="bi bi-dash-circle"></i>
+@else
 
-                        </div>
+    <div class="portal-profile-action">
 
-                    @endif
+        <span>
+            <i class="bi bi-easel"></i>
+        </span>
+
+        <div>
+            <strong>Empleado inactivo</strong>
+
+            <small>
+                Active primero al empleado para registrarlo como docente.
+            </small>
+        </div>
+
+        <i class="bi bi-dash-circle"></i>
+    </div>
+
+@endif
 
                     <button
                         type="button"

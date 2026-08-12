@@ -1,8 +1,8 @@
 @extends('layouts.portal')
 
-@section('title', 'Editar empleado | Portal EDMA')
+@section('title', 'Editar docente | Portal EDMA')
 
-@section('page-title', 'Editar empleado')
+@section('page-title', 'Editar docente')
 
 @section('page-header')
 
@@ -10,25 +10,25 @@
 
         <div>
             <span class="portal-page-eyebrow">
-                Gestión de recursos humanos
+                Gestión académica
             </span>
 
-            <h1>Editar expediente laboral</h1>
+            <h1>Editar perfil docente</h1>
 
             <p>
-                Actualice la información laboral de
-                {{ $empleado->persona->nombre_completo }}.
+                Actualice la información docente de
+                {{ $docente->empleado->persona->nombre_completo }}.
             </p>
         </div>
 
         <div class="portal-page-actions">
 
             <a
-                href="{{ route('portal.empleados.show', $empleado) }}"
+                href="{{ route('portal.docentes.show', $docente) }}"
                 class="btn portal-btn-secondary"
             >
                 <i class="bi bi-arrow-left"></i>
-                Volver al expediente
+                Volver al perfil
             </a>
 
         </div>
@@ -40,16 +40,16 @@
 @section('content')
 
     <form
-        action="{{ route('portal.empleados.update', $empleado) }}"
+        action="{{ route('portal.docentes.update', $docente) }}"
         method="POST"
-        id="empleadoForm"
+        id="docenteForm"
         novalidate
     >
         @csrf
         @method('PUT')
 
-        @include('portal.empleados.partials._form', [
-            'empleado' => $empleado,
+        @include('portal.docentes.partials._form', [
+            'docente' => $docente,
             'modoEdicion' => true,
         ])
 

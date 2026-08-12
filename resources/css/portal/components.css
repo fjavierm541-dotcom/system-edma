@@ -1838,3 +1838,31 @@ textarea.portal-form-control {
 .portal-bank-info small + small {
     margin-top: 3px;
 }
+
+
+/* =========================================================
+   Listado de docentes
+   ========================================================= */
+
+.portal-teacher-table {
+    min-width: 1100px;
+}
+
+.portal-teacher-code {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 9px;
+    border: 1px solid rgba(18, 61, 106, 0.1);
+    border-radius: 7px;
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary-dark);
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+    font-size: 0.7rem;
+    font-weight: 750;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}

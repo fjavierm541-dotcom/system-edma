@@ -8,7 +8,7 @@ use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Portal\FormacionAcademicaController;
 use App\Http\Controllers\Portal\CuentaBancariaController;
-
+use App\Http\Controllers\Portal\DocenteController;
 /*
 |--------------------------------------------------------------------------
 | Página web institucional
@@ -159,6 +159,23 @@ Route::patch(
     'empleados/{empleado}/cuentas-bancarias/{cuenta}/estado',
     [CuentaBancariaController::class, 'cambiarEstado']
 )->name('empleados.cuentas-bancarias.cambiar-estado');
+
+
+/*
+|--------------------------------------------------------------------------
+| Docentes
+|--------------------------------------------------------------------------
+*/
+
+        Route::patch(
+            'docentes/{docente}/estado',
+            [DocenteController::class, 'cambiarEstado']
+        )->name('docentes.cambiar-estado');
+
+        Route::resource(
+            'docentes',
+            DocenteController::class
+        )->except('destroy');
 
 
 

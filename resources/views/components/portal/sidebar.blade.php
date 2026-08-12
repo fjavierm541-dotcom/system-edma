@@ -82,10 +82,13 @@
             </a>
 
             <a
-                href="#"
-                class="portal-menu-link"
+                href="{{ route('portal.docentes.index') }}"
+                class="portal-menu-link
+                    {{ request()->routeIs('portal.docentes.*')
+                        ? 'active'
+                        : '' }}"
             >
-                <i class="bi bi-person-workspace"></i>
+                <i class="bi bi-easel"></i>
 
                 <span>Docentes</span>
             </a>
