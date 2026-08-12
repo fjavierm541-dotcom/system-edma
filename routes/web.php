@@ -10,6 +10,9 @@ use App\Http\Controllers\Portal\FormacionAcademicaController;
 use App\Http\Controllers\Portal\CuentaBancariaController;
 use App\Http\Controllers\Portal\DocenteController;
 use App\Http\Controllers\Portal\ProgramaController;
+use App\Http\Controllers\Portal\NivelController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Página web institucional
@@ -193,6 +196,29 @@ Route::patch(
             'programas',
             ProgramaController::class
         )->except('destroy');
+
+        /*
+|--------------------------------------------------------------------------
+| Niveles académicos
+|--------------------------------------------------------------------------
+*/
+
+Route::patch(
+    'niveles/{nivel}/estado',
+    [NivelController::class, 'cambiarEstado']
+)->name('niveles.cambiar-estado');
+
+Route::resource(
+    'niveles',
+    NivelController::class
+)
+    ->parameters([
+        'niveles' => 'nivel',
+    ])
+    ->except('destroy');
+
+
+
 
     });
 
