@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Portal\FormacionAcademicaController;
 use App\Http\Controllers\Portal\CuentaBancariaController;
 use App\Http\Controllers\Portal\DocenteController;
+use App\Http\Controllers\Portal\ProgramaController;
 /*
 |--------------------------------------------------------------------------
 | Página web institucional
@@ -177,7 +178,21 @@ Route::patch(
             DocenteController::class
         )->except('destroy');
 
+        /*
+        |--------------------------------------------------------------------------
+        | Programas académicos
+        |--------------------------------------------------------------------------
+        */
 
+        Route::patch(
+            'programas/{programa}/estado',
+            [ProgramaController::class, 'cambiarEstado']
+        )->name('programas.cambiar-estado');
+
+        Route::resource(
+            'programas',
+            ProgramaController::class
+        )->except('destroy');
 
     });
 
