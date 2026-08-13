@@ -11,6 +11,7 @@ use App\Http\Controllers\Portal\CuentaBancariaController;
 use App\Http\Controllers\Portal\DocenteController;
 use App\Http\Controllers\Portal\ProgramaController;
 use App\Http\Controllers\Portal\NivelController;
+use App\Http\Controllers\Portal\PeriodoAcademicoController;
 
 
 /*
@@ -218,6 +219,25 @@ Route::resource(
     ->except('destroy');
 
 
+    /*
+|--------------------------------------------------------------------------
+| Períodos académicos
+|--------------------------------------------------------------------------
+*/
+
+Route::patch(
+    'periodos/{periodo}/estado',
+    [PeriodoAcademicoController::class, 'cambiarEstado']
+)->name('periodos.cambiar-estado');
+
+Route::resource(
+    'periodos',
+    PeriodoAcademicoController::class
+)
+    ->parameters([
+        'periodos' => 'periodo',
+    ])
+    ->except('destroy');
 
 
     });
