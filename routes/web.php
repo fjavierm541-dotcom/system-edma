@@ -12,6 +12,7 @@ use App\Http\Controllers\Portal\DocenteController;
 use App\Http\Controllers\Portal\ProgramaController;
 use App\Http\Controllers\Portal\NivelController;
 use App\Http\Controllers\Portal\PeriodoAcademicoController;
+use App\Http\Controllers\Portal\HorarioController;
 
 
 /*
@@ -121,56 +122,56 @@ Route::prefix('portal')
         )->except('destroy');
 
 
+                /*
+        |--------------------------------------------------------------------------
+        | Formación académica
+        |--------------------------------------------------------------------------
+        */
+
+        Route::post(
+            'empleados/{empleado}/formaciones-academicas',
+            [FormacionAcademicaController::class, 'store']
+        )->name('empleados.formaciones-academicas.store');
+
+        Route::put(
+            'empleados/{empleado}/formaciones-academicas/{formacion}',
+            [FormacionAcademicaController::class, 'update']
+        )->name('empleados.formaciones-academicas.update');
+
+        Route::patch(
+            'empleados/{empleado}/formaciones-academicas/{formacion}/estado',
+            [FormacionAcademicaController::class, 'cambiarEstado']
+        )->name('empleados.formaciones-academicas.cambiar-estado');
+
+
+
         /*
-|--------------------------------------------------------------------------
-| Formación académica
-|--------------------------------------------------------------------------
-*/
+        |--------------------------------------------------------------------------
+        | Cuentas bancarias
+        |--------------------------------------------------------------------------
+        */
 
-Route::post(
-    'empleados/{empleado}/formaciones-academicas',
-    [FormacionAcademicaController::class, 'store']
-)->name('empleados.formaciones-academicas.store');
+        Route::post(
+            'empleados/{empleado}/cuentas-bancarias',
+            [CuentaBancariaController::class, 'store']
+        )->name('empleados.cuentas-bancarias.store');
 
-Route::put(
-    'empleados/{empleado}/formaciones-academicas/{formacion}',
-    [FormacionAcademicaController::class, 'update']
-)->name('empleados.formaciones-academicas.update');
+        Route::put(
+            'empleados/{empleado}/cuentas-bancarias/{cuenta}',
+            [CuentaBancariaController::class, 'update']
+        )->name('empleados.cuentas-bancarias.update');
 
-Route::patch(
-    'empleados/{empleado}/formaciones-academicas/{formacion}/estado',
-    [FormacionAcademicaController::class, 'cambiarEstado']
-)->name('empleados.formaciones-academicas.cambiar-estado');
-
-
-
-/*
-|--------------------------------------------------------------------------
-| Cuentas bancarias
-|--------------------------------------------------------------------------
-*/
-
-Route::post(
-    'empleados/{empleado}/cuentas-bancarias',
-    [CuentaBancariaController::class, 'store']
-)->name('empleados.cuentas-bancarias.store');
-
-Route::put(
-    'empleados/{empleado}/cuentas-bancarias/{cuenta}',
-    [CuentaBancariaController::class, 'update']
-)->name('empleados.cuentas-bancarias.update');
-
-Route::patch(
-    'empleados/{empleado}/cuentas-bancarias/{cuenta}/estado',
-    [CuentaBancariaController::class, 'cambiarEstado']
-)->name('empleados.cuentas-bancarias.cambiar-estado');
+        Route::patch(
+            'empleados/{empleado}/cuentas-bancarias/{cuenta}/estado',
+            [CuentaBancariaController::class, 'cambiarEstado']
+        )->name('empleados.cuentas-bancarias.cambiar-estado');
 
 
-/*
-|--------------------------------------------------------------------------
-| Docentes
-|--------------------------------------------------------------------------
-*/
+        /*
+        |--------------------------------------------------------------------------
+        | Docentes
+        |--------------------------------------------------------------------------
+        */
 
         Route::patch(
             'docentes/{docente}/estado',
@@ -198,47 +199,67 @@ Route::patch(
             ProgramaController::class
         )->except('destroy');
 
+            /*
+    |--------------------------------------------------------------------------
+    | Niveles académicos
+    |--------------------------------------------------------------------------
+    */
+
+    Route::patch(
+        'niveles/{nivel}/estado',
+        [NivelController::class, 'cambiarEstado']
+    )->name('niveles.cambiar-estado');
+
+    Route::resource(
+        'niveles',
+        NivelController::class
+    )
+        ->parameters([
+            'niveles' => 'nivel',
+        ])
+        ->except('destroy');
+
+
         /*
-|--------------------------------------------------------------------------
-| Niveles académicos
-|--------------------------------------------------------------------------
-*/
+    |--------------------------------------------------------------------------
+    | Períodos académicos
+    |--------------------------------------------------------------------------
+    */
 
-Route::patch(
-    'niveles/{nivel}/estado',
-    [NivelController::class, 'cambiarEstado']
-)->name('niveles.cambiar-estado');
+    Route::patch(
+        'periodos/{periodo}/estado',
+        [PeriodoAcademicoController::class, 'cambiarEstado']
+    )->name('periodos.cambiar-estado');
 
-Route::resource(
-    'niveles',
-    NivelController::class
-)
-    ->parameters([
-        'niveles' => 'nivel',
-    ])
-    ->except('destroy');
+    Route::resource(
+        'periodos',
+        PeriodoAcademicoController::class
+    )
+        ->parameters([
+            'periodos' => 'periodo',
+        ])
+        ->except('destroy');
 
 
-    /*
-|--------------------------------------------------------------------------
-| Períodos académicos
-|--------------------------------------------------------------------------
-*/
+        /*
+    |--------------------------------------------------------------------------
+    | Horarios
+    |--------------------------------------------------------------------------
+    */
 
-Route::patch(
-    'periodos/{periodo}/estado',
-    [PeriodoAcademicoController::class, 'cambiarEstado']
-)->name('periodos.cambiar-estado');
+    Route::patch(
+        'horarios/{horario}/estado',
+        [HorarioController::class, 'cambiarEstado']
+    )->name('horarios.cambiar-estado');
 
-Route::resource(
-    'periodos',
-    PeriodoAcademicoController::class
-)
-    ->parameters([
-        'periodos' => 'periodo',
-    ])
-    ->except('destroy');
-
+    Route::resource(
+        'horarios',
+        HorarioController::class
+    )
+        ->parameters([
+            'horarios' => 'horario',
+        ])
+        ->except('destroy');
 
     });
 
