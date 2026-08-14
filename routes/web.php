@@ -13,6 +13,7 @@ use App\Http\Controllers\Portal\ProgramaController;
 use App\Http\Controllers\Portal\NivelController;
 use App\Http\Controllers\Portal\PeriodoAcademicoController;
 use App\Http\Controllers\Portal\HorarioController;
+use App\Http\Controllers\Portal\GrupoController;
 
 
 /*
@@ -260,6 +261,27 @@ Route::prefix('portal')
             'horarios' => 'horario',
         ])
         ->except('destroy');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Grupos académicos
+        |--------------------------------------------------------------------------
+        */
+
+        Route::patch(
+            'grupos/{grupo}/estado',
+            [GrupoController::class, 'cambiarEstado']
+        )->name('grupos.cambiar-estado');
+
+        Route::resource(
+            'grupos',
+            GrupoController::class
+        )
+            ->parameters([
+                'grupos' => 'grupo',
+            ])
+            ->except('destroy');
 
     });
 
