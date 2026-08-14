@@ -463,38 +463,288 @@
 
             </section>
 
+            {{-- Docente responsable --}}
             <section class="portal-card portal-detail-card mb-0">
 
-                <div class="portal-form-section-header">
+                <div class="portal-form-section-header portal-section-header-actions">
 
-                    <div class="portal-form-section-icon">
-                        <i class="bi bi-easel"></i>
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="portal-form-section-icon">
+                            <i class="bi bi-easel"></i>
+                        </div>
+
+                        <div>
+                            <h2>Docente responsable</h2>
+
+                            <p>
+                                Consulte la asignación docente actual
+                                y el historial del grupo.
+                            </p>
+                        </div>
+
                     </div>
 
-                    <div>
-                        <h2>Docentes</h2>
+                    @php
+                        $tieneDocenteActivo =
+                            $grupo->docentes
+                                ->contains(
+                                    fn ($asignacion) =>
+                                        $asignacion->activo
+                                );
+                    @endphp
+
+                    @if (
+                        !$tieneDocenteActivo &&
+                        $grupo->estado === 'activo' &&
+                        $docentesDisponibles->isNotEmpty()
+                    )
+
+                        <button
+                            type="button"
+                            class="btn portal-btn-secondary btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addGroupTeacherModal"
+                        >
+                            <i class="bi bi-person-plus"></i>
+                            Asignar docente
+                        </button>
+
+                    @endif
+
+                </div>
+
+                @if ($grupo->docentes->isNotEmpty())
+
+                    <div class="portal-academic-list">
+
+                        @foreach ($grupo->docentes as $asignacion)
+
+                            @php
+                                $docente =
+                                    $asignacion->docente;
+
+                                $persona =
+                                    $docente?->empleado?->persona;
+                            @endphp
+
+                            <article
+                                class="portal-academic-item
+                                    {{ !$asignacion->activo
+                                        ? 'portal-academic-item-inactive'
+                                        : '' }}"
+                            >
+
+                                <div class="portal-academic-icon">
+                                    <i class="bi bi-person-video3"></i>
+                                </div>
+
+                                <div class="portal-academic-info">
+
+                                    <div class="d-flex align-items-center flex-wrap gap-2">
+
+                                        <strong>
+                                            {{ $persona?->nombre_completo
+                                                ?: 'Docente no disponible' }}
+                                        </strong>
+
+                                        @if ($asignacion->activo)
+
+                                            <span class="portal-small-badge">
+                                                Docente actual
+                                            </span>
+
+                                        @else
+
+                                            <span class="portal-status-badge portal-status-inactive">
+                                                Historial
+                                            </span>
+
+                                        @endif
+
+                                    </div>
+
+                                    <span>
+                                        {{ $docente?->codigo_docente
+                                            ?: 'Sin código docente' }}
+                                    </span>
+
+                                    <small>
+
+                                        Desde
+
+                                        {{ $asignacion->fecha_inicio
+                                            ? $asignacion
+                                                ->fecha_inicio
+                                                ->translatedFormat(
+                                                    'd M Y'
+                                                )
+                                            : 'fecha no registrada' }}
+
+                                        @if ($asignacion->fecha_fin)
+
+                                            · Hasta
+
+                                            {{ $asignacion
+                                                ->fecha_fin
+                                                ->translatedFormat(
+                                                    'd M Y'
+                                                ) }}
+
+                                        @endif
+
+                                    </small>
+
+                                    @if ($asignacion->observaciones)
+
+                                        <small>
+                                            {{ $asignacion->observaciones }}
+                                        </small>
+
+                                    @endif
+
+                                </div>
+
+                                <div class="dropdown">
+
+                                    <button
+                                        type="button"
+                                        class="portal-table-action"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        aria-label="Opciones de la asignación docente"
+                                    >
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end portal-actions-menu">
+
+                                        <li>
+
+                                            <button
+                                                type="button"
+                                                class="dropdown-item"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editGroupTeacherModal"
+
+                                                data-action="{{ route(
+                                                    'portal.grupos.docentes.update',
+                                                    [
+                                                        $grupo,
+                                                        $asignacion
+                                                    ]
+                                                ) }}"
+
+                                                data-docente="{{ $asignacion->docente_id }}"
+
+                                                data-inicio="{{ $asignacion
+                                                    ->fecha_inicio
+                                                    ?->format('Y-m-d') }}"
+
+                                                data-fin="{{ $asignacion
+                                                    ->fecha_fin
+                                                    ?->format('Y-m-d') }}"
+
+                                                data-activo="{{ $asignacion->activo
+                                                    ? '1'
+                                                    : '0' }}"
+
+                                                data-observaciones="{{ $asignacion->observaciones }}"
+                                            >
+                                                <i class="bi bi-pencil-square"></i>
+                                                Editar asignación
+                                            </button>
+
+                                        </li>
+
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+
+                                        <li>
+
+                                            <button
+                                                type="button"
+                                                class="dropdown-item
+                                                    {{ $asignacion->activo
+                                                        ? 'text-warning-emphasis'
+                                                        : 'text-success' }}"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#changeGroupTeacherStatusModal"
+
+                                                data-action="{{ route(
+                                                    'portal.grupos.docentes.cambiar-estado',
+                                                    [
+                                                        $grupo,
+                                                        $asignacion
+                                                    ]
+                                                ) }}"
+
+                                                data-name="{{ $persona?->nombre_completo
+                                                    ?: 'este docente' }}"
+
+                                                data-active="{{ $asignacion->activo
+                                                    ? '1'
+                                                    : '0' }}"
+                                            >
+                                                <i class="bi
+                                                    {{ $asignacion->activo
+                                                        ? 'bi-person-dash'
+                                                        : 'bi-person-check' }}">
+                                                </i>
+
+                                                {{ $asignacion->activo
+                                                    ? 'Finalizar asignación'
+                                                    : 'Reactivar asignación' }}
+                                            </button>
+
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+
+                            </article>
+
+                        @endforeach
+
+                    </div>
+
+                @else
+
+                    <div class="portal-empty-state portal-empty-state-documents">
+
+                        <div class="portal-empty-icon">
+                            <i class="bi bi-easel"></i>
+                        </div>
+
+                        <h3>No hay docente asignado</h3>
 
                         <p>
-                            Docentes asignados al grupo.
+                            Asigne al docente que estará a cargo
+                            de este grupo académico.
                         </p>
+
+                        @if (
+                            $grupo->estado === 'activo' &&
+                            $docentesDisponibles->isNotEmpty()
+                        )
+
+                            <button
+                                type="button"
+                                class="btn portal-btn-primary mt-3"
+                                data-bs-toggle="modal"
+                                data-bs-target="#addGroupTeacherModal"
+                            >
+                                <i class="bi bi-person-plus"></i>
+                                Asignar docente
+                            </button>
+
+                        @endif
+
                     </div>
 
-                </div>
-
-                <div class="portal-empty-state portal-empty-state-documents">
-
-                    <div class="portal-empty-icon">
-                        <i class="bi bi-easel"></i>
-                    </div>
-
-                    <h3>Asignación docente pendiente</h3>
-
-                    <p>
-                        Una vez configurados los horarios,
-                        podrá asignarse el docente responsable.
-                    </p>
-
-                </div>
+                @endif
 
             </section>
 
@@ -907,6 +1157,515 @@
 
 
 
+{{-- Modal: asignar docente --}}
+<div
+    class="modal fade"
+    id="addGroupTeacherModal"
+    tabindex="-1"
+    aria-labelledby="addGroupTeacherModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                action="{{ route(
+                    'portal.grupos.docentes.store',
+                    $grupo
+                ) }}"
+                method="POST"
+            >
+                @csrf
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <span class="portal-modal-eyebrow">
+                            Organización del grupo
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="addGroupTeacherModalLabel"
+                        >
+                            Asignar docente responsable
+                        </h2>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+
+                            <label
+                                for="docente_id"
+                                class="form-label portal-form-label"
+                            >
+                                Docente
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <select
+                                name="docente_id"
+                                id="docente_id"
+                                class="form-select portal-form-control"
+                                required
+                            >
+                                <option value="">
+                                    Seleccione un docente
+                                </option>
+
+                                @foreach (
+                                    $docentesDisponibles
+                                    as $docente
+                                )
+
+                                    <option value="{{ $docente->id }}">
+
+                                        {{ $docente
+                                            ->empleado
+                                            ?->persona
+                                            ?->nombre_completo }}
+
+                                        ·
+
+                                        {{ $docente->codigo_docente }}
+
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                            <div class="portal-form-help">
+                                Se muestran los docentes activos
+                                disponibles en el sistema.
+                            </div>
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="teacher_fecha_inicio"
+                                class="form-label portal-form-label"
+                            >
+                                Inicio de la asignación
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <input
+                                type="date"
+                                name="fecha_inicio"
+                                id="teacher_fecha_inicio"
+                                value="{{ $grupo
+                                    ->fecha_inicio
+                                    ?->format('Y-m-d') }}"
+                                min="{{ $grupo
+                                    ->fecha_inicio
+                                    ?->format('Y-m-d') }}"
+                                max="{{ $grupo
+                                    ->fecha_fin
+                                    ?->format('Y-m-d') }}"
+                                class="form-control portal-form-control"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="teacher_fecha_fin"
+                                class="form-label portal-form-label"
+                            >
+                                Fecha de finalización
+                            </label>
+
+                            <input
+                                type="date"
+                                name="fecha_fin"
+                                id="teacher_fecha_fin"
+                                min="{{ $grupo
+                                    ->fecha_inicio
+                                    ?->format('Y-m-d') }}"
+                                max="{{ $grupo
+                                    ->fecha_fin
+                                    ?->format('Y-m-d') }}"
+                                class="form-control portal-form-control"
+                            >
+
+                            <div class="portal-form-help">
+                                Puede dejarse vacía mientras el docente
+                                continúe a cargo del grupo.
+                            </div>
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <label
+                                for="teacher_observaciones"
+                                class="form-label portal-form-label"
+                            >
+                                Observaciones
+                            </label>
+
+                            <textarea
+                                name="observaciones"
+                                id="teacher_observaciones"
+                                rows="3"
+                                maxlength="2000"
+                                class="form-control portal-form-control"
+                                placeholder="Información adicional sobre la asignación..."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="tipo_asignacion"
+                        value="principal"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="activo"
+                        value="1"
+                    >
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                    >
+                        <i class="bi bi-person-check"></i>
+                        Asignar docente
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+{{-- Modal: editar asignación docente --}}
+<div
+    class="modal fade"
+    id="editGroupTeacherModal"
+    tabindex="-1"
+    aria-labelledby="editGroupTeacherModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                method="POST"
+                id="editGroupTeacherForm"
+            >
+                @csrf
+                @method('PUT')
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <span class="portal-modal-eyebrow">
+                            Asignación docente
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="editGroupTeacherModalLabel"
+                        >
+                            Editar asignación
+                        </h2>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+
+                            <label
+                                for="edit_teacher_docente_id"
+                                class="form-label portal-form-label"
+                            >
+                                Docente
+                            </label>
+
+                            <select
+                                name="docente_id"
+                                id="edit_teacher_docente_id"
+                                class="form-select portal-form-control"
+                                required
+                            >
+
+                                @foreach (
+                                    $docentesDisponibles
+                                    as $docente
+                                )
+
+                                    <option value="{{ $docente->id }}">
+
+                                        {{ $docente
+                                            ->empleado
+                                            ?->persona
+                                            ?->nombre_completo }}
+
+                                        ·
+
+                                        {{ $docente->codigo_docente }}
+
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="edit_teacher_fecha_inicio"
+                                class="form-label portal-form-label"
+                            >
+                                Inicio
+                            </label>
+
+                            <input
+                                type="date"
+                                name="fecha_inicio"
+                                id="edit_teacher_fecha_inicio"
+                                min="{{ $grupo
+                                    ->fecha_inicio
+                                    ?->format('Y-m-d') }}"
+                                max="{{ $grupo
+                                    ->fecha_fin
+                                    ?->format('Y-m-d') }}"
+                                class="form-control portal-form-control"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="edit_teacher_fecha_fin"
+                                class="form-label portal-form-label"
+                            >
+                                Finalización
+                            </label>
+
+                            <input
+                                type="date"
+                                name="fecha_fin"
+                                id="edit_teacher_fecha_fin"
+                                min="{{ $grupo
+                                    ->fecha_inicio
+                                    ?->format('Y-m-d') }}"
+                                max="{{ $grupo
+                                    ->fecha_fin
+                                    ?->format('Y-m-d') }}"
+                                class="form-control portal-form-control"
+                            >
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <label
+                                for="edit_teacher_observaciones"
+                                class="form-label portal-form-label"
+                            >
+                                Observaciones
+                            </label>
+
+                            <textarea
+                                name="observaciones"
+                                id="edit_teacher_observaciones"
+                                rows="3"
+                                maxlength="2000"
+                                class="form-control portal-form-control"
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="tipo_asignacion"
+                        value="principal"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="activo"
+                        id="edit_teacher_activo"
+                        value="1"
+                    >
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                    >
+                        <i class="bi bi-check2-circle"></i>
+                        Guardar cambios
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+
+{{-- Modal: cambiar estado de asignación docente --}}
+<div
+    class="modal fade"
+    id="changeGroupTeacherStatusModal"
+    tabindex="-1"
+    aria-labelledby="changeGroupTeacherStatusModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                method="POST"
+                id="changeGroupTeacherStatusForm"
+            >
+                @csrf
+                @method('PATCH')
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <span class="portal-modal-eyebrow">
+                            Confirmación
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="changeGroupTeacherStatusModalLabel"
+                        >
+                            Cambiar asignación docente
+                        </h2>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="portal-modal-warning-icon">
+                        <i class="bi bi-person-gear"></i>
+                    </div>
+
+                    <p
+                        id="changeGroupTeacherStatusMessage"
+                        class="mb-0"
+                    ></p>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                        id="changeGroupTeacherStatusSubmit"
+                    >
+                        Confirmar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
 
 @push('scripts')
 
@@ -915,15 +1674,15 @@
 
         /*
         |--------------------------------------------------------------------------
-        | Editar asignación
+        | Editar asignación de horario
         |--------------------------------------------------------------------------
         */
 
-        const editModal = document.getElementById(
+        const editScheduleModal = document.getElementById(
             'editGroupScheduleModal'
         );
 
-        editModal?.addEventListener(
+        editScheduleModal?.addEventListener(
             'show.bs.modal',
             event => {
                 const button = event.relatedTarget;
@@ -936,32 +1695,42 @@
                     'editGroupScheduleForm'
                 );
 
-                form.action =
-                    button.dataset.action;
-
-                document.getElementById(
+                const day = document.getElementById(
                     'edit_dia_semana'
-                ).value =
-                    button.dataset.dia || '';
+                );
 
-                document.getElementById(
+                const schedule = document.getElementById(
                     'edit_horario_id'
-                ).value =
-                    button.dataset.horario || '';
+                );
+
+                if (form) {
+                    form.action =
+                        button.dataset.action || '';
+                }
+
+                if (day) {
+                    day.value =
+                        button.dataset.dia || '';
+                }
+
+                if (schedule) {
+                    schedule.value =
+                        button.dataset.horario || '';
+                }
             }
         );
 
         /*
         |--------------------------------------------------------------------------
-        | Quitar asignación
+        | Quitar horario del grupo
         |--------------------------------------------------------------------------
         */
 
-        const removeModal = document.getElementById(
+        const removeScheduleModal = document.getElementById(
             'removeGroupScheduleModal'
         );
 
-        removeModal?.addEventListener(
+        removeScheduleModal?.addEventListener(
             'show.bs.modal',
             event => {
                 const button = event.relatedTarget;
@@ -982,16 +1751,231 @@
                     'removeGroupScheduleName'
                 );
 
-                form.action =
-                    button.dataset.action;
+                if (form) {
+                    form.action =
+                        button.dataset.action || '';
+                }
 
-                day.textContent =
-                    button.dataset.dia || '';
+                if (day) {
+                    day.textContent =
+                        button.dataset.dia || '';
+                }
 
-                schedule.textContent =
-                    button.dataset.horario || '';
+                if (schedule) {
+                    schedule.textContent =
+                        button.dataset.horario || '';
+                }
             }
         );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Editar asignación docente
+        |--------------------------------------------------------------------------
+        */
+
+        const editTeacherModal = document.getElementById(
+            'editGroupTeacherModal'
+        );
+
+        editTeacherModal?.addEventListener(
+            'show.bs.modal',
+            event => {
+                const button = event.relatedTarget;
+
+                if (!button) {
+                    return;
+                }
+
+                const form = document.getElementById(
+                    'editGroupTeacherForm'
+                );
+
+                const teacher = document.getElementById(
+                    'edit_teacher_docente_id'
+                );
+
+                const startDate = document.getElementById(
+                    'edit_teacher_fecha_inicio'
+                );
+
+                const endDate = document.getElementById(
+                    'edit_teacher_fecha_fin'
+                );
+
+                const observations = document.getElementById(
+                    'edit_teacher_observaciones'
+                );
+
+                const active = document.getElementById(
+                    'edit_teacher_activo'
+                );
+
+                if (form) {
+                    form.action =
+                        button.dataset.action || '';
+                }
+
+                if (teacher) {
+                    teacher.value =
+                        button.dataset.docente || '';
+                }
+
+                if (startDate) {
+                    startDate.value =
+                        button.dataset.inicio || '';
+                }
+
+                if (endDate) {
+                    endDate.value =
+                        button.dataset.fin || '';
+                }
+
+                if (observations) {
+                    observations.value =
+                        button.dataset.observaciones || '';
+                }
+
+                if (active) {
+                    active.value =
+                        button.dataset.activo || '0';
+                }
+
+                /*
+                 * La fecha final nunca podrá ser
+                 * anterior a la fecha inicial.
+                 */
+                if (startDate && endDate) {
+                    endDate.min =
+                        startDate.value || '';
+
+                    startDate.onchange = () => {
+                        endDate.min =
+                            startDate.value || '';
+
+                        if (
+                            endDate.value &&
+                            startDate.value &&
+                            endDate.value <
+                            startDate.value
+                        ) {
+                            endDate.value = '';
+                        }
+                    };
+                }
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Finalizar / reactivar asignación docente
+        |--------------------------------------------------------------------------
+        */
+
+        const teacherStatusModal = document.getElementById(
+            'changeGroupTeacherStatusModal'
+        );
+
+        teacherStatusModal?.addEventListener(
+            'show.bs.modal',
+            event => {
+                const button = event.relatedTarget;
+
+                if (!button) {
+                    return;
+                }
+
+                const isActive =
+                    button.dataset.active === '1';
+
+                const teacherName =
+                    button.dataset.name ||
+                    'este docente';
+
+                const form = document.getElementById(
+                    'changeGroupTeacherStatusForm'
+                );
+
+                const message = document.getElementById(
+                    'changeGroupTeacherStatusMessage'
+                );
+
+                const submit = document.getElementById(
+                    'changeGroupTeacherStatusSubmit'
+                );
+
+                if (form) {
+                    form.action =
+                        button.dataset.action || '';
+                }
+
+                if (message) {
+                    message.textContent = isActive
+                        ? `¿Desea finalizar la asignación de ${teacherName} en este grupo? El historial permanecerá disponible.`
+                        : `¿Desea reactivar la asignación de ${teacherName} en este grupo?`;
+                }
+
+                if (submit) {
+                    submit.textContent = isActive
+                        ? 'Finalizar asignación'
+                        : 'Reactivar asignación';
+
+                    submit.classList.toggle(
+                        'portal-btn-danger',
+                        isActive
+                    );
+
+                    submit.classList.toggle(
+                        'portal-btn-primary',
+                        !isActive
+                    );
+                }
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fechas al crear una asignación docente
+        |--------------------------------------------------------------------------
+        */
+
+        const createTeacherStartDate =
+            document.getElementById(
+                'teacher_fecha_inicio'
+            );
+
+        const createTeacherEndDate =
+            document.getElementById(
+                'teacher_fecha_fin'
+            );
+
+        const updateTeacherEndMinimum = () => {
+            if (
+                !createTeacherStartDate ||
+                !createTeacherEndDate
+            ) {
+                return;
+            }
+
+            createTeacherEndDate.min =
+                createTeacherStartDate.value || '';
+
+            if (
+                createTeacherEndDate.value &&
+                createTeacherStartDate.value &&
+                createTeacherEndDate.value <
+                createTeacherStartDate.value
+            ) {
+                createTeacherEndDate.value = '';
+            }
+        };
+
+        createTeacherStartDate?.addEventListener(
+            'change',
+            updateTeacherEndMinimum
+        );
+
+        updateTeacherEndMinimum();
     });
 </script>
 

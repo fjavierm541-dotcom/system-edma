@@ -15,7 +15,7 @@ use App\Http\Controllers\Portal\PeriodoAcademicoController;
 use App\Http\Controllers\Portal\HorarioController;
 use App\Http\Controllers\Portal\GrupoController;
 use App\Http\Controllers\Portal\GrupoHorarioController;
-
+use App\Http\Controllers\Portal\GrupoDocenteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -304,6 +304,28 @@ Route::prefix('portal')
                 'grupos/{grupo}/horarios/{grupoHorario}',
                 [GrupoHorarioController::class, 'destroy']
             )->name('grupos.horarios.destroy');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Docentes de grupos
+            |--------------------------------------------------------------------------
+            */
+
+            Route::post(
+                'grupos/{grupo}/docentes',
+                [GrupoDocenteController::class, 'store']
+            )->name('grupos.docentes.store');
+
+            Route::put(
+                'grupos/{grupo}/docentes/{grupoDocente}',
+                [GrupoDocenteController::class, 'update']
+            )->name('grupos.docentes.update');
+
+            Route::patch(
+                'grupos/{grupo}/docentes/{grupoDocente}/estado',
+                [GrupoDocenteController::class, 'cambiarEstado']
+            )->name('grupos.docentes.cambiar-estado');
 
     });
 

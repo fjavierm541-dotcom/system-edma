@@ -7,6 +7,7 @@ use App\Http\Requests\StoreGrupoRequest;
 use App\Http\Requests\UpdateGrupoRequest;
 use App\Models\Grupo;
 use App\Models\Nivel;
+use App\Models\Docente;
 use App\Models\PeriodoAcademico;
 use App\Models\Programa;
 use App\Services\Grupos\CrearGrupoService;
@@ -226,42 +227,91 @@ class GrupoController extends Controller
         }
     }
 
-    public function show(
-        Grupo $grupo
-    ): View {
-        $grupo->load([
-            'nivel.programa',
-            'periodoAcademico',
+   public function show(
+    Grupo $grupo
+): View {
+    $grupo->load([
+        'nivel.programa',
 
-            'horarios' => fn ($query) =>
-                $query
-                    ->with('horario')
-                    ->orderByRaw("
-                        FIELD(
-                            dia_semana,
-                            'lunes',
-                            'martes',
-                            'miércoles',
-                            'jueves',
-                            'viernes',
-                            'sábado',
-                            'domingo'
-                        )
-                    ")
-                    ->orderBy('id'),
-        ]);
+        'periodoAcademico',
 
-        $horariosDisponibles = Horario::query()
-            ->activos()
-            ->orderBy('hora_inicio')
-            ->orderBy('nombre')
-            ->get();
+        'horarios' => fn ($query) =>
+            $query
+                ->with('horario')
+                ->orderByRaw("
+                    FIELD(
+                        dia_semana,
+                        'lunes',
+                        'martes',
+                        'miércoles',
+                        'jueves',
+                        'viernes',
+                        'sábado',
+                        'domingo'
+                    )
+                ")
+                ->orderBy('id'),
 
-        return view('portal.grupos.show', [
-            'grupo' => $grupo,
-            'horariosDisponibles' => $horariosDisponibles,
-        ]);
-    }
+        'docentes' => fn ($query) =>
+            $query
+                ->with(
+                    'docente.empleado.persona'
+                )
+                ->orderByDesc('activo')
+                ->orderByDesc('fecha_inicio')
+                ->orderByDesc('id'),
+    ]);
+
+    $horariosDisponibles = Horario::query()
+        ->activos()
+        ->orderBy('hora_inicio')
+        ->orderBy('nombre')
+        ->get();
+
+    $docentesYaAsignados = $grupo
+        ->docentes
+        ->pluck('docente_id')
+        ->filter()
+        ->unique()
+        ->values();
+
+    $docentesDisponibles = Docente::query()
+        ->with([
+            'empleado.persona',
+        ])
+        ->where(
+            'estado',
+            'activo'
+        )
+        ->whereHas(
+            'empleado',
+            fn ($query) =>
+                $query->where(
+                    'estado',
+                    'activo'
+                )
+        )
+        ->when(
+            $docentesYaAsignados->isNotEmpty(),
+            fn ($query) =>
+                $query->whereNotIn(
+                    'id',
+                    $docentesYaAsignados
+                )
+        )
+        ->orderBy('codigo_docente')
+        ->get();
+
+    return view('portal.grupos.show', [
+        'grupo' => $grupo,
+
+        'horariosDisponibles' =>
+            $horariosDisponibles,
+
+        'docentesDisponibles' =>
+            $docentesDisponibles,
+    ]);
+}
 
     public function edit(
         Grupo $grupo
