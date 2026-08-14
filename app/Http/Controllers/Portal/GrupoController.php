@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Portal;
-
+use App\Models\Horario;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreGrupoRequest;
 use App\Http\Requests\UpdateGrupoRequest;
@@ -232,11 +232,34 @@ class GrupoController extends Controller
         $grupo->load([
             'nivel.programa',
             'periodoAcademico',
-            'horarios.horario',
+
+            'horarios' => fn ($query) =>
+                $query
+                    ->with('horario')
+                    ->orderByRaw("
+                        FIELD(
+                            dia_semana,
+                            'lunes',
+                            'martes',
+                            'miércoles',
+                            'jueves',
+                            'viernes',
+                            'sábado',
+                            'domingo'
+                        )
+                    ")
+                    ->orderBy('id'),
         ]);
+
+        $horariosDisponibles = Horario::query()
+            ->activos()
+            ->orderBy('hora_inicio')
+            ->orderBy('nombre')
+            ->get();
 
         return view('portal.grupos.show', [
             'grupo' => $grupo,
+            'horariosDisponibles' => $horariosDisponibles,
         ]);
     }
 

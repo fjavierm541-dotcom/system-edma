@@ -14,6 +14,7 @@ use App\Http\Controllers\Portal\NivelController;
 use App\Http\Controllers\Portal\PeriodoAcademicoController;
 use App\Http\Controllers\Portal\HorarioController;
 use App\Http\Controllers\Portal\GrupoController;
+use App\Http\Controllers\Portal\GrupoHorarioController;
 
 
 /*
@@ -282,6 +283,27 @@ Route::prefix('portal')
                 'grupos' => 'grupo',
             ])
             ->except('destroy');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Horarios de grupos
+            |--------------------------------------------------------------------------
+            */
+
+            Route::post(
+                'grupos/{grupo}/horarios',
+                [GrupoHorarioController::class, 'store']
+            )->name('grupos.horarios.store');
+
+            Route::put(
+                'grupos/{grupo}/horarios/{grupoHorario}',
+                [GrupoHorarioController::class, 'update']
+            )->name('grupos.horarios.update');
+
+            Route::delete(
+                'grupos/{grupo}/horarios/{grupoHorario}',
+                [GrupoHorarioController::class, 'destroy']
+            )->name('grupos.horarios.destroy');
 
     });
 

@@ -253,21 +253,44 @@
 
             </section>
 
+           {{-- Días y horarios --}}
             <section class="portal-card portal-detail-card">
 
-                <div class="portal-form-section-header">
+                <div class="portal-form-section-header portal-section-header-actions">
 
-                    <div class="portal-form-section-icon">
-                        <i class="bi bi-clock"></i>
+                    <div class="d-flex align-items-center gap-3">
+
+                        <div class="portal-form-section-icon">
+                            <i class="bi bi-clock"></i>
+                        </div>
+
+                        <div>
+                            <h2>Días y horarios</h2>
+
+                            <p>
+                                Configure los días y horas en que
+                                este grupo recibirá clases.
+                            </p>
+                        </div>
+
                     </div>
 
-                    <div>
-                        <h2>Días y horarios</h2>
+                    @if (
+                        $grupo->estado === 'activo' &&
+                        $horariosDisponibles->isNotEmpty()
+                    )
 
-                        <p>
-                            Horarios asignados actualmente al grupo.
-                        </p>
-                    </div>
+                        <button
+                            type="button"
+                            class="btn portal-btn-secondary btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addGroupScheduleModal"
+                        >
+                            <i class="bi bi-plus-circle"></i>
+                            Agregar horario
+                        </button>
+
+                    @endif
 
                 </div>
 
@@ -276,6 +299,24 @@
                     <div class="portal-academic-list">
 
                         @foreach ($grupo->horarios as $asignacion)
+
+                            @php
+                                $horario = $asignacion->horario;
+
+                                $inicio = $horario
+                                    ? \Carbon\Carbon::createFromFormat(
+                                        'H:i:s',
+                                        $horario->hora_inicio
+                                    )
+                                    : null;
+
+                                $fin = $horario
+                                    ? \Carbon\Carbon::createFromFormat(
+                                        'H:i:s',
+                                        $horario->hora_fin
+                                    )
+                                    : null;
+                            @endphp
 
                             <article class="portal-academic-item">
 
@@ -292,14 +333,89 @@
                                     </strong>
 
                                     <span>
-                                        {{ $asignacion->horario?->nombre }}
+                                        {{ $horario?->nombre
+                                            ?: 'Horario no disponible' }}
                                     </span>
 
-                                    <small>
-                                        {{ $asignacion->horario?->hora_inicio }}
-                                        -
-                                        {{ $asignacion->horario?->hora_fin }}
-                                    </small>
+                                    @if ($inicio && $fin)
+
+                                        <small>
+                                            {{ $inicio->format('g:i A') }}
+                                            -
+                                            {{ $fin->format('g:i A') }}
+                                        </small>
+
+                                    @endif
+
+                                </div>
+
+                                <div class="dropdown">
+
+                                    <button
+                                        type="button"
+                                        class="portal-table-action"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        aria-label="Opciones del horario"
+                                    >
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+
+                                    <ul class="dropdown-menu dropdown-menu-end portal-actions-menu">
+
+                                        <li>
+
+                                            <button
+                                                type="button"
+                                                class="dropdown-item"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editGroupScheduleModal"
+                                                data-action="{{ route(
+                                                    'portal.grupos.horarios.update',
+                                                    [
+                                                        $grupo,
+                                                        $asignacion
+                                                    ]
+                                                ) }}"
+                                                data-dia="{{ $asignacion->dia_semana }}"
+                                                data-horario="{{ $asignacion->horario_id }}"
+                                            >
+                                                <i class="bi bi-pencil-square"></i>
+                                                Editar asignación
+                                            </button>
+
+                                        </li>
+
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+
+                                        <li>
+
+                                            <button
+                                                type="button"
+                                                class="dropdown-item text-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#removeGroupScheduleModal"
+                                                data-action="{{ route(
+                                                    'portal.grupos.horarios.destroy',
+                                                    [
+                                                        $grupo,
+                                                        $asignacion
+                                                    ]
+                                                ) }}"
+                                                data-dia="{{ str(
+                                                    $asignacion->dia_semana
+                                                )->title() }}"
+                                                data-horario="{{ $asignacion->horario?->nombre }}"
+                                            >
+                                                <i class="bi bi-x-circle"></i>
+                                                Quitar del grupo
+                                            </button>
+
+                                        </li>
+
+                                    </ul>
 
                                 </div>
 
@@ -320,9 +436,26 @@
                         <h3>No hay horarios asignados</h3>
 
                         <p>
-                            El siguiente paso será seleccionar
-                            los días y horarios de clase.
+                            Seleccione los días y horas en los que
+                            este grupo recibirá clases.
                         </p>
+
+                        @if (
+                            $grupo->estado === 'activo' &&
+                            $horariosDisponibles->isNotEmpty()
+                        )
+
+                            <button
+                                type="button"
+                                class="btn portal-btn-primary mt-3"
+                                data-bs-toggle="modal"
+                                data-bs-target="#addGroupScheduleModal"
+                            >
+                                <i class="bi bi-plus-circle"></i>
+                                Agregar primer horario
+                            </button>
+
+                        @endif
 
                     </div>
 
@@ -368,5 +501,500 @@
         </div>
 
     </div>
+
+
+
+    {{-- Modal: agregar horario --}}
+<div
+    class="modal fade"
+    id="addGroupScheduleModal"
+    tabindex="-1"
+    aria-labelledby="addGroupScheduleModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                action="{{ route(
+                    'portal.grupos.horarios.store',
+                    $grupo
+                ) }}"
+                method="POST"
+            >
+                @csrf
+
+                <div class="modal-header">
+
+                    <div>
+                        <span class="portal-modal-eyebrow">
+                            Organización del grupo
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="addGroupScheduleModalLabel"
+                        >
+                            Agregar día y horario
+                        </h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+
+                            <label
+                                for="dia_semana"
+                                class="form-label portal-form-label"
+                            >
+                                Día de clase
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <select
+                                name="dia_semana"
+                                id="dia_semana"
+                                class="form-select portal-form-control"
+                                required
+                            >
+                                <option value="">
+                                    Seleccione un día
+                                </option>
+
+                                <option value="lunes">Lunes</option>
+                                <option value="martes">Martes</option>
+                                <option value="miércoles">Miércoles</option>
+                                <option value="jueves">Jueves</option>
+                                <option value="viernes">Viernes</option>
+                                <option value="sábado">Sábado</option>
+                                <option value="domingo">Domingo</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <label
+                                for="horario_id"
+                                class="form-label portal-form-label"
+                            >
+                                Horario
+                                <span class="portal-required">*</span>
+                            </label>
+
+                            <select
+                                name="horario_id"
+                                id="horario_id"
+                                class="form-select portal-form-control"
+                                required
+                            >
+                                <option value="">
+                                    Seleccione un horario
+                                </option>
+
+                                @foreach (
+                                    $horariosDisponibles
+                                    as $horario
+                                )
+
+                                    @php
+                                        $inicio =
+                                            \Carbon\Carbon::createFromFormat(
+                                                'H:i:s',
+                                                $horario->hora_inicio
+                                            );
+
+                                        $fin =
+                                            \Carbon\Carbon::createFromFormat(
+                                                'H:i:s',
+                                                $horario->hora_fin
+                                            );
+                                    @endphp
+
+                                    <option value="{{ $horario->id }}">
+                                        {{ $horario->nombre }}
+                                        ·
+                                        {{ $inicio->format('g:i A') }}
+                                        -
+                                        {{ $fin->format('g:i A') }}
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                    >
+                        <i class="bi bi-check2-circle"></i>
+                        Agregar horario
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+{{-- Modal: editar horario --}}
+<div
+    class="modal fade"
+    id="editGroupScheduleModal"
+    tabindex="-1"
+    aria-labelledby="editGroupScheduleModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                method="POST"
+                id="editGroupScheduleForm"
+            >
+                @csrf
+                @method('PUT')
+
+                <div class="modal-header">
+
+                    <div>
+                        <span class="portal-modal-eyebrow">
+                            Organización del grupo
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="editGroupScheduleModalLabel"
+                        >
+                            Editar día y horario
+                        </h2>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+
+                            <label
+                                for="edit_dia_semana"
+                                class="form-label portal-form-label"
+                            >
+                                Día de clase
+                            </label>
+
+                            <select
+                                name="dia_semana"
+                                id="edit_dia_semana"
+                                class="form-select portal-form-control"
+                                required
+                            >
+                                <option value="lunes">Lunes</option>
+                                <option value="martes">Martes</option>
+                                <option value="miércoles">Miércoles</option>
+                                <option value="jueves">Jueves</option>
+                                <option value="viernes">Viernes</option>
+                                <option value="sábado">Sábado</option>
+                                <option value="domingo">Domingo</option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <label
+                                for="edit_horario_id"
+                                class="form-label portal-form-label"
+                            >
+                                Horario
+                            </label>
+
+                            <select
+                                name="horario_id"
+                                id="edit_horario_id"
+                                class="form-select portal-form-control"
+                                required
+                            >
+
+                                @foreach (
+                                    $horariosDisponibles
+                                    as $horario
+                                )
+
+                                    <option value="{{ $horario->id }}">
+                                        {{ $horario->nombre }}
+                                    </option>
+
+                                @endforeach
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-primary"
+                    >
+                        <i class="bi bi-check2-circle"></i>
+                        Guardar cambios
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{{-- Modal: quitar horario del grupo --}}
+<div
+    class="modal fade"
+    id="removeGroupScheduleModal"
+    tabindex="-1"
+    aria-labelledby="removeGroupScheduleModalLabel"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content portal-modal">
+
+            <form
+                method="POST"
+                id="removeGroupScheduleForm"
+            >
+                @csrf
+                @method('DELETE')
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <span class="portal-modal-eyebrow">
+                            Confirmación
+                        </span>
+
+                        <h2
+                            class="modal-title"
+                            id="removeGroupScheduleModalLabel"
+                        >
+                            Quitar horario del grupo
+                        </h2>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar"
+                    ></button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="portal-modal-warning-icon">
+                        <i class="bi bi-calendar-x"></i>
+                    </div>
+
+                    <p class="mb-0">
+
+                        ¿Desea retirar la asignación de
+
+                        <strong id="removeGroupScheduleDay"></strong>
+
+                        con el horario
+
+                        <strong id="removeGroupScheduleName"></strong>
+
+                        de este grupo?
+
+                    </p>
+
+                    <div class="portal-form-help mt-3">
+                        El horario continuará disponible para otros
+                        grupos. Solamente se eliminará esta asignación.
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn portal-btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn portal-btn-danger"
+                    >
+                        <i class="bi bi-x-circle"></i>
+                        Quitar horario
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+@push('scripts')
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Editar asignación
+        |--------------------------------------------------------------------------
+        */
+
+        const editModal = document.getElementById(
+            'editGroupScheduleModal'
+        );
+
+        editModal?.addEventListener(
+            'show.bs.modal',
+            event => {
+                const button = event.relatedTarget;
+
+                if (!button) {
+                    return;
+                }
+
+                const form = document.getElementById(
+                    'editGroupScheduleForm'
+                );
+
+                form.action =
+                    button.dataset.action;
+
+                document.getElementById(
+                    'edit_dia_semana'
+                ).value =
+                    button.dataset.dia || '';
+
+                document.getElementById(
+                    'edit_horario_id'
+                ).value =
+                    button.dataset.horario || '';
+            }
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Quitar asignación
+        |--------------------------------------------------------------------------
+        */
+
+        const removeModal = document.getElementById(
+            'removeGroupScheduleModal'
+        );
+
+        removeModal?.addEventListener(
+            'show.bs.modal',
+            event => {
+                const button = event.relatedTarget;
+
+                if (!button) {
+                    return;
+                }
+
+                const form = document.getElementById(
+                    'removeGroupScheduleForm'
+                );
+
+                const day = document.getElementById(
+                    'removeGroupScheduleDay'
+                );
+
+                const schedule = document.getElementById(
+                    'removeGroupScheduleName'
+                );
+
+                form.action =
+                    button.dataset.action;
+
+                day.textContent =
+                    button.dataset.dia || '';
+
+                schedule.textContent =
+                    button.dataset.horario || '';
+            }
+        );
+    });
+</script>
+
+@endpush
 
 @endsection
