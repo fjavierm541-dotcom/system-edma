@@ -13,7 +13,7 @@ return new class extends Migration
 
             $table->foreignId('solicitud_inscripcion_id')
                 ->constrained('solicitudes_inscripcion')
-                ->cascadeOnDelete()
+                ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
             $table->foreignId('responsable_persona_id')
@@ -23,9 +23,11 @@ return new class extends Migration
 
             $table->string('parentesco', 50)->nullable();
 
-            $table->boolean('es_principal')->default(true);
-            $table->boolean('recibe_notificaciones')->default(true);
-            $table->boolean('autoriza_inscripcion')->default(true);
+            $table->boolean('es_principal')
+                ->default(true);
+
+            $table->boolean('recibe_notificaciones')
+                ->default(true);
 
             $table->timestamps();
 
@@ -43,6 +45,11 @@ return new class extends Migration
                     'es_principal'
                 ],
                 'idx_solicitud_responsable_principal'
+            );
+
+            $table->index(
+                'responsable_persona_id',
+                'idx_solicitud_responsable_persona'
             );
         });
     }
