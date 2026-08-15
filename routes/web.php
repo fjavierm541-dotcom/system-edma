@@ -16,6 +16,8 @@ use App\Http\Controllers\Portal\HorarioController;
 use App\Http\Controllers\Portal\GrupoController;
 use App\Http\Controllers\Portal\GrupoHorarioController;
 use App\Http\Controllers\Portal\GrupoDocenteController;
+use App\Http\Controllers\SolicitudInscripcionPublicaController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -327,7 +329,46 @@ Route::prefix('portal')
                 [GrupoDocenteController::class, 'cambiarEstado']
             )->name('grupos.docentes.cambiar-estado');
 
+
+
+
     });
+
+                /*
+|--------------------------------------------------------------------------
+| Solicitud pública de inscripción
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('inscripciones')
+    ->name('inscripciones.')
+    ->group(function () {
+
+        Route::get(
+            '/solicitud',
+            [
+                SolicitudInscripcionPublicaController::class,
+                'create'
+            ]
+        )->name('solicitud');
+
+        Route::post(
+            '/solicitud',
+            [
+                SolicitudInscripcionPublicaController::class,
+                'store'
+            ]
+        )->name('solicitud.store');
+
+        Route::get(
+            '/solicitud/enviada/{codigo}',
+            [
+                SolicitudInscripcionPublicaController::class,
+                'success'
+            ]
+        )->name('solicitud.exito');
+    });
+
 
 /*
 |--------------------------------------------------------------------------

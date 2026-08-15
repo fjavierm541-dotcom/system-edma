@@ -118,6 +118,7 @@ class SolicitudInscripcion extends Model
         );
     }
 
+
     public function scopeBuscar(
         Builder $query,
         ?string $termino
