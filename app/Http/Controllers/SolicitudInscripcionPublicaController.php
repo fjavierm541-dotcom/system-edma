@@ -78,8 +78,9 @@ class SolicitudInscripcionPublicaController extends Controller
         */
 
         $fuentesReferencia = FuenteReferencia::query()
-            ->orderBy('nombre')
-            ->get();
+    ->activas()
+    ->ordenadas()
+    ->get();
 
         /*
         |--------------------------------------------------------------------------

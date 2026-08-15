@@ -12,14 +12,6 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Formulario público
-        |--------------------------------------------------------------------------
-        |
-        | No requiere autenticación.
-        |
-        */
         return true;
     }
 
@@ -49,6 +41,11 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
                 // La regla date manejará el error.
             }
         }
+
+        $fuenteReferenciaTipo =
+            $this->input(
+                'fuente_referencia_tipo'
+            );
 
         $this->merge([
             /*
@@ -88,13 +85,17 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 
             'numero_documento' =>
                 $this->normalizarDocumento(
-                    $this->input('numero_documento')
+                    $this->input(
+                        'numero_documento'
+                    )
                 ),
 
             'sexo' =>
                 mb_strtolower(
                     trim(
-                        (string) $this->input('sexo')
+                        (string) $this->input(
+                            'sexo'
+                        )
                     )
                 ),
 
@@ -104,17 +105,17 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
                 ),
 
             'correo_personal' =>
-                mb_strtolower(
-                    trim(
-                        (string) $this->input(
-                            'correo_personal'
-                        )
+                $this->normalizarCorreoNullable(
+                    $this->input(
+                        'correo_personal'
                     )
                 ),
 
             'telefono_movil' =>
-                $this->normalizarTelefono(
-                    $this->input('telefono_movil')
+                $this->normalizarTelefonoNullable(
+                    $this->input(
+                        'telefono_movil'
+                    )
                 ),
 
             'direccion' =>
@@ -124,7 +125,9 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 
             'ciudad_municipio' =>
                 $this->normalizarTextoNullable(
-                    $this->input('ciudad_municipio')
+                    $this->input(
+                        'ciudad_municipio'
+                    )
                 ),
 
             'departamento_estado' =>
@@ -136,7 +139,7 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 
             /*
             |--------------------------------------------------------------------------
-            | Información académica
+            | Académico
             |--------------------------------------------------------------------------
             */
 
@@ -145,27 +148,28 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 
             /*
             |--------------------------------------------------------------------------
-            | Información complementaria
+            | Referencia
             |--------------------------------------------------------------------------
             */
 
             'fuente_referencia_otro' =>
-                $this->normalizarTextoNullable(
-                    $this->input(
-                        'fuente_referencia_otro'
+                $fuenteReferenciaTipo === 'otro'
+                    ? $this->normalizarTextoNullable(
+                        $this->input(
+                            'fuente_referencia_otro'
+                        )
                     )
-                ),
+                    : null,
+
+            'recomienda_otro_estudiante' =>
+                $fuenteReferenciaTipo
+                === 'recomendacion_estudiante',
 
             'observaciones_solicitante' =>
                 $this->normalizarTextoNullable(
                     $this->input(
                         'observaciones_solicitante'
                     )
-                ),
-
-            'recomienda_otro_estudiante' =>
-                $this->boolean(
-                    'recomienda_otro_estudiante'
                 ),
 
             /*
@@ -219,16 +223,14 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
                 ),
 
             'responsable_correo' =>
-                mb_strtolower(
-                    trim(
-                        (string) $this->input(
-                            'responsable_correo'
-                        )
+                $this->normalizarCorreoNullable(
+                    $this->input(
+                        'responsable_correo'
                     )
                 ),
 
             'responsable_telefono' =>
-                $this->normalizarTelefono(
+                $this->normalizarTelefonoNullable(
                     $this->input(
                         'responsable_telefono'
                     )
@@ -267,23 +269,29 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             |--------------------------------------------------------------------------
             */
 
-            'edad_calculada' => $edad,
+            'edad_calculada' =>
+                $edad,
         ]);
     }
 
     public function rules(): array
     {
-        $esMenor =
-            is_numeric(
-                $this->input('edad_calculada')
-            )
-            &&
-            (int) $this->input(
+        $edad =
+            $this->input(
                 'edad_calculada'
-            ) < 18;
+            );
+
+        $esMenor =
+            is_numeric($edad)
+            &&
+            (int) $edad < 18;
+
+        $esAdulto =
+            is_numeric($edad)
+            &&
+            (int) $edad >= 18;
 
         return [
-
             /*
             |--------------------------------------------------------------------------
             | Datos personales
@@ -334,6 +342,7 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 
             'tipo_documento' => [
                 'required',
+
                 Rule::in([
                     'dni',
                     'identidad_menor',
@@ -363,14 +372,26 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
                 ),
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | Contacto del aspirante
+            |--------------------------------------------------------------------------
+            |
+            | Adulto: obligatorio.
+            | Menor: opcional.
+            |
+            */
+
             'correo_personal' => [
-                'required',
+                Rule::requiredIf($esAdulto),
+                'nullable',
                 'email:rfc',
                 'max:150',
             ],
 
             'telefono_movil' => [
-                'required',
+                Rule::requiredIf($esAdulto),
+                'nullable',
                 'string',
                 'max:30',
             ],
@@ -404,10 +425,6 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             |--------------------------------------------------------------------------
             */
 
-            /*
-             * programa_id se utiliza para controlar el formulario,
-             * aunque no se almacena directamente en la solicitud.
-             */
             'programa_id' => [
                 'required',
                 'integer',
@@ -430,6 +447,7 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 
             'segmento_solicitado' => [
                 'required',
+
                 Rule::in([
                     'niños',
                     'jóvenes_adultos',
@@ -472,7 +490,29 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
                 ),
             ],
 
+            'fuente_referencia_tipo' => [
+                'nullable',
+                'string',
+
+                Rule::in([
+                    'redes_sociales',
+                    'recomendacion_estudiante',
+                    'recomendacion_familiar',
+                    'publicidad_internet',
+                    'volante',
+                    'evento_edma',
+                    'busqueda_internet',
+                    'otro',
+                ]),
+            ],
+
             'fuente_referencia_otro' => [
+                Rule::requiredIf(
+                    $this->input(
+                        'fuente_referencia_tipo'
+                    ) === 'otro'
+                ),
+
                 'nullable',
                 'string',
                 'max:150',
@@ -615,21 +655,13 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             'comprobante_pago' => [
                 'required',
                 'file',
-
-                /*
-                 * Imagen o PDF.
-                 */
                 'mimes:jpg,jpeg,png,webp,pdf',
-
-                /*
-                 * 5 MB.
-                 */
                 'max:5120',
             ],
 
             /*
             |--------------------------------------------------------------------------
-            | Términos
+            | Declaración
             |--------------------------------------------------------------------------
             */
 
@@ -667,9 +699,10 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
     private function validarSegmentoPorEdad(
         Validator $validator
     ): void {
-        $edad = $this->input(
-            'edad_calculada'
-        );
+        $edad =
+            $this->input(
+                'edad_calculada'
+            );
 
         if (!is_numeric($edad)) {
             return;
@@ -697,13 +730,15 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
     private function validarNivelDelPrograma(
         Validator $validator
     ): void {
-        $nivelId = $this->input(
-            'nivel_solicitado_id'
-        );
+        $nivelId =
+            $this->input(
+                'nivel_solicitado_id'
+            );
 
-        $programaId = $this->input(
-            'programa_id'
-        );
+        $programaId =
+            $this->input(
+                'programa_id'
+            );
 
         if (
             !$nivelId ||
@@ -732,10 +767,6 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             return;
         }
 
-        /*
-         * También evitamos manipular el HTML para seleccionar
-         * un programa de un segmento que no corresponda.
-         */
         if (
             $nivel->programa &&
             $nivel->programa->segmento
@@ -753,39 +784,30 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
     private function validarDocumentoPorTipo(
         Validator $validator
     ): void {
-        $tipo = $this->input(
-            'tipo_documento'
-        );
+        $tipo =
+            $this->input(
+                'tipo_documento'
+            );
 
-        $numero = $this->input(
-            'numero_documento'
-        );
+        $numero =
+            $this->input(
+                'numero_documento'
+            );
 
         if (!$numero) {
             return;
         }
 
-        if ($tipo === 'dni') {
-            if (
-                !preg_match(
-                    '/^\d{13}$/',
-                    $numero
-                )
-            ) {
-                $validator->errors()->add(
-                    'numero_documento',
-                    'El DNI debe contener exactamente 13 dígitos.'
-                );
-            }
-        }
-
         if (
-            $tipo === 'identidad_menor' &&
-            mb_strlen($numero) > 50
+            $tipo === 'dni' &&
+            !preg_match(
+                '/^\d{13}$/',
+                $numero
+            )
         ) {
             $validator->errors()->add(
                 'numero_documento',
-                'El número de identidad registrado no es válido.'
+                'El DNI debe contener exactamente 13 dígitos.'
             );
         }
     }
@@ -793,13 +815,15 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
     private function validarDocumentoResponsable(
         Validator $validator
     ): void {
-        $tipo = $this->input(
-            'responsable_tipo_documento'
-        );
+        $tipo =
+            $this->input(
+                'responsable_tipo_documento'
+            );
 
-        $numero = $this->input(
-            'responsable_numero_documento'
-        );
+        $numero =
+            $this->input(
+                'responsable_numero_documento'
+            );
 
         if (
             !$tipo ||
@@ -825,12 +849,6 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
     public function messages(): array
     {
         return [
-            /*
-            |--------------------------------------------------------------------------
-            | Aspirante
-            |--------------------------------------------------------------------------
-            */
-
             'primer_nombre.required' =>
                 'Ingrese el primer nombre del aspirante.',
 
@@ -845,9 +863,6 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 
             'sexo.required' =>
                 'Seleccione el sexo del aspirante.',
-
-            'sexo.in' =>
-                'La opción seleccionada para sexo no es válida.',
 
             'tipo_documento.required' =>
                 'Seleccione el tipo de documento.',
@@ -876,12 +891,6 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             'departamento_estado.required' =>
                 'Ingrese el departamento o estado.',
 
-            /*
-            |--------------------------------------------------------------------------
-            | Académico
-            |--------------------------------------------------------------------------
-            */
-
             'programa_id.required' =>
                 'Seleccione el programa académico.',
 
@@ -894,11 +903,8 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             'nivel_solicitado_id.exists' =>
                 'El nivel seleccionado no está disponible.',
 
-            /*
-            |--------------------------------------------------------------------------
-            | Responsable
-            |--------------------------------------------------------------------------
-            */
+            'fuente_referencia_otro.required' =>
+                'Indique cómo conoció EDMA.',
 
             'responsable_primer_nombre.required' =>
                 'Ingrese el nombre del responsable.',
@@ -927,17 +933,14 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             'parentesco.required' =>
                 'Indique el parentesco o relación con el aspirante.',
 
-            /*
-            |--------------------------------------------------------------------------
-            | Pago
-            |--------------------------------------------------------------------------
-            */
-
             'monto_total.required' =>
                 'Ingrese el monto correspondiente al pago realizado.',
 
             'monto_total.numeric' =>
                 'El monto del pago no es válido.',
+
+            'monto_total.min' =>
+                'El primer pago debe ser de al menos L 700.00.',
 
             'metodo_pago.required' =>
                 'Seleccione el método utilizado para realizar el pago.',
@@ -948,12 +951,6 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             'fecha_pago.before_or_equal' =>
                 'La fecha del pago no puede ser posterior a hoy.',
 
-            /*
-            |--------------------------------------------------------------------------
-            | Comprobante
-            |--------------------------------------------------------------------------
-            */
-
             'comprobante_pago.required' =>
                 'Adjunte el comprobante del pago.',
 
@@ -963,18 +960,8 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             'comprobante_pago.max' =>
                 'El comprobante no puede superar los 5 MB.',
 
-            /*
-            |--------------------------------------------------------------------------
-            | Declaración
-            |--------------------------------------------------------------------------
-            */
-
             'acepta_declaracion.accepted' =>
                 'Debe confirmar que la información proporcionada es correcta antes de enviar la solicitud.',
-
-                'monto_total.min' =>
-    'El primer pago debe ser de al menos L 700.00.',
-    
         ];
     }
 
@@ -1010,6 +997,22 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             : $value;
     }
 
+    private function normalizarCorreoNullable(
+        mixed $value
+    ): mixed {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $value = mb_strtolower(
+            trim($value)
+        );
+
+        return $value === ''
+            ? null
+            : $value;
+    }
+
     private function normalizarDocumento(
         mixed $value
     ): mixed {
@@ -1017,24 +1020,32 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             return $value;
         }
 
-        return preg_replace(
+        $value = preg_replace(
             '/[\s-]+/',
             '',
             trim($value)
         );
+
+        return $value === ''
+            ? null
+            : $value;
     }
 
-    private function normalizarTelefono(
+    private function normalizarTelefonoNullable(
         mixed $value
     ): mixed {
         if (!is_string($value)) {
             return $value;
         }
 
-        return preg_replace(
+        $value = preg_replace(
             '/[^\d+]/',
             '',
             trim($value)
         );
+
+        return $value === ''
+            ? null
+            : $value;
     }
 }
