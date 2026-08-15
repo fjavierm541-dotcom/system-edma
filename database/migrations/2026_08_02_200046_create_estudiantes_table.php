@@ -23,6 +23,12 @@ return new class extends Migration
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
+            // Nivel actualmente reconocido por EDMA.
+            $table->foreignId('nivel_autorizado_id')
+                ->constrained('niveles')
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
             $table->string('codigo_estudiante', 20)->unique();
 
             $table->string('profesion_ocupacion', 150)->nullable();
@@ -38,6 +44,11 @@ return new class extends Migration
 
             $table->index('estado');
             $table->index('fecha_ingreso');
+
+            $table->index(
+                ['nivel_autorizado_id', 'estado'],
+                'idx_estudiantes_nivel_estado'
+            );
         });
     }
 

@@ -11,7 +11,14 @@ return new class extends Migration
         Schema::create('examenes_ubicacion', function (Blueprint $table) {
             $table->id();
 
+            $table->foreignId('estudiante_id')
+                ->constrained('estudiantes')
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
+            // Solo como trazabilidad hacia la inscripción inicial.
             $table->foreignId('solicitud_inscripcion_id')
+                ->nullable()
                 ->constrained('solicitudes_inscripcion')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
@@ -22,7 +29,7 @@ return new class extends Migration
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('nivel_asignado_id')
+            $table->foreignId('nivel_autorizado_id')
                 ->nullable()
                 ->constrained('niveles')
                 ->restrictOnDelete()
@@ -36,8 +43,11 @@ return new class extends Migration
             $table->decimal('calificacion', 5, 2)->nullable();
 
             /*
-             * pendiente, programado, realizado,
-             * ausente, cancelado
+             * pendiente
+             * programado
+             * realizado
+             * ausente
+             * cancelado
              */
             $table->string('estado', 30)->default('pendiente');
 
@@ -52,8 +62,13 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(
-                ['solicitud_inscripcion_id', 'numero_intento'],
-                'uq_examen_solicitud_intento'
+                ['estudiante_id', 'numero_intento'],
+                'uq_examen_estudiante_intento'
+            );
+
+            $table->index(
+                ['estudiante_id', 'estado'],
+                'idx_examenes_estudiante_estado'
             );
 
             $table->index(

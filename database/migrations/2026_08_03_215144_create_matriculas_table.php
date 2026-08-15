@@ -23,41 +23,27 @@ return new class extends Migration
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
-            /*
-             * Se utiliza en la primera matrícula.
-             * Las matrículas posteriores se solicitarán desde el portal.
-             */
-            $table->foreignId('solicitud_inscripcion_id')
-                ->nullable()
-                ->unique()
-                ->constrained('solicitudes_inscripcion')
-                ->restrictOnDelete()
-                ->cascadeOnUpdate();
-
             $table->date('fecha_matricula');
 
-            /*
-             * Precio histórico acordado para el nivel.
-             * Actualmente: L 2,100.
-             */
             $table->decimal('precio_nivel_acordado', 10, 2);
 
-            /*
-             * Cantidad acordada de cuotas:
-             * 1, 2 o 3.
-             */
             $table->unsignedTinyInteger('cantidad_cuotas');
 
             $table->decimal('monto_mora_acordado', 10, 2)
                 ->default(100.00);
 
             /*
-             * pendiente, activa, finalizada,
-             * retirada, cancelada, rechazada
+             * pendiente
+             * activa
+             * finalizada
+             * retirada
+             * cancelada
+             * rechazada
              */
             $table->string('estado', 30)->default('pendiente');
 
             $table->timestamp('aprobada_at')->nullable();
+
             $table->foreignId('aprobada_por')
                 ->nullable()
                 ->constrained('users')

@@ -13,75 +13,48 @@ return new class extends Migration
 
             $table->string('codigo_solicitud', 30)->unique();
 
-            // Persona interesada en ingresar
             $table->foreignId('persona_id')
                 ->constrained('personas')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
-            // Grupo y horario seleccionados por el solicitante
-            $table->foreignId('grupo_solicitado_id')
-                ->constrained('grupos')
-                ->restrictOnDelete()
-                ->cascadeOnUpdate();
-
-                $table->foreignId('grupo_autorizado_id')
-                ->nullable()
-                ->constrained('grupos')
-                ->restrictOnDelete()
-                ->cascadeOnUpdate();
-
-            // Cómo conoció la academia
             $table->foreignId('fuente_referencia_id')
                 ->nullable()
                 ->constrained('fuentes_referencia')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->string('fuente_referencia_otro', 150)
-                ->nullable();
+            $table->string('fuente_referencia_otro', 150)->nullable();
 
-            /*
-             * Clasificación seleccionada en el formulario:
-             * infantil, joven_adulto
-             */
             $table->string('segmento_solicitado', 30);
 
-            /*
-             * Si solicita comenzar por encima de A0,
-             * deberá realizar examen de ubicación.
-             */
-            $table->boolean('requiere_examen_ubicacion')
-                ->default(false);
-
+            // Nivel que el aspirante considera que podría cursar.
             $table->foreignId('nivel_solicitado_id')
                 ->nullable()
                 ->constrained('niveles')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
-            /*
-             * Nivel finalmente autorizado por administración
-             * después de revisar la solicitud o el examen.
-             */
+            // Nivel reconocido al momento de resolver la solicitud.
+            // Para todo nuevo estudiante aprobado será A0.
             $table->foreignId('nivel_autorizado_id')
                 ->nullable()
                 ->constrained('niveles')
                 ->restrictOnDelete()
                 ->cascadeOnUpdate();
 
+            $table->boolean('requiere_examen_ubicacion')
+                ->default(false);
+
             /*
-             * Estados previstos:
              * borrador
              * pendiente
              * en_revision
-             * pendiente_examen
              * aprobada
              * rechazada
              * cancelada
              */
-            $table->string('estado', 30)
-                ->default('pendiente');
+            $table->string('estado', 30)->default('pendiente');
 
             $table->timestamp('enviada_at')->nullable();
             $table->timestamp('revisada_at')->nullable();
@@ -95,7 +68,6 @@ return new class extends Migration
 
             $table->text('observaciones_solicitante')->nullable();
             $table->text('observaciones_administracion')->nullable();
-
             $table->text('motivo_rechazo')->nullable();
 
             $table->boolean('recomienda_otro_estudiante')
@@ -110,8 +82,8 @@ return new class extends Migration
             );
 
             $table->index(
-                ['grupo_solicitado_id', 'estado'],
-                'idx_solicitudes_grupo_estado'
+                ['nivel_solicitado_id', 'estado'],
+                'idx_solicitudes_nivel_estado'
             );
 
             $table->index(
