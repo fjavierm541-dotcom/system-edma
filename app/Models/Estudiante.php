@@ -19,16 +19,26 @@ class Estudiante extends Model
     protected $fillable = [
         'persona_id',
         'nivel_escolaridad_id',
+        'nivel_autorizado_id',
         'codigo_estudiante',
         'profesion_ocupacion',
         'fecha_ingreso',
         'estado',
         'observaciones',
+        'nivel_autorizado_id',
     ];
 
     protected $casts = [
         'fecha_ingreso' => 'date',
     ];
+
+    public function nivelAutorizado(): BelongsTo
+{
+    return $this->belongsTo(
+        Nivel::class,
+        'nivel_autorizado_id'
+    );
+}
 
     /*
     |--------------------------------------------------------------------------

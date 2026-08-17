@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             PaisSeeder::class,
             NivelEscolaridadSeeder::class,
             InstitucionFinancieraSeeder::class,
+            RolSeeder::class,
         ]);
     }
 }

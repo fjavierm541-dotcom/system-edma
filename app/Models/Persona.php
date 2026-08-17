@@ -178,6 +178,16 @@ class Persona extends Model
     );
 }
 
+
+public function usuario(): HasOne
+{
+    return $this->hasOne(
+        User::class,
+        'persona_id'
+    );
+}
+
+
 public function responsabilidadesEstudiantiles(): HasMany
 {
     return $this->hasMany(

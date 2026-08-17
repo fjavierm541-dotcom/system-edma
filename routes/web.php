@@ -17,6 +17,7 @@ use App\Http\Controllers\Portal\GrupoController;
 use App\Http\Controllers\Portal\GrupoHorarioController;
 use App\Http\Controllers\Portal\GrupoDocenteController;
 use App\Http\Controllers\SolicitudInscripcionPublicaController;
+use App\Http\Controllers\Portal\SolicitudInscripcionController;
 
 
 /*
@@ -329,8 +330,66 @@ Route::prefix('portal')
                 [GrupoDocenteController::class, 'cambiarEstado']
             )->name('grupos.docentes.cambiar-estado');
 
+            
+
+        /*
+        |--------------------------------------------------------------------------
+        | Solicitudes de inscripción
+        |--------------------------------------------------------------------------
+        */
 
 
+        Route::patch(
+            'solicitudes-inscripcion/{solicitud}/iniciar-revision',
+            [
+                SolicitudInscripcionController::class,
+                'iniciarRevision',
+            ]
+        )->name(
+            'solicitudes-inscripcion.iniciar-revision'
+        );
+
+        Route::get(
+            'solicitudes-inscripcion/{solicitud}/comprobantes/{comprobante}',
+            [
+                SolicitudInscripcionController::class,
+                'comprobante',
+            ]
+        )->name(
+            'solicitudes-inscripcion.comprobantes.show'
+        );
+
+        Route::patch(
+            'solicitudes-inscripcion/{solicitud}/aprobar',
+            [
+                SolicitudInscripcionController::class,
+                'aprobar',
+            ]
+        )->name(
+            'solicitudes-inscripcion.aprobar'
+        );
+
+        Route::patch(
+            'solicitudes-inscripcion/{solicitud}/rechazar',
+            [
+                SolicitudInscripcionController::class,
+                'rechazar',
+            ]
+        )->name(
+            'solicitudes-inscripcion.rechazar'
+        );
+
+        Route::resource(
+            'solicitudes-inscripcion',
+            SolicitudInscripcionController::class
+        )
+            ->parameters([
+                'solicitudes-inscripcion' => 'solicitud',
+            ])
+            ->only([
+                'index',
+                'show',
+            ]);
 
     });
 

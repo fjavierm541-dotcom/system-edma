@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
+use App\Models\Nivel;
+use App\Models\Programa;
+use RuntimeException;
 
 class EstudianteController extends Controller
 {
@@ -96,50 +99,183 @@ class EstudianteController extends Controller
     /**
      * Guardar un nuevo expediente estudiantil.
      */
-    public function store(
-        StoreEstudianteRequest $request
-    ): RedirectResponse {
-        try {
-            $datos = $request->validated();
+public function store(
+    StoreEstudianteRequest $request
+): RedirectResponse {
+    try {
+        $datos = $request->validated();
 
-            /*
-             * El código institucional nunca proviene del formulario.
-             * CrearEstudianteService lo genera de forma segura.
-             */
-            unset($datos['codigo_estudiante']);
-
-            $estudiante = $this->crearEstudianteService->ejecutar(
-                $datos,
-                $datos['fecha_ingreso'] ?? null
+        /*
+         * Obtener la Persona seleccionada.
+         */
+        $persona = Persona::query()
+            ->findOrFail(
+                $datos['persona_id']
             );
 
-            return redirect()
-                ->route(
-                    'portal.estudiantes.show',
-                    $estudiante
-                )
-                ->with(
-                    'success',
-                    'El expediente del estudiante fue creado correctamente.'
-                );
-        } catch (Throwable $exception) {
-            Log::error(
-                'Error al registrar un estudiante.',
-                [
-                    'exception' => $exception,
-                    'persona_id' => $request->input('persona_id'),
-                    'usuario_id' => auth()->id(),
-                ]
+        /*
+         * La fecha de nacimiento es necesaria
+         * para determinar el segmento académico.
+         */
+        if (!$persona->fecha_nacimiento) {
+            throw new RuntimeException(
+                'La persona debe tener una fecha de nacimiento registrada.'
             );
-
-            return back()
-                ->withInput()
-                ->with(
-                    'error',
-                    'Ocurrió un error al crear el expediente del estudiante. Intente nuevamente.'
-                );
         }
+
+        /*
+         * Calcular edad actual.
+         */
+        $edad = $persona
+            ->fecha_nacimiento
+            ->age;
+
+        /*
+         * EDMA admite estudiantes desde los 7 años.
+         */
+        if ($edad < 7) {
+            throw new RuntimeException(
+                'La persona no cumple con la edad mínima para ser registrada como estudiante.'
+            );
+        }
+
+        /*
+         * Determinar automáticamente el segmento.
+         *
+         * 7 a 13 años:
+         * Niños
+         *
+         * 14 años en adelante:
+         * Jóvenes y adultos
+         */
+        $segmento = $edad <= 13
+            ? 'niños'
+            : 'jóvenes_adultos';
+
+        /*
+         * Buscar el programa activo
+         * correspondiente al segmento.
+         */
+        $programa = Programa::query()
+            ->where(
+                'segmento',
+                $segmento
+            )
+            ->where(
+                'estado',
+                'activo'
+            )
+            ->first();
+
+        if (!$programa) {
+            throw new RuntimeException(
+                'No existe un programa activo para el segmento correspondiente.'
+            );
+        }
+
+        /*
+         * Todo estudiante nuevo inicia
+         * institucionalmente en A0.
+         */
+        $nivelA0 = Nivel::query()
+            ->where(
+                'programa_id',
+                $programa->id
+            )
+            ->where(
+                'codigo',
+                'A0'
+            )
+            ->where(
+                'estado',
+                'activo'
+            )
+            ->first();
+
+        if (!$nivelA0) {
+            throw new RuntimeException(
+                'No existe un nivel A0 activo para el programa correspondiente.'
+            );
+        }
+
+        /*
+         * El nivel autorizado inicial
+         * siempre será A0.
+         */
+        $datos['nivel_autorizado_id'] =
+            $nivelA0->id;
+
+        /*
+         * El código institucional nunca proviene
+         * del formulario.
+         *
+         * CrearEstudianteService lo genera
+         * automáticamente de forma segura.
+         */
+        unset(
+            $datos['codigo_estudiante']
+        );
+
+        $estudiante =
+            $this
+                ->crearEstudianteService
+                ->ejecutar(
+                    $datos,
+                    $datos['fecha_ingreso']
+                        ?? null
+                );
+
+        return redirect()
+            ->route(
+                'portal.estudiantes.show',
+                $estudiante
+            )
+            ->with(
+                'success',
+                'El expediente del estudiante fue creado correctamente.'
+            );
+    } catch (RuntimeException $exception) {
+        /*
+         * Estos errores corresponden a reglas
+         * esperadas del proceso y pueden mostrarse
+         * directamente al usuario administrativo.
+         */
+        return back()
+            ->withInput()
+            ->with(
+                'error',
+                $exception->getMessage()
+            );
+    } catch (Throwable $exception) {
+        /*
+         * Los errores inesperados sí se registran
+         * para revisión técnica.
+         */
+        Log::error(
+            'Error al registrar un estudiante.',
+            [
+                'exception' =>
+                    $exception,
+
+                'persona_id' =>
+                    $request->input(
+                        'persona_id'
+                    ),
+
+                'usuario_id' =>
+                    auth()->id(),
+            ]
+        );
+
+        return back()
+            ->withInput()
+            ->with(
+                'error',
+                'Ocurrió un error al crear el expediente del estudiante. Intente nuevamente.'
+            );
     }
+}
+
 
     /**
      * Mostrar el expediente del estudiante.

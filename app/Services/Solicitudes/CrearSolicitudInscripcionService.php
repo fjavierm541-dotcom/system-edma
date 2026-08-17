@@ -276,8 +276,8 @@ class CrearSolicitudInscripcionService
                             $solicitud->id,
 
                         /*
-                         * Aún no existe estudiante.
-                         */
+                        * Aún no existe estudiante.
+                        */
                         'estudiante_id' =>
                             null,
 
@@ -285,8 +285,8 @@ class CrearSolicitudInscripcionService
                             $periodo->id,
 
                         /*
-                         * Aún no existe matrícula.
-                         */
+                        * Aún no existe matrícula.
+                        */
                         'matricula_id' =>
                             null,
 
@@ -304,7 +304,7 @@ class CrearSolicitudInscripcionService
                                 ?? null,
 
                         'estado' =>
-                            'pendiente',
+                            'pendiente_revision',
 
                         'revisado_at' =>
                             null,
