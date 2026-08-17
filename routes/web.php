@@ -18,7 +18,7 @@ use App\Http\Controllers\Portal\GrupoHorarioController;
 use App\Http\Controllers\Portal\GrupoDocenteController;
 use App\Http\Controllers\SolicitudInscripcionPublicaController;
 use App\Http\Controllers\Portal\SolicitudInscripcionController;
-
+use App\Http\Controllers\Portal\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,8 +54,10 @@ Route::prefix('portal')
     ->name('portal.')
     ->group(function () {
 
-        Route::view('/', 'portal.dashboard')
-            ->name('dashboard');
+        Route::get(
+            '/',
+            [DashboardController::class, 'index']
+        )->name('dashboard');
 
         /*
         |--------------------------------------------------------------------------

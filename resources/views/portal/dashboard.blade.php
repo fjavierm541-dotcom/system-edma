@@ -9,24 +9,32 @@
     <div class="portal-page-heading">
 
         <div>
+
             <span class="portal-page-eyebrow">
                 Resumen general
             </span>
 
-            <h1>Bienvenido al Portal EDMA</h1>
+            <h1>
+                Bienvenido al Portal EDMA
+            </h1>
 
             <p>
                 Consulte el estado general de la gestión académica
                 y acceda rápidamente a los módulos del sistema.
             </p>
+
         </div>
 
         <div class="portal-page-actions">
 
             <span class="portal-current-date">
+
                 <i class="bi bi-calendar3"></i>
 
-                {{ now()->translatedFormat('d \d\e F \d\e Y') }}
+                {{ now()->translatedFormat(
+                    'd \d\e F \d\e Y'
+                ) }}
+
             </span>
 
         </div>
@@ -37,8 +45,12 @@
 
 @section('content')
 
+    {{-- =====================================================
+         Indicadores principales
+         ===================================================== --}}
     <section class="portal-stat-grid">
 
+        {{-- Personas --}}
         <article class="portal-stat-card">
 
             <div class="portal-stat-icon">
@@ -46,13 +58,26 @@
             </div>
 
             <div class="portal-stat-content">
-                <span>Personas registradas</span>
-                <strong>0</strong>
-                <small>Información general del sistema</small>
+
+                <span>
+                    Personas registradas
+                </span>
+
+                <strong>
+                    {{ number_format(
+                        $personasRegistradas
+                    ) }}
+                </strong>
+
+                <small>
+                    Expedientes generales registrados
+                </small>
+
             </div>
 
         </article>
 
+        {{-- Estudiantes --}}
         <article class="portal-stat-card">
 
             <div class="portal-stat-icon">
@@ -60,13 +85,41 @@
             </div>
 
             <div class="portal-stat-content">
-                <span>Estudiantes activos</span>
-                <strong>0</strong>
-                <small>Con expediente activo</small>
+
+                <span>
+                    Estudiantes
+                </span>
+
+                <strong>
+                    {{ number_format(
+                        $estudiantesActivos
+                    ) }}
+                </strong>
+
+                <small>
+
+                    {{ number_format(
+                        $estudiantesActivos
+                    ) }}
+                    activos
+
+                    @if ($estudiantesInactivos > 0)
+
+                        ·
+                        {{ number_format(
+                            $estudiantesInactivos
+                        ) }}
+                        inactivos
+
+                    @endif
+
+                </small>
+
             </div>
 
         </article>
 
+        {{-- Docentes --}}
         <article class="portal-stat-card">
 
             <div class="portal-stat-icon">
@@ -74,23 +127,78 @@
             </div>
 
             <div class="portal-stat-content">
-                <span>Docentes activos</span>
-                <strong>0</strong>
-                <small>Personal docente registrado</small>
+
+                <span>
+                    Docentes
+                </span>
+
+                <strong>
+                    {{ number_format(
+                        $docentesActivos
+                    ) }}
+                </strong>
+
+                <small>
+
+                    {{ number_format(
+                        $docentesActivos
+                    ) }}
+                    activos
+
+                    @if ($docentesInactivos > 0)
+
+                        ·
+                        {{ number_format(
+                            $docentesInactivos
+                        ) }}
+                        inactivos
+
+                    @endif
+
+                </small>
+
             </div>
 
         </article>
 
-        <article class="portal-stat-card portal-stat-card-highlight">
+        {{-- Solicitudes --}}
+        <article
+            class="portal-stat-card
+                {{ $solicitudesPendientes > 0
+                    ? 'portal-stat-card-highlight'
+                    : '' }}"
+        >
 
             <div class="portal-stat-icon">
                 <i class="bi bi-file-earmark-check"></i>
             </div>
 
             <div class="portal-stat-content">
-                <span>Solicitudes pendientes</span>
-                <strong>0</strong>
-                <small>Pendientes de revisión</small>
+
+                <span>
+                    Solicitudes pendientes
+                </span>
+
+                <strong>
+                    {{ number_format(
+                        $solicitudesPendientes
+                    ) }}
+                </strong>
+
+                <small>
+
+                    @if ($solicitudesPendientes > 0)
+
+                        Requieren atención administrativa
+
+                    @else
+
+                        No hay solicitudes pendientes
+
+                    @endif
+
+                </small>
+
             </div>
 
         </article>
@@ -99,6 +207,9 @@
 
     <div class="row g-4">
 
+        {{-- =================================================
+             Estado académico
+             ================================================= --}}
         <div class="col-12 col-xl-8">
 
             <section class="portal-card">
@@ -106,33 +217,103 @@
                 <div class="portal-card-header">
 
                     <div>
-                        <h2>Actividad reciente</h2>
-                        <p>
-                            Últimos movimientos registrados en el sistema.
-                        </p>
-                    </div>
 
-                    <button
-                        type="button"
-                        class="btn portal-btn-secondary btn-sm"
-                    >
-                        Ver actividad
-                    </button>
+                        <h2>
+                            Estado académico
+                        </h2>
+
+                        <p>
+                            Información general de la operación
+                            académica actual.
+                        </p>
+
+                    </div>
 
                 </div>
 
-                <div class="portal-empty-state">
+                <div class="portal-detail-grid">
 
-                    <div class="portal-empty-icon">
-                        <i class="bi bi-clock-history"></i>
+                    <div class="portal-detail-item">
+
+                        <span>
+                            Grupos activos
+                        </span>
+
+                        <strong>
+                            {{ number_format(
+                                $gruposActivos
+                            ) }}
+                        </strong>
+
+                        <small>
+                            Grupos actualmente habilitados
+                        </small>
+
                     </div>
 
-                    <h3>No hay actividad reciente</h3>
+                    <div class="portal-detail-item">
 
-                    <p>
-                        Los registros y actualizaciones realizadas
-                        aparecerán en este espacio.
-                    </p>
+                        <span>
+                            Estudiantes activos
+                        </span>
+
+                        <strong>
+                            {{ number_format(
+                                $estudiantesActivos
+                            ) }}
+                        </strong>
+
+                        <small>
+                            Expedientes estudiantiles activos
+                        </small>
+
+                    </div>
+
+                    <div class="portal-detail-item">
+
+                        <span>
+                            Docentes activos
+                        </span>
+
+                        <strong>
+                            {{ number_format(
+                                $docentesActivos
+                            ) }}
+                        </strong>
+
+                        <small>
+                            Docentes disponibles en el sistema
+                        </small>
+
+                    </div>
+
+                    <div class="portal-detail-item">
+
+                        <span>
+                            Solicitudes por revisar
+                        </span>
+
+                        <strong>
+                            {{ number_format(
+                                $solicitudesPendientes
+                            ) }}
+                        </strong>
+
+                        <small>
+
+                            @if ($solicitudesPendientes > 0)
+
+                                Hay solicitudes que requieren atención
+
+                            @else
+
+                                Todo se encuentra al día
+
+                            @endif
+
+                        </small>
+
+                    </div>
 
                 </div>
 
@@ -140,6 +321,9 @@
 
         </div>
 
+        {{-- =================================================
+             Accesos rápidos
+             ================================================= --}}
         <div class="col-12 col-xl-4">
 
             <section class="portal-card">
@@ -147,60 +331,174 @@
                 <div class="portal-card-header">
 
                     <div>
-                        <h2>Accesos rápidos</h2>
-                        <p>Operaciones frecuentes.</p>
+
+                        <h2>
+                            Accesos rápidos
+                        </h2>
+
+                        <p>
+                            Operaciones frecuentes.
+                        </p>
+
                     </div>
 
                 </div>
 
                 <div class="portal-quick-actions">
 
+                    {{-- Nueva persona --}}
                     <a
-                        href="#"
+                        href="{{ route(
+                            'portal.personas.create'
+                        ) }}"
                         class="portal-quick-action"
                     >
+
                         <span>
                             <i class="bi bi-person-plus"></i>
                         </span>
 
                         <div>
-                            <strong>Nueva persona</strong>
-                            <small>Registrar información personal</small>
+
+                            <strong>
+                                Nueva persona
+                            </strong>
+
+                            <small>
+                                Registrar información personal
+                            </small>
+
                         </div>
 
                         <i class="bi bi-chevron-right"></i>
+
                     </a>
 
-                    <a
-                        href="{{ route('portal.personas.create') }}"
-                        class="portal-quick-action"
-                    >
-                        <span>
-                            <i class="bi bi-file-earmark-plus"></i>
-                        </span>
+                    {{-- Solicitudes --}}
+                    @if (
+                        Route::has(
+                            'portal.solicitudes-inscripcion.index'
+                        )
+                    )
 
-                        <div>
-                            <strong>Revisar solicitudes</strong>
-                            <small>Solicitudes de inscripción</small>
+                        <a
+                            href="{{ route(
+                                'portal.solicitudes-inscripcion.index'
+                            ) }}"
+                            class="portal-quick-action"
+                        >
+
+                            <span>
+                                <i class="bi bi-file-earmark-check"></i>
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Revisar solicitudes
+                                </strong>
+
+                                <small>
+
+                                    @if ($solicitudesPendientes > 0)
+
+                                        {{ $solicitudesPendientes }}
+                                        pendientes de atención
+
+                                    @else
+
+                                        Consultar solicitudes de inscripción
+
+                                    @endif
+
+                                </small>
+
+                            </div>
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </a>
+
+                    @else
+
+                        <div class="portal-quick-action">
+
+                            <span>
+                                <i class="bi bi-file-earmark-check"></i>
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Solicitudes de inscripción
+                                </strong>
+
+                                <small>
+                                    Módulo administrativo en preparación
+                                </small>
+
+                            </div>
+
+                            <i class="bi bi-hourglass-split"></i>
+
                         </div>
 
-                        <i class="bi bi-chevron-right"></i>
-                    </a>
+                    @endif
 
+                    {{-- Grupos --}}
                     <a
-                        href="#"
+                        href="{{ route(
+                            'portal.grupos.index'
+                        ) }}"
                         class="portal-quick-action"
                     >
+
                         <span>
                             <i class="bi bi-people"></i>
                         </span>
 
                         <div>
-                            <strong>Consultar grupos</strong>
-                            <small>Grupos y cupos disponibles</small>
+
+                            <strong>
+                                Consultar grupos
+                            </strong>
+
+                            <small>
+                                Grupos, horarios y docentes
+                            </small>
+
                         </div>
 
                         <i class="bi bi-chevron-right"></i>
+
+                    </a>
+
+                    {{-- Estudiantes --}}
+                    <a
+                        href="{{ route(
+                            'portal.estudiantes.index'
+                        ) }}"
+                        class="portal-quick-action"
+                    >
+
+                        <span>
+                            <i class="bi bi-mortarboard"></i>
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Consultar estudiantes
+                            </strong>
+
+                            <small>
+                                Expedientes estudiantiles
+                            </small>
+
+                        </div>
+
+                        <i class="bi bi-chevron-right"></i>
+
                     </a>
 
                 </div>
