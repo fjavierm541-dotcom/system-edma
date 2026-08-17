@@ -98,7 +98,7 @@
                     </a>
 
                     <a
-                        href="{{ route('website.admissions') }}"
+                        href="{{ route('inscripciones.solicitud') }}"
                         class="edma-button edma-button--admission"
                     >
                         <span>Solicitar inscripción</span>

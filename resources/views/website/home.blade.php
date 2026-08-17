@@ -57,7 +57,7 @@
                     <div class="edma-hero__actions">
 
                         <a
-                            href="{{ route('website.admissions') }}"
+                            href="{{ route('inscripciones.solicitud') }}"
                             class="edma-hero__button edma-hero__button--primary"
                         >
                             <span>Solicitar inscripción</span>
