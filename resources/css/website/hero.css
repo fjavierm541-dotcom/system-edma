@@ -1,837 +1,439 @@
 /*
 |--------------------------------------------------------------------------
-| Hero principal
+| EDMA HERO - Dirección institucional
 |--------------------------------------------------------------------------
 */
 
 .edma-hero {
-    position: relative;
-    min-height: 100vh;
-    overflow: hidden;
-    padding: 9.5rem 0 4.5rem;
-
-    background:
-        radial-gradient(
-            circle at 7% 18%,
-            rgba(255, 181, 28, 0.17),
-            transparent 24%
-        ),
-        radial-gradient(
-            circle at 92% 15%,
-            rgba(233, 124, 21, 0.14),
-            transparent 26%
-        ),
-        radial-gradient(
-            circle at 87% 88%,
-            rgba(191, 22, 27, 0.08),
-            transparent 24%
-        ),
-        linear-gradient(
-            135deg,
-            #f7f9fd 0%,
-            #f3f6fc 45%,
-            #fff9ed 100%
-        );
+    padding: 8.7rem 0 0;
+    background: #f4f6fa;
 }
 
-.edma-hero .edma-container {
-    position: relative;
-    z-index: 2;
-}
 
-/*
-|--------------------------------------------------------------------------
-| Fondo decorativo
-|--------------------------------------------------------------------------
-*/
+/* =========================================================
+   Panel principal
+   ========================================================= */
 
-.edma-hero__grid {
-    position: absolute;
-    inset: 0;
-    opacity: 0.32;
+.edma-hero__panel {
+    min-height: 620px;
 
-    background-image:
-        linear-gradient(
-            rgba(0, 23, 73, 0.04) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgba(0, 23, 73, 0.04) 1px,
-            transparent 1px
-        );
-
-    background-size: 52px 52px;
-
-    mask-image:
-        linear-gradient(
-            to bottom,
-            black 0%,
-            transparent 92%
-        );
-
-    pointer-events: none;
-}
-
-.edma-hero__glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(18px);
-    pointer-events: none;
-}
-
-.edma-hero__glow--left {
-    top: 13%;
-    left: -8%;
-    width: 430px;
-    height: 430px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255, 181, 28, 0.19),
-            transparent 68%
-        );
-}
-
-.edma-hero__glow--right {
-    right: -6%;
-    bottom: -8%;
-    width: 520px;
-    height: 520px;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(233, 124, 21, 0.14),
-            transparent 68%
-        );
-}
-
-/*
-|--------------------------------------------------------------------------
-| Distribución principal
-|--------------------------------------------------------------------------
-*/
-
-.edma-hero__main {
     display: grid;
     grid-template-columns:
         minmax(0, 0.92fr)
-        minmax(460px, 1.08fr);
+        minmax(500px, 1.08fr);
 
-    align-items: center;
-    gap: clamp(3rem, 6vw, 6.5rem);
-}
-
-.edma-hero__content {
-    max-width: 650px;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Etiqueta superior
-|--------------------------------------------------------------------------
-*/
-
-.edma-hero__eyebrow {
-    position: relative;
-    width: fit-content;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
     overflow: hidden;
 
-    margin-bottom: 1.4rem;
-    padding: 0.58rem 0.9rem;
+    border-radius: 2rem;
 
-    border:
-        1px solid
-        rgba(255, 181, 28, 0.29);
-
-    border-radius: var(--edma-radius-pill);
-
-    color: var(--edma-blue);
-
-    background:
-        linear-gradient(
-            120deg,
-            rgba(255, 255, 255, 0.92),
-            rgba(255, 247, 224, 0.74)
-        );
+    background: var(--edma-blue);
 
     box-shadow:
-        0 10px 30px rgba(233, 124, 21, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.98);
-
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-
-    font-size: 0.78rem;
-    font-weight: 750;
+        0 35px 90px rgba(0, 23, 73, 0.2);
 }
 
-.edma-hero__eyebrow::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -42%;
-    width: 28%;
-    height: 100%;
+
+/* =========================================================
+   Contenido
+   ========================================================= */
+
+.edma-hero__content {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        clamp(3rem, 5vw, 5.5rem)
+        clamp(2.5rem, 5vw, 5rem);
+}
+
+
+/* =========================================================
+   Eyebrow
+   ========================================================= */
+
+.edma-hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+
+    width: fit-content;
+
+    margin-bottom: 1.4rem;
+
+    color: rgba(255, 255, 255, 0.72);
+
+    font-size: 0.76rem;
+    font-weight: 750;
+
+    letter-spacing: 0.07em;
+
+    text-transform: uppercase;
+}
+
+.edma-hero__eyebrow span {
+    width: 28px;
+    height: 2px;
+
+    border-radius: 999px;
 
     background:
         linear-gradient(
             90deg,
-            transparent,
-            rgba(255, 255, 255, 0.9),
-            transparent
-        );
-
-    transform: skewX(-18deg);
-    animation: edma-eyebrow-shine 5.5s ease-in-out infinite;
-}
-
-.edma-hero__eyebrow-dot {
-    width: 8px;
-    height: 8px;
-    flex-shrink: 0;
-    border-radius: 50%;
-
-    background:
-        linear-gradient(
-            135deg,
             var(--edma-yellow),
             var(--edma-orange)
         );
-
-    box-shadow:
-        0 0 0 5px rgba(255, 181, 28, 0.16),
-        0 0 16px rgba(255, 181, 28, 0.45);
 }
 
-/*
-|--------------------------------------------------------------------------
-| Título
-|--------------------------------------------------------------------------
-*/
+
+/* =========================================================
+   Título
+   ========================================================= */
 
 .edma-hero__title {
-    max-width: 720px;
+    max-width: 680px;
+
     margin: 0;
 
-    color: var(--edma-blue);
+    color: var(--edma-white);
 
-    font-size: clamp(3.4rem, 5.6vw, 6.2rem);
+    font-size:
+        clamp(3.3rem, 5.4vw, 6.3rem);
+
     font-weight: 850;
-    letter-spacing: -0.065em;
-    line-height: 0.94;
 
-    text-wrap: balance;
+    letter-spacing: -0.065em;
+
+    line-height: 0.94;
 }
 
-.edma-hero__title span {
+.edma-hero__highlight {
+    position: relative;
+
     display: block;
+
+    width: fit-content;
+
+    overflow: hidden;
 
     color: transparent;
 
     background:
         linear-gradient(
-            105deg,
-            var(--edma-blue) 0%,
-            var(--edma-blue-light) 26%,
-            var(--edma-yellow) 52%,
-            var(--edma-orange) 76%,
-            var(--edma-red) 100%
+            100deg,
+            var(--edma-yellow),
+            var(--edma-orange),
+            var(--edma-yellow-light)
         );
 
-    background-size: 190% 190%;
+    background-size: 180% 180%;
 
     -webkit-background-clip: text;
     background-clip: text;
 
-    animation: edma-title-gradient 8s ease infinite;
+    animation:
+        edma-future-gradient
+        7s
+        ease
+        infinite;
 }
+
 
 /*
 |--------------------------------------------------------------------------
-| Descripción
+| Brillo que recorre "tu futuro"
 |--------------------------------------------------------------------------
 */
 
-.edma-hero__description {
-    max-width: 600px;
-    margin: 1.7rem 0 0;
-
-    color: var(--edma-text-muted);
-
-    font-size: 1.02rem;
-    line-height: 1.75;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Botones
-|--------------------------------------------------------------------------
-*/
-
-.edma-hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.85rem;
-    margin-top: 2rem;
-}
-
-.edma-hero__button {
-    min-height: 52px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.65rem;
-
-    padding: 0.82rem 1.2rem;
-
-    border-radius: 1rem;
-
-    font-size: 0.86rem;
-    font-weight: 750;
-
-    transition:
-        transform var(--edma-transition-fast),
-        box-shadow var(--edma-transition-fast),
-        border-color var(--edma-transition-fast);
-}
-
-.edma-hero__button--primary {
-    position: relative;
-    overflow: hidden;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.2);
-
-    color: var(--edma-white);
-
-    background:
-        linear-gradient(
-            125deg,
-            var(--edma-blue-dark),
-            var(--edma-blue) 60%,
-            var(--edma-blue-light)
-        );
-
-    box-shadow:
-        0 16px 36px rgba(0, 23, 73, 0.27),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.edma-hero__button--primary::before {
+.edma-hero__highlight::after {
     content: "";
+
     position: absolute;
-    top: -60%;
-    left: -45%;
-    width: 38%;
-    height: 220%;
+    top: 0;
+    left: -35%;
+
+    width: 26%;
+    height: 100%;
 
     background:
         linear-gradient(
             90deg,
             transparent,
-            rgba(255, 255, 255, 0.37),
+            rgba(255, 255, 255, 0.75),
             transparent
         );
 
-    transform: rotate(20deg);
-    transition: left 600ms ease;
+    transform:
+        skewX(-18deg);
+
+    mix-blend-mode: screen;
+
+    animation:
+        edma-future-shine
+        4.8s
+        ease-in-out
+        infinite;
 }
 
-.edma-hero__button--primary:hover,
-.edma-hero__button--primary:focus-visible {
-    color: var(--edma-white);
 
-    transform: translateY(-3px);
+/* =========================================================
+   Descripción
+   ========================================================= */
 
-    box-shadow:
-        0 21px 44px rgba(0, 23, 73, 0.36),
-        0 0 0 5px rgba(255, 181, 28, 0.08);
+.edma-hero__description {
+    max-width: 590px;
+
+    margin: 1.8rem 0 0;
+
+    color: rgba(255, 255, 255, 0.72);
+
+    font-size: 1rem;
+
+    line-height: 1.8;
 }
 
-.edma-hero__button--primary:hover::before,
-.edma-hero__button--primary:focus-visible::before {
-    left: 125%;
-}
 
-.edma-hero__button--secondary {
-    border:
-        1px solid
-        rgba(0, 23, 73, 0.12);
+/* =========================================================
+   Acciones
+   ========================================================= */
 
-    color: var(--edma-blue);
-
-    background:
-        linear-gradient(
-            125deg,
-            rgba(255, 255, 255, 0.91),
-            rgba(255, 247, 225, 0.73)
-        );
-
-    box-shadow:
-        0 10px 26px rgba(0, 23, 73, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.96);
-
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-}
-
-.edma-hero__button--secondary i {
-    color: var(--edma-orange);
-}
-
-.edma-hero__button--secondary:hover,
-.edma-hero__button--secondary:focus-visible {
-    color: var(--edma-blue);
-    border-color: rgba(233, 124, 21, 0.25);
-    transform: translateY(-3px);
-}
-
-/*
-|--------------------------------------------------------------------------
-| Texto de apoyo
-|--------------------------------------------------------------------------
-*/
-
-.edma-hero__support {
+.edma-hero__actions {
     display: flex;
-    align-items: center;
-    gap: 0.65rem;
+    flex-wrap: wrap;
 
-    margin-top: 1.5rem;
+    gap: 0.8rem;
+
+    margin-top: 2rem;
 }
 
-.edma-hero__support-icon {
-    width: 28px;
-    height: 28px;
+.edma-button {
+    min-height: 51px;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
 
-    border-radius: 50%;
+    gap: 0.6rem;
 
+    padding:
+        0.82rem
+        1.15rem;
+
+    border-radius: 0.8rem;
+
+    font-size: 0.82rem;
+    font-weight: 800;
+
+    transition:
+        transform var(--edma-transition-fast),
+        box-shadow var(--edma-transition-fast),
+        background-color var(--edma-transition-fast);
+}
+
+
+/* Botón dorado */
+
+.edma-button--gold {
     color: var(--edma-blue);
 
     background:
         linear-gradient(
             135deg,
-            rgba(255, 181, 28, 0.25),
-            rgba(233, 124, 21, 0.15)
+            var(--edma-yellow),
+            var(--edma-orange)
         );
+
+    box-shadow:
+        0 14px 30px rgba(233, 124, 21, 0.23);
 }
 
-.edma-hero__support p {
-    margin: 0;
-    color: var(--edma-text-muted);
-    font-size: 0.78rem;
+.edma-button--gold:hover {
+    color: var(--edma-blue);
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 19px 38px rgba(233, 124, 21, 0.3);
+}
+
+
+/* Botón secundario */
+
+.edma-button--outline-light {
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.28);
+
+    color: var(--edma-white);
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    backdrop-filter: blur(12px);
+}
+
+.edma-button--outline-light:hover {
+    color: var(--edma-white);
+
+    background:
+        rgba(255, 255, 255, 0.13);
+
+    transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   Nota
+   ========================================================= */
+
+.edma-hero__note {
+    display: flex;
+    align-items: center;
+
+    gap: 0.55rem;
+
+    margin-top: 1.7rem;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    font-size: 0.72rem;
     font-weight: 600;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Área fotográfica
-|--------------------------------------------------------------------------
-*/
-
-.edma-hero__visual {
-    position: relative;
-    min-height: 540px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.edma-hero__note i {
+    color: var(--edma-yellow);
 }
 
-.edma-hero__visual-shape {
-    position: absolute;
-    top: 4%;
-    right: 2%;
-    width: 78%;
-    height: 82%;
 
-    border-radius:
-        48% 52% 45% 55%
-        / 44% 39% 61% 56%;
+/* =========================================================
+   Imagen
+   ========================================================= */
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255, 181, 28, 0.27),
-            rgba(233, 124, 21, 0.15),
-            rgba(191, 22, 27, 0.07)
-        );
-
-    filter: blur(1px);
-
-    animation:
-        edma-hero-shape
-        11s
-        ease-in-out
-        infinite alternate;
-}
-
-.edma-hero__image-card {
+.edma-hero__media {
     position: relative;
-    width: min(100%, 590px);
-    height: 500px;
+
+    min-height: 620px;
+
     overflow: hidden;
-    margin: 0;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.8);
-
-    border-radius:
-        2.2rem 2.2rem 2.2rem 5.5rem;
-
-    background-color: var(--edma-surface);
-
-    box-shadow:
-        0 38px 90px rgba(0, 23, 73, 0.22),
-        16px 20px 55px rgba(233, 124, 21, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.95);
-
-    transform: rotate(1deg);
 }
 
 .edma-hero__image {
+    position: absolute;
+
+    inset: 0;
+
     width: 100%;
     height: 100%;
+
     object-fit: cover;
     object-position: center;
 }
 
-.edma-hero__image-overlay {
+.edma-hero__media-overlay {
     position: absolute;
+
     inset: 0;
 
     background:
         linear-gradient(
             90deg,
-            rgba(0, 23, 73, 0.18),
-            transparent 55%
+            rgba(0, 23, 73, 0.46),
+            transparent 45%
         ),
         linear-gradient(
             to top,
-            rgba(0, 23, 73, 0.45),
-            transparent 48%
+            rgba(0, 23, 73, 0.32),
+            transparent 42%
         );
-
-    pointer-events: none;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Etiqueta sobre fotografía
-|--------------------------------------------------------------------------
-*/
 
-.edma-hero__image-caption {
+/* =========================================================
+   Glass puntual sobre la fotografía
+   ========================================================= */
+
+.edma-hero__media-card {
     position: absolute;
-    right: 1.35rem;
-    bottom: 1.35rem;
-    left: 1.35rem;
+
+    right: 1.7rem;
+    bottom: 1.7rem;
 
     display: flex;
     align-items: center;
-    gap: 0.75rem;
 
-    padding: 0.85rem 1rem;
+    gap: 0.8rem;
+
+    max-width: 340px;
+
+    padding:
+        0.85rem
+        1rem;
 
     border:
         1px solid
-        rgba(255, 255, 255, 0.56);
-
-    border-radius: 1.2rem;
-
-    color: var(--edma-blue);
-
-    background:
-        linear-gradient(
-            125deg,
-            rgba(255, 255, 255, 0.85),
-            rgba(255, 247, 225, 0.67)
-        );
-
-    box-shadow:
-        0 16px 38px rgba(0, 23, 73, 0.16),
-        inset 0 1px 0 rgba(255, 255, 255, 0.96);
-
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-}
-
-.edma-hero__caption-icon {
-    width: 43px;
-    height: 43px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-
-    border-radius: 0.85rem;
-
-    color: var(--edma-white);
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--edma-yellow),
-            var(--edma-orange)
-        );
-
-    box-shadow:
-        0 9px 22px rgba(233, 124, 21, 0.28);
-}
-
-.edma-hero__caption-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.12rem;
-}
-
-.edma-hero__caption-content small {
-    color: var(--edma-text-muted);
-    font-size: 0.66rem;
-    font-weight: 650;
-}
-
-.edma-hero__caption-content strong {
-    color: var(--edma-blue);
-    font-size: 0.85rem;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Insignia lateral
-|--------------------------------------------------------------------------
-*/
-
-.edma-hero__badge {
-    position: absolute;
-    top: 1.35rem;
-    left: 1.35rem;
-
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-
-    padding: 0.65rem 0.8rem;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.62);
+        rgba(255, 255, 255, 0.42);
 
     border-radius: 1rem;
 
-    color: var(--edma-blue);
-
     background:
-        rgba(255, 255, 255, 0.78);
+        rgba(255, 255, 255, 0.76);
 
     box-shadow:
-        0 14px 32px rgba(0, 23, 73, 0.15);
+        0 20px 45px rgba(0, 23, 73, 0.2);
 
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter:
+        blur(20px);
+
+    -webkit-backdrop-filter:
+        blur(20px);
 }
 
-.edma-hero__badge-number {
-    min-width: 35px;
-    color: var(--edma-orange);
-    font-size: 1.55rem;
-    font-weight: 850;
-    line-height: 1;
-}
+.edma-hero__media-icon {
+    width: 42px;
+    height: 42px;
 
-.edma-hero__badge-text {
-    color: var(--edma-blue);
-    font-size: 0.67rem;
-    font-weight: 750;
-    line-height: 1.2;
-}
-
-/*
-|--------------------------------------------------------------------------
-| Banda de beneficios
-|--------------------------------------------------------------------------
-*/
-
-.edma-hero__features {
-    position: relative;
-    z-index: 4;
-
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-
-    gap: 0.85rem;
-
-    margin-top: 2.2rem;
-}
-
-.edma-feature-card {
-    position: relative;
-    min-height: 155px;
-    overflow: hidden;
-
-    padding: 1.15rem;
-
-    border:
-        1px solid
-        rgba(255, 255, 255, 0.78);
-
-    border-radius: 1.35rem;
-
-    background:
-        linear-gradient(
-            130deg,
-            rgba(255, 255, 255, 0.88),
-            rgba(255, 247, 225, 0.64)
-        );
-
-    box-shadow:
-        0 16px 38px rgba(0, 23, 73, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.98);
-
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-
-    transition:
-        transform var(--edma-transition-normal),
-        box-shadow var(--edma-transition-normal),
-        border-color var(--edma-transition-normal);
-}
-
-.edma-feature-card::after {
-    content: "";
-    position: absolute;
-    right: -35px;
-    bottom: -42px;
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255, 181, 28, 0.17),
-            transparent 70%
-        );
-}
-
-.edma-feature-card:hover {
-    border-color: rgba(255, 181, 28, 0.34);
-
-    transform: translateY(-6px);
-
-    box-shadow:
-        0 22px 48px rgba(0, 23, 73, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
-}
-
-.edma-feature-card__number {
-    position: absolute;
-    top: 0.85rem;
-    right: 1rem;
-
-    color: rgba(0, 23, 73, 0.13);
-
-    font-size: 2rem;
-    font-weight: 850;
-    line-height: 1;
-}
-
-.edma-feature-card__icon {
-    width: 43px;
-    height: 43px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
-    margin-bottom: 0.85rem;
+    flex-shrink: 0;
 
-    border-radius: 0.9rem;
+    border-radius: 0.7rem;
 
     color: var(--edma-white);
 
-    background:
-        linear-gradient(
-            135deg,
-            var(--edma-blue),
-            var(--edma-blue-light)
-        );
-
-    box-shadow:
-        0 9px 20px rgba(0, 23, 73, 0.21);
+    background: var(--edma-orange);
 }
 
-.edma-feature-card:nth-child(2)
-.edma-feature-card__icon {
-    background:
-        linear-gradient(
-            135deg,
-            var(--edma-yellow),
-            var(--edma-orange)
-        );
-
-    box-shadow:
-        0 9px 20px rgba(233, 124, 21, 0.22);
+.edma-hero__media-card div {
+    display: flex;
+    flex-direction: column;
 }
 
-.edma-feature-card:nth-child(3)
-.edma-feature-card__icon {
-    background:
-        linear-gradient(
-            135deg,
-            var(--edma-orange),
-            var(--edma-red)
-        );
+.edma-hero__media-card small {
+    color: var(--edma-text-muted);
 
-    box-shadow:
-        0 9px 20px rgba(191, 22, 27, 0.2);
+    font-size: 0.64rem;
+    font-weight: 650;
 }
 
-.edma-feature-card:nth-child(4)
-.edma-feature-card__icon {
-    background:
-        linear-gradient(
-            135deg,
-            var(--edma-blue-light),
-            var(--edma-blue)
-        );
-}
-
-.edma-feature-card__content h2 {
-    margin: 0 0 0.4rem;
-
+.edma-hero__media-card strong {
     color: var(--edma-blue);
 
-    font-size: 0.92rem;
+    font-size: 0.8rem;
     font-weight: 800;
 }
 
-.edma-feature-card__content p {
-    margin: 0;
 
-    color: var(--edma-text-muted);
+/* =========================================================
+   Animaciones
+   ========================================================= */
 
-    font-size: 0.72rem;
-    line-height: 1.55;
-}
+@keyframes edma-future-gradient {
 
-/*
-|--------------------------------------------------------------------------
-| Animaciones
-|--------------------------------------------------------------------------
-*/
-
-@keyframes edma-title-gradient {
     0%,
     100% {
         background-position: 0% 50%;
@@ -842,198 +444,101 @@
     }
 }
 
-@keyframes edma-eyebrow-shine {
+@keyframes edma-future-shine {
+
     0%,
-    56% {
-        left: -42%;
+    55% {
+        left: -35%;
     }
 
-    74%,
+    75%,
     100% {
-        left: 135%;
+        left: 130%;
     }
 }
 
-@keyframes edma-hero-shape {
-    0% {
-        border-radius:
-            48% 52% 45% 55%
-            / 44% 39% 61% 56%;
 
-        transform:
-            rotate(0deg)
-            scale(1);
-    }
-
-    100% {
-        border-radius:
-            57% 43% 55% 45%
-            / 53% 61% 39% 47%;
-
-        transform:
-            rotate(5deg)
-            scale(1.035);
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| Responsive: pantallas medianas
-|--------------------------------------------------------------------------
-*/
+/* =========================================================
+   Responsive
+   ========================================================= */
 
 @media (max-width: 1199.98px) {
-    .edma-hero__main {
+
+    .edma-hero__panel {
         grid-template-columns:
             minmax(0, 0.95fr)
-            minmax(400px, 1.05fr);
-
-        gap: 2.7rem;
-    }
-
-    .edma-hero__title {
-        font-size: clamp(3.2rem, 5.4vw, 5.5rem);
-    }
-
-    .edma-hero__image-card {
-        height: 470px;
+            minmax(430px, 1.05fr);
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Responsive: tablets
-|--------------------------------------------------------------------------
-*/
 
 @media (max-width: 991.98px) {
+
     .edma-hero {
-        padding: 8.6rem 0 4rem;
+        padding-top: 7.5rem;
     }
 
-    .edma-hero__main {
+    .edma-hero__panel {
         grid-template-columns: 1fr;
-        gap: 3rem;
+    }
+
+    .edma-hero__media {
+        min-height: 480px;
     }
 
     .edma-hero__content {
-        max-width: 760px;
-    }
-
-    .edma-hero__visual {
-        min-height: 500px;
-    }
-
-    .edma-hero__image-card {
-        width: min(100%, 680px);
-    }
-
-    .edma-hero__features {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 4rem 2.5rem;
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Responsive: teléfonos
-|--------------------------------------------------------------------------
-*/
 
-@media (max-width: 767.98px) {
+@media (max-width: 575.98px) {
+
     .edma-hero {
-        padding: 7.8rem 0 3.2rem;
+        padding-top: 6.8rem;
+    }
+
+    .edma-hero__panel {
+        border-radius: 1.3rem;
+    }
+
+    .edma-hero__content {
+        padding:
+            3rem
+            1.4rem;
     }
 
     .edma-hero__title {
-        font-size: clamp(3rem, 13vw, 4.6rem);
+        font-size:
+            clamp(3rem, 14vw, 4.5rem);
     }
 
-    .edma-hero__description {
-        font-size: 0.96rem;
-    }
-
-    .edma-hero__visual {
-        min-height: 430px;
-    }
-
-    .edma-hero__image-card {
-        height: 420px;
-
-        border-radius:
-            1.8rem
-            1.8rem
-            1.8rem
-            4rem;
-    }
-
-    .edma-hero__image-caption {
-        right: 0.85rem;
-        bottom: 0.85rem;
-        left: 0.85rem;
-    }
-
-    .edma-hero__badge {
-        top: 0.85rem;
-        left: 0.85rem;
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| Responsive: teléfonos pequeños
-|--------------------------------------------------------------------------
-*/
-
-@media (max-width: 575.98px) {
     .edma-hero__actions {
         flex-direction: column;
     }
 
-    .edma-hero__button {
+    .edma-button {
         width: 100%;
     }
 
-    .edma-hero__visual {
+    .edma-hero__media {
         min-height: 390px;
     }
 
-    .edma-hero__image-card {
-        height: 380px;
-    }
+    .edma-hero__media-card {
+        right: 1rem;
+        bottom: 1rem;
+        left: 1rem;
 
-    .edma-hero__features {
-        grid-template-columns: 1fr;
-    }
-
-    .edma-feature-card {
-        min-height: auto;
-    }
-
-    .edma-hero__image-caption {
-        padding: 0.72rem;
-    }
-
-    .edma-hero__caption-icon {
-        width: 38px;
-        height: 38px;
+        max-width: none;
     }
 }
 
-/*
-|--------------------------------------------------------------------------
-| Accesibilidad
-|--------------------------------------------------------------------------
-*/
 
 @media (prefers-reduced-motion: reduce) {
-    .edma-hero__title span,
-    .edma-hero__eyebrow::after,
-    .edma-hero__visual-shape {
-        animation: none;
-    }
 
-    .edma-feature-card,
-    .edma-hero__button {
-        transition: none;
+    .edma-hero__highlight,
+    .edma-hero__highlight::after {
+        animation: none;
     }
 }

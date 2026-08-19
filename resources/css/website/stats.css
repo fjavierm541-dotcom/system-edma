@@ -1,0 +1,97 @@
+/*
+|--------------------------------------------------------------------------
+| Cifras institucionales
+|--------------------------------------------------------------------------
+*/
+
+.edma-stats {
+    padding: 0;
+    background: #f4f6fa;
+}
+
+.edma-stats__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    overflow: hidden;
+
+    border-radius: 0 0 1.5rem 1.5rem;
+
+    background: var(--edma-blue);
+}
+
+.edma-stat {
+    min-height: 145px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 1.8rem 2rem;
+
+    border-right:
+        1px solid rgba(255, 255, 255, 0.11);
+}
+
+.edma-stat:last-child {
+    border-right: 0;
+}
+
+.edma-stat strong {
+    color: var(--edma-yellow);
+
+    font-size: 2.3rem;
+    font-weight: 850;
+
+    line-height: 1;
+}
+
+.edma-stat span {
+    margin-top: 0.55rem;
+
+    color: rgba(255, 255, 255, 0.72);
+
+    font-size: 0.76rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .edma-stats__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .edma-stat:nth-child(2) {
+        border-right: 0;
+    }
+
+    .edma-stat:nth-child(-n + 2) {
+        border-bottom:
+            1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+@media (max-width: 420px) {
+
+    .edma-stat {
+        padding: 1.4rem;
+    }
+}
+
+.edma-stat strong {
+    color: var(--edma-yellow);
+    font-size: 2.6rem;
+    font-weight: 850;
+    line-height: 1;
+}
+
+.edma-stat span {
+    margin-top: 0.55rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
