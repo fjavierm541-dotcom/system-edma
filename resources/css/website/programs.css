@@ -641,9 +641,9 @@
 
     color: var(--edma-text-muted);
 
-    font-size: 0.72rem;
+    font-size: 0.90rem;
 
-    line-height: 1.65;
+    line-height: 1.7;
 }
 
 
@@ -670,7 +670,7 @@
 
     color: var(--edma-text-muted);
 
-    font-size: 0.64rem;
+    font-size: 0.80rem;
 }
 
 .edma-program-card__facts i {
@@ -697,7 +697,7 @@
 
     color: var(--edma-blue);
 
-    font-size: 0.68rem;
+    font-size: 0.8rem;
 
     font-weight: 800;
 
@@ -738,7 +738,7 @@
 .edma-program-card__preview > span {
     color: var(--edma-text-muted);
 
-    font-size: 0.56rem;
+    font-size: 0.75rem;
 
     font-weight: 700;
 
@@ -804,7 +804,7 @@
 
     color: var(--edma-text-muted);
 
-    font-size: 0.58rem;
+    font-size: 0.75rem;
 
     line-height: 1.5;
 }
@@ -1012,7 +1012,7 @@
 
     color: var(--edma-orange);
 
-    font-size: 0.55rem;
+    font-size: 0.7rem;
 
     font-weight: 850;
 
@@ -1026,7 +1026,7 @@
 
     color: var(--edma-blue);
 
-    font-size: 0.66rem;
+    font-size: 0.81rem;
 
     font-weight: 800;
 
@@ -1153,7 +1153,7 @@
 
     color: var(--edma-text-muted);
 
-    font-size: 0.73rem;
+    font-size: 0.9rem;
 
     line-height: 1.7;
 }
@@ -1222,13 +1222,13 @@
 .edma-level-detail__fact small {
     color: var(--edma-text-muted);
 
-    font-size: 0.5rem;
+    font-size: 0.7rem;
 }
 
 .edma-level-detail__fact strong {
     color: var(--edma-blue);
 
-    font-size: 0.65rem;
+    font-size: 0.7rem;
 
     font-weight: 800;
 }
@@ -1739,7 +1739,7 @@
     color:
         rgba(255, 255, 255, 0.58);
 
-    font-size: 0.7rem;
+    font-size: 0.85rem;
 
     line-height: 1.6;
 }
@@ -1849,7 +1849,7 @@
 .edma-program-modal__meta small {
     color: var(--edma-text-muted);
 
-    font-size: 0.5rem;
+    font-size: 0.7rem;
 }
 
 .edma-program-modal__meta strong {
@@ -1857,7 +1857,7 @@
 
     color: var(--edma-blue);
 
-    font-size: 0.64rem;
+    font-size: 0.7rem;
 
     font-weight: 800;
 }
@@ -2556,4 +2556,186 @@ button.edma-program-card__action {
     .edma-program-card__preview {
         grid-column: auto;
     }
+}
+
+
+
+/* =========================================================
+   EDMA PROGRAMAS
+   Ajuste final de legibilidad
+   ========================================================= */
+
+
+/* ---------------------------------------------------------
+   TARJETAS DE PROGRAMAS
+   --------------------------------------------------------- */
+
+/* Código del programa sobre el nombre */
+.edma-program-card__code {
+    font-size: 0.82rem !important;
+    font-weight: 850;
+    letter-spacing: 0.08em;
+}
+
+
+/* Datos: "1 nivel", "2 niveles", etc. */
+.edma-program-card__facts > div {
+    font-size: 0.92rem !important;
+    line-height: 1.45;
+}
+
+.edma-program-card__facts strong {
+    font-size: 0.94rem !important;
+    font-weight: 800;
+}
+
+
+/* Formación virtual */
+.edma-program-card__facts span,
+.edma-program-card__facts small {
+    font-size: 0.88rem !important;
+}
+
+
+/* Desde nivel X hasta nivel X */
+.edma-program-card__preview {
+    font-size: 0.88rem !important;
+}
+
+.edma-program-card__preview > span {
+    font-size: 0.8rem !important;
+    font-weight: 750;
+}
+
+.edma-program-card__preview small {
+    font-size: 0.84rem !important;
+    line-height: 1.5;
+}
+
+.edma-program-card__preview strong {
+    font-size: 0.9rem !important;
+    font-weight: 850;
+}
+
+
+/* Botón Conocer más */
+.edma-program-card__action {
+    font-size: 0.9rem !important;
+    font-weight: 800;
+}
+
+.edma-program-card__action i {
+    font-size: 1rem;
+}
+
+
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+
+/* Texto descriptivo debajo del nombre del programa */
+.edma-program-modal__header p {
+    font-size: 0.98rem !important;
+    line-height: 1.65;
+}
+
+
+/* ---------------------------------------------------------
+   Datos superiores:
+   Recorrido / Modalidad / Programa
+   --------------------------------------------------------- */
+
+.edma-program-modal__meta small {
+    font-size: 0.82rem !important;
+    line-height: 1.3;
+}
+
+.edma-program-modal__meta strong {
+    font-size: 0.92rem !important;
+    line-height: 1.4;
+}
+
+
+/* ---------------------------------------------------------
+   "SELECCIONA UN NIVEL"
+   --------------------------------------------------------- */
+
+.edma-program-modal__levels-label {
+    font-size: 0.78rem !important;
+    font-weight: 850;
+    letter-spacing: 0.06em;
+}
+
+
+/* ---------------------------------------------------------
+   Recorrido de niveles
+   --------------------------------------------------------- */
+
+/* Número 01, 02, 03... */
+.edma-level-node__number {
+    font-size: 0.76rem !important;
+    font-weight: 800;
+}
+
+
+/* Código naranja A0, A1... */
+.edma-level-node__code {
+    font-size: 0.86rem !important;
+    font-weight: 850;
+}
+
+
+/* Nombre/código principal debajo */
+.edma-level-node strong {
+    font-size: 0.96rem !important;
+    font-weight: 850;
+}
+
+
+/* ---------------------------------------------------------
+   Tarjeta de detalle del nivel
+   --------------------------------------------------------- */
+
+/* "NIVEL ACADÉMICO" */
+.edma-level-detail__eyebrow {
+    font-size: 0.78rem !important;
+    font-weight: 850;
+    letter-spacing: 0.05em;
+}
+
+
+/* Nombre del nivel: A0, A1... */
+.edma-level-detail__main h3 {
+    font-size: clamp(2.2rem, 3vw, 2.8rem) !important;
+}
+
+
+/* Descripción del nivel */
+.edma-level-detail__main p {
+    font-size: 0.98rem !important;
+    line-height: 1.75;
+}
+
+
+/* ---------------------------------------------------------
+   Datos laterales del nivel
+   Duración / Modalidad / Nota mínima
+   --------------------------------------------------------- */
+
+.edma-level-detail__fact small {
+    font-size: 0.82rem !important;
+    line-height: 1.3;
+}
+
+.edma-level-detail__fact strong {
+    font-size: 0.92rem !important;
+    line-height: 1.4;
+}
+
+
+/* Iconos de datos */
+.edma-level-detail__fact i {
+    font-size: 1rem;
 }

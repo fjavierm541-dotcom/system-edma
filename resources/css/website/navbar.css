@@ -6,18 +6,27 @@
 
 .edma-header {
     position: fixed;
+
     top: 0;
     right: 0;
     left: 0;
+
     z-index: 1050;
-    padding: 0.85rem 1rem 0;
+
+    padding:
+        0.85rem
+        1rem
+        0;
+
     pointer-events: none;
 }
 
 .edma-navbar {
     padding: 0;
+
     pointer-events: auto;
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,13 +35,30 @@
 */
 
 .edma-navbar__shell {
-    width: min(calc(100% - 1rem), 1380px);
+    width:
+        min(
+            calc(100% - 1rem),
+            1380px
+        );
+
     min-height: 72px;
+
     margin-inline: auto;
+
     display: flex;
+
     align-items: center;
-    padding: 0.55rem 0.7rem 0.55rem 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.82);
+
+    padding:
+        0.55rem
+        0.7rem
+        0.55rem
+        0.85rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.82);
+
     border-radius: 1.35rem;
 
     background:
@@ -44,12 +70,21 @@
         );
 
     box-shadow:
-        0 16px 45px rgba(0, 23, 73, 0.14),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
+        0 16px 45px
+        rgba(0, 23, 73, 0.14),
 
-    backdrop-filter: blur(22px) saturate(150%);
-    -webkit-backdrop-filter: blur(22px) saturate(150%);
+        inset 0 1px 0
+        rgba(255, 255, 255, 1);
+
+    backdrop-filter:
+        blur(22px)
+        saturate(150%);
+
+    -webkit-backdrop-filter:
+        blur(22px)
+        saturate(150%);
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -59,18 +94,30 @@
 
 .edma-navbar__brand {
     display: inline-flex;
+
     align-items: center;
-    margin: 0 2rem 0 0;
-    padding: 0;
+
     flex-shrink: 0;
+
+    margin:
+        0
+        2rem
+        0
+        0;
+
+    padding: 0;
 }
 
 .edma-navbar__logo {
     width: auto;
+
     max-width: 145px;
+
     height: 48px;
+
     object-fit: contain;
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -84,17 +131,27 @@
 
 .edma-navbar__menu {
     align-items: center;
+
     gap: 0.15rem;
+
     margin-right: auto;
 }
 
 .edma-navbar__link {
     position: relative;
-    padding: 0.72rem 0.78rem !important;
+
+    padding:
+        0.72rem
+        0.78rem !important;
+
     border-radius: 0.78rem;
+
     color: var(--edma-blue);
+
     font-size: 0.84rem;
+
     font-weight: 700;
+
     white-space: nowrap;
 
     transition:
@@ -104,13 +161,24 @@
         box-shadow var(--edma-transition-fast);
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Línea animada
+|--------------------------------------------------------------------------
+*/
+
 .edma-navbar__link::after {
     content: "";
+
     position: absolute;
+
     right: 0.75rem;
     bottom: 0.32rem;
     left: 0.75rem;
+
     height: 2px;
+
     border-radius: 999px;
 
     background:
@@ -122,6 +190,7 @@
         );
 
     opacity: 0;
+
     transform: scaleX(0);
 
     transition:
@@ -132,12 +201,24 @@
 .edma-navbar__link:hover,
 .edma-navbar__link:focus-visible {
     color: var(--edma-blue);
-    background: rgba(255, 255, 255, 0.64);
-    transform: translateY(-1px);
+
+    background:
+        rgba(255, 255, 255, 0.64);
+
+    transform:
+        translateY(-1px);
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Estado activo
+|--------------------------------------------------------------------------
+*/
 
 .edma-navbar__link.is-active {
     color: var(--edma-blue);
+
     background:
         linear-gradient(
             135deg,
@@ -146,16 +227,21 @@
         );
 
     box-shadow:
-        0 7px 18px rgba(233, 124, 21, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 1);
+        0 7px 18px
+        rgba(233, 124, 21, 0.1),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 1);
 }
 
 .edma-navbar__link:hover::after,
 .edma-navbar__link:focus-visible::after,
 .edma-navbar__link.is-active::after {
     opacity: 1;
+
     transform: scaleX(1);
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -165,57 +251,181 @@
 
 .edma-navbar__actions {
     display: flex;
+
     align-items: center;
-    gap: 0.55rem;
-    margin-left: 1rem;
+
+    gap: 0.42rem;
+
+    margin-left: 0.8rem;
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Botones generales
+|--------------------------------------------------------------------------
+*/
 
 .edma-button {
     min-height: 42px;
+
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
-    gap: 0.48rem;
-    padding: 0.68rem 0.92rem;
-    border-radius: 0.9rem;
-    font-size: 0.78rem;
+
+    gap: 0.42rem;
+
+    padding:
+        0.68rem
+        0.78rem;
+
+    border-radius: 0.82rem;
+
+    font-size: 0.75rem;
+
     font-weight: 750;
+
+    line-height: 1;
+
     white-space: nowrap;
+
+    text-decoration: none;
 
     transition:
         transform var(--edma-transition-fast),
         box-shadow var(--edma-transition-fast),
         border-color var(--edma-transition-fast),
-        background-color var(--edma-transition-fast);
+        background-color var(--edma-transition-fast),
+        color var(--edma-transition-fast);
 }
 
-.edma-button--login {
-    border: 1px solid rgba(0, 23, 73, 0.13);
+
+/*
+|--------------------------------------------------------------------------
+| Campus / Portal
+|--------------------------------------------------------------------------
+*/
+
+.edma-button--access {
+    border:
+        1px solid
+        rgba(0, 23, 73, 0.1);
+
     color: var(--edma-blue);
+
+    background:
+        rgba(255, 255, 255, 0.53);
+}
+
+.edma-button--access i {
+    font-size: 0.9rem;
+
+    transition:
+        transform var(--edma-transition-fast);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Campus
+|--------------------------------------------------------------------------
+*/
+
+.edma-button--campus:hover,
+.edma-button--campus:focus-visible {
+    color: var(--edma-blue);
+
+    border-color:
+        rgba(233, 124, 21, 0.23);
+
+    background:
+        rgba(255, 255, 255, 0.87);
+
+    box-shadow:
+        0 7px 18px
+        rgba(0, 23, 73, 0.07);
+
+    transform:
+        translateY(-2px);
+}
+
+.edma-button--campus:hover i {
+    transform:
+        translateY(-1px)
+        rotate(-4deg);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Portal
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Portal
+|--------------------------------------------------------------------------
+*/
+
+.edma-button--portal {
     background:
         linear-gradient(
             135deg,
-            rgba(255, 255, 255, 0.84),
-            rgba(255, 255, 255, 0.58)
+            rgba(255, 255, 255, 0.72),
+            rgba(255, 248, 229, 0.54)
         );
+}
+
+.edma-button--portal:hover,
+.edma-button--portal:focus-visible {
+    color: var(--edma-blue);
+
+    border-color:
+        rgba(233, 124, 21, 0.23);
+
+    background:
+        rgba(255, 255, 255, 0.9);
 
     box-shadow:
-        0 7px 18px rgba(0, 23, 73, 0.07),
-        inset 0 1px 0 rgba(255, 255, 255, 0.96);
+        0 7px 18px
+        rgba(0, 23, 73, 0.08),
+
+        0 0 0 3px
+        rgba(255, 181, 28, 0.06);
+
+    transform:
+        translateY(-2px);
 }
 
-.edma-button--login:hover,
-.edma-button--login:focus-visible {
-    color: var(--edma-blue);
-    border-color: rgba(233, 124, 21, 0.28);
-    background: rgba(255, 255, 255, 0.92);
-    transform: translateY(-2px);
+.edma-button--portal:hover i,
+.edma-button--portal:focus-visible i {
+    transform:
+        translateY(-1px)
+        scale(1.06);
 }
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Solicitud de inscripción
+|--------------------------------------------------------------------------
+*/
 
 .edma-button--admission {
     position: relative;
+
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    padding-inline:
+        0.92rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.18);
+
     color: var(--edma-white);
 
     background:
@@ -227,15 +437,28 @@
         );
 
     box-shadow:
-        0 11px 25px rgba(0, 23, 73, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        0 11px 25px
+        rgba(0, 23, 73, 0.25),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.2);
 }
+
+
+/*
+|--------------------------------------------------------------------------
+| Brillo botón inscripción
+|--------------------------------------------------------------------------
+*/
 
 .edma-button--admission::before {
     content: "";
+
     position: absolute;
+
     top: -50%;
     left: -45%;
+
     width: 35%;
     height: 200%;
 
@@ -248,22 +471,30 @@
         );
 
     transform: rotate(18deg);
-    transition: left 550ms ease;
+
+    transition:
+        left 550ms ease;
 }
 
 .edma-button--admission:hover,
 .edma-button--admission:focus-visible {
     color: var(--edma-white);
-    transform: translateY(-2px);
+
+    transform:
+        translateY(-2px);
 
     box-shadow:
-        0 15px 32px rgba(0, 23, 73, 0.34),
-        0 0 0 4px rgba(255, 181, 28, 0.08);
+        0 15px 32px
+        rgba(0, 23, 73, 0.34),
+
+        0 0 0 4px
+        rgba(255, 181, 28, 0.08);
 }
 
 .edma-button--admission:hover::before {
     left: 125%;
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -274,30 +505,48 @@
 .edma-navbar__toggler {
     width: 44px;
     height: 44px;
+
     display: none;
+
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
+
     gap: 5px;
+
     margin-left: auto;
+
     padding: 0;
 
-    border: 1px solid rgba(0, 23, 73, 0.12);
+    border:
+        1px solid
+        rgba(0, 23, 73, 0.12);
+
     border-radius: 0.85rem;
-    background: rgba(255, 255, 255, 0.72);
+
+    background:
+        rgba(255, 255, 255, 0.72);
+
     box-shadow: none;
 }
 
 .edma-navbar__toggler span {
     width: 19px;
     height: 2px;
+
     border-radius: 999px;
-    background-color: var(--edma-blue);
+
+    background-color:
+        var(--edma-blue);
 }
 
 .edma-navbar__toggler:focus {
-    box-shadow: 0 0 0 4px rgba(255, 181, 28, 0.14);
+    box-shadow:
+        0 0 0 4px
+        rgba(255, 181, 28, 0.14);
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -306,59 +555,125 @@
 */
 
 @media (max-width: 1199.98px) {
+
     .edma-navbar__shell {
         flex-wrap: wrap;
     }
+
 
     .edma-navbar__brand {
         margin-right: auto;
     }
 
+
     .edma-navbar__toggler {
         display: inline-flex;
     }
 
+
     .edma-navbar__collapse {
         width: 100%;
+
         margin-top: 0.7rem;
-        padding: 0.85rem 0.2rem 0.15rem;
-        border-top: 1px solid rgba(0, 23, 73, 0.1);
+
+        padding:
+            0.85rem
+            0.2rem
+            0.15rem;
+
+        border-top:
+            1px solid
+            rgba(0, 23, 73, 0.1);
     }
+
 
     .edma-navbar__menu {
         align-items: stretch;
+
         gap: 0.15rem;
+
         margin: 0;
     }
 
+
     .edma-navbar__link {
-        padding: 0.8rem 0.85rem !important;
+        padding:
+            0.8rem
+            0.85rem !important;
     }
 
+
     .edma-navbar__actions {
-        flex-direction: column;
-        align-items: stretch;
-        margin: 0.85rem 0 0;
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 0.5rem;
+
+        margin:
+            0.85rem
+            0
+            0;
     }
+
 
     .edma-button {
         width: 100%;
     }
+
+
+    .edma-button--admission {
+        grid-column:
+            1 / -1;
+    }
+
 }
 
+
+/*
+|--------------------------------------------------------------------------
+| Móvil
+|--------------------------------------------------------------------------
+*/
+
 @media (max-width: 575.98px) {
+
     .edma-header {
-        padding: 0.6rem 0.45rem 0;
+        padding:
+            0.6rem
+            0.45rem
+            0;
     }
+
 
     .edma-navbar__shell {
         min-height: 64px;
-        padding: 0.45rem 0.55rem 0.45rem 0.7rem;
+
+        padding:
+            0.45rem
+            0.55rem
+            0.45rem
+            0.7rem;
+
         border-radius: 1.1rem;
     }
 
+
     .edma-navbar__logo {
         max-width: 118px;
+
         height: 42px;
     }
+
+
+    .edma-navbar__actions {
+        grid-template-columns: 1fr;
+    }
+
+
+    .edma-button--admission {
+        grid-column: auto;
+    }
+
 }
