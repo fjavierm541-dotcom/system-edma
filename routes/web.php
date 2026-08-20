@@ -10,6 +10,7 @@ use App\Http\Controllers\Portal\FormacionAcademicaController;
 use App\Http\Controllers\Portal\CuentaBancariaController;
 use App\Http\Controllers\Portal\DocenteController;
 use App\Http\Controllers\Portal\ProgramaController;
+use App\Http\Controllers\Website\ProgramaController as WebsiteProgramaController;
 use App\Http\Controllers\Portal\NivelController;
 use App\Http\Controllers\Portal\PeriodoAcademicoController;
 use App\Http\Controllers\Portal\HorarioController;
@@ -43,6 +44,10 @@ Route::get('/empleos', [WebsiteController::class, 'jobs'])
 
 Route::get('/contacto', [WebsiteController::class, 'contact'])
     ->name('website.contact');
+
+        Route::get('/cursos', [WebsiteProgramaController::class, 'index'])
+    ->name('website.courses');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -395,40 +400,43 @@ Route::prefix('portal')
 
     });
 
+
+
+
                 /*
-|--------------------------------------------------------------------------
-| Solicitud pública de inscripción
-|--------------------------------------------------------------------------
-*/
+                |--------------------------------------------------------------------------
+                | Solicitud pública de inscripción
+                |--------------------------------------------------------------------------
+                */
 
-Route::prefix('inscripciones')
-    ->name('inscripciones.')
-    ->group(function () {
+                Route::prefix('inscripciones')
+                    ->name('inscripciones.')
+                    ->group(function () {
 
-        Route::get(
-            '/solicitud',
-            [
-                SolicitudInscripcionPublicaController::class,
-                'create'
-            ]
-        )->name('solicitud');
+                        Route::get(
+                            '/solicitud',
+                            [
+                                SolicitudInscripcionPublicaController::class,
+                                'create'
+                            ]
+                        )->name('solicitud');
 
-        Route::post(
-            '/solicitud',
-            [
-                SolicitudInscripcionPublicaController::class,
-                'store'
-            ]
-        )->name('solicitud.store');
+                        Route::post(
+                            '/solicitud',
+                            [
+                                SolicitudInscripcionPublicaController::class,
+                                'store'
+                            ]
+                        )->name('solicitud.store');
 
-        Route::get(
-            '/solicitud/enviada/{codigo}',
-            [
-                SolicitudInscripcionPublicaController::class,
-                'success'
-            ]
-        )->name('solicitud.exito');
-    });
+                        Route::get(
+                            '/solicitud/enviada/{codigo}',
+                            [
+                                SolicitudInscripcionPublicaController::class,
+                                'success'
+                            ]
+                        )->name('solicitud.exito');
+                    });
 
 
 /*

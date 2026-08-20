@@ -1,0 +1,2559 @@
+/*
+|--------------------------------------------------------------------------
+| EDMA Web - Programas
+|--------------------------------------------------------------------------
+*/
+
+
+/* =========================================================
+   Hero
+   ========================================================= */
+
+.edma-programs-hero {
+    position: relative;
+    overflow: hidden;
+
+    padding: 10rem 0 6rem;
+
+    background:
+        linear-gradient(
+            110deg,
+            #f5f7fb 0%,
+            #ffffff 52%,
+            #fff7eb 100%
+        );
+}
+
+.edma-programs-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 520px;
+    height: 520px;
+
+    top: -250px;
+    right: 4%;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.12),
+            transparent 67%
+        );
+
+    pointer-events: none;
+}
+
+.edma-programs-hero__grid {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.1fr)
+        minmax(380px, 0.75fr);
+
+    align-items: center;
+
+    gap: clamp(4rem, 8vw, 8rem);
+}
+
+
+/* =========================================================
+   Hero content
+   ========================================================= */
+
+.edma-programs-hero__eyebrow {
+    display: inline-flex;
+
+    align-items: center;
+
+    margin-bottom: 1.2rem;
+
+    color: var(--edma-orange);
+
+    font-size: 0.7rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.edma-programs-hero__eyebrow::before {
+    content: "";
+
+    width: 26px;
+    height: 2px;
+
+    margin-right: 0.65rem;
+
+    background: var(--edma-orange);
+}
+
+.edma-programs-hero__title {
+    max-width: 760px;
+
+    margin: 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(3.6rem, 6vw, 6.8rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.065em;
+
+    line-height: 0.9;
+}
+
+.edma-programs-hero__title span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+.edma-programs-hero__description {
+    max-width: 620px;
+
+    margin: 1.8rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.92rem;
+
+    line-height: 1.85;
+}
+
+
+/* =========================================================
+   Meta
+   ========================================================= */
+
+.edma-programs-hero__meta {
+    display: flex;
+
+    align-items: center;
+
+    gap: 1.4rem;
+
+    margin-top: 2.3rem;
+}
+
+.edma-programs-hero__meta > div {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.1rem;
+}
+
+.edma-programs-hero__meta strong {
+    color: var(--edma-blue);
+
+    font-size: 1.3rem;
+
+    font-weight: 850;
+}
+
+.edma-programs-hero__meta span {
+    color: var(--edma-text-muted);
+
+    font-size: 0.64rem;
+}
+
+.edma-programs-hero__divider {
+    width: 1px;
+    height: 38px;
+
+    background: rgba(0, 23, 73, 0.12);
+}
+
+
+/* =========================================================
+   Visual
+   ========================================================= */
+
+.edma-programs-hero__visual {
+    position: relative;
+
+    min-height: 390px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.edma-programs-hero__visual::before {
+    content: "";
+
+    position: absolute;
+
+    width: 330px;
+    height: 330px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(0, 23, 73, 0.08);
+}
+
+.edma-programs-hero__visual::after {
+    content: "";
+
+    position: absolute;
+
+    width: 245px;
+    height: 245px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(0, 23, 73, 0.07),
+            rgba(255, 181, 28, 0.12)
+        );
+}
+
+
+/* =========================================================
+   Hero Glass
+   ========================================================= */
+
+.edma-programs-hero__glass {
+    position: relative;
+    z-index: 3;
+
+    width: min(100%, 330px);
+
+    padding: 2rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 1.4rem;
+
+    background:
+        rgba(255, 255, 255, 0.66);
+
+    box-shadow:
+        0 30px 70px
+        rgba(0, 23, 73, 0.12);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+}
+
+.edma-programs-hero__glass-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 1.5rem;
+
+    border-radius: 0.85rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+
+    box-shadow:
+        0 12px 25px
+        rgba(0, 23, 73, 0.2);
+}
+
+.edma-programs-hero__glass small {
+    display: block;
+
+    color: var(--edma-orange);
+
+    font-size: 0.58rem;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.06em;
+}
+
+.edma-programs-hero__glass strong {
+    display: block;
+
+    margin-top: 0.35rem;
+
+    color: var(--edma-blue);
+
+    font-size: 1.15rem;
+
+    font-weight: 850;
+}
+
+.edma-programs-hero__glass p {
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.7rem;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   Progress visual
+   ========================================================= */
+
+.edma-programs-hero__progress {
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 0.35rem;
+
+    margin-top: 1.5rem;
+}
+
+.edma-programs-hero__progress span {
+    height: 5px;
+
+    border-radius: 100px;
+
+    background: rgba(0, 23, 73, 0.09);
+}
+
+.edma-programs-hero__progress span:nth-child(1),
+.edma-programs-hero__progress span:nth-child(2),
+.edma-programs-hero__progress span:nth-child(3) {
+    background:
+        linear-gradient(
+            90deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+}
+
+
+/* =========================================================
+   Floating element
+   ========================================================= */
+
+.edma-programs-hero__floating {
+    position: absolute;
+
+    z-index: 4;
+
+    right: -10px;
+    bottom: 40px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.65rem;
+
+    padding: 0.75rem 0.9rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 0.85rem;
+
+    background:
+        rgba(255, 255, 255, 0.8);
+
+    box-shadow:
+        0 18px 40px
+        rgba(0, 23, 73, 0.12);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.edma-programs-hero__floating > i {
+    width: 36px;
+    height: 36px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.6rem;
+
+    color: #ffffff;
+
+    background: var(--edma-orange);
+}
+
+.edma-programs-hero__floating div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-programs-hero__floating small {
+    color: var(--edma-text-muted);
+
+    font-size: 0.5rem;
+}
+
+.edma-programs-hero__floating strong {
+    color: var(--edma-blue);
+
+    font-size: 0.65rem;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   Catálogo
+   ========================================================= */
+
+.edma-programs-catalog {
+    padding: 7rem 0;
+
+    background: #ffffff;
+}
+
+.edma-programs-catalog__header {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(300px, 0.55fr);
+
+    align-items: end;
+
+    gap: 4rem;
+
+    margin-bottom: 3.5rem;
+}
+
+.edma-programs-catalog__header h2 {
+    max-width: 700px;
+
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(2.8rem, 4.5vw, 4.8rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.055em;
+
+    line-height: 0.98;
+}
+
+.edma-programs-catalog__header h2 span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+.edma-programs-catalog__header > p {
+    max-width: 480px;
+
+    margin: 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.82rem;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   Program card
+   ========================================================= */
+
+.edma-program-card {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        150px
+        minmax(0, 1fr)
+        minmax(280px, 0.65fr);
+
+    gap: 2rem;
+
+    align-items: stretch;
+
+    overflow: hidden;
+
+    margin-top: 1rem;
+
+    padding: 1.2rem;
+
+    border:
+        1px solid rgba(0, 23, 73, 0.09);
+
+    border-radius: 1.35rem;
+
+    background: #f9fafc;
+
+    transition:
+        transform 300ms ease,
+        box-shadow 300ms ease,
+        border-color 300ms ease;
+}
+
+.edma-program-card:hover {
+    border-color:
+        rgba(233, 124, 21, 0.2);
+
+    box-shadow:
+        0 24px 55px
+        rgba(0, 23, 73, 0.08);
+
+    transform:
+        translateY(-3px);
+}
+
+
+/* =========================================================
+   Identidad
+   ========================================================= */
+
+.edma-program-card__identity {
+    position: relative;
+
+    min-height: 230px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    padding: 1rem;
+
+    border-radius: 1rem;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--edma-blue),
+            #062861
+        );
+}
+
+.edma-program-card__number {
+    position: absolute;
+
+    top: 0.6rem;
+    right: 0.8rem;
+
+    color:
+        rgba(255, 255, 255, 0.12);
+
+    font-size: 2.3rem;
+
+    font-weight: 900;
+}
+
+.edma-program-card__icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.7rem;
+
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-program-card__segment {
+    position: relative;
+    z-index: 2;
+
+    font-size: 0.62rem;
+
+    font-weight: 750;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   Content
+   ========================================================= */
+
+.edma-program-card__content {
+    align-self: center;
+
+    padding: 0.8rem 0;
+}
+
+.edma-program-card__code {
+    color: var(--edma-orange);
+
+    font-size: 0.58rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+.edma-program-card__content h3 {
+    margin: 0.35rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(1.35rem, 2vw, 1.9rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.035em;
+}
+
+.edma-program-card__content > p {
+    max-width: 620px;
+
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.72rem;
+
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   Facts
+   ========================================================= */
+
+.edma-program-card__facts {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 1.3rem;
+
+    margin-top: 1.2rem;
+}
+
+.edma-program-card__facts > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.45rem;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.64rem;
+}
+
+.edma-program-card__facts i {
+    color: var(--edma-orange);
+}
+
+.edma-program-card__facts strong {
+    color: var(--edma-blue);
+}
+
+
+/* =========================================================
+   Action
+   ========================================================= */
+
+.edma-program-card__action {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.5rem;
+
+    margin-top: 1.3rem;
+
+    color: var(--edma-blue);
+
+    font-size: 0.68rem;
+
+    font-weight: 800;
+
+    transition:
+        color 200ms ease,
+        gap 200ms ease;
+}
+
+.edma-program-card__action:hover {
+    gap: 0.7rem;
+
+    color: var(--edma-orange);
+}
+
+
+/* =========================================================
+   Preview niveles
+   ========================================================= */
+
+.edma-program-card__preview {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 1.5rem;
+
+    border-radius: 1rem;
+
+    background: #ffffff;
+
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(0, 23, 73, 0.06);
+}
+
+.edma-program-card__preview > span {
+    color: var(--edma-text-muted);
+
+    font-size: 0.56rem;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.05em;
+}
+
+.edma-program-card__levels {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.4rem;
+
+    margin-top: 0.9rem;
+}
+
+.edma-program-card__levels > div {
+    min-width: 39px;
+    height: 39px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 0.5rem;
+
+    border-radius: 0.6rem;
+
+    color: var(--edma-blue);
+
+    background: #f1f4f8;
+
+    font-size: 0.6rem;
+
+    font-weight: 850;
+
+    transition:
+        transform 200ms ease,
+        color 200ms ease,
+        background-color 200ms ease;
+}
+
+.edma-program-card__levels > div:hover {
+    color: #ffffff;
+
+    background: var(--edma-blue);
+
+    transform: translateY(-3px);
+}
+
+.edma-program-card__levels
+.edma-program-card__levels-more {
+    color: #ffffff;
+
+    background: var(--edma-orange);
+}
+
+.edma-program-card__preview small {
+    margin-top: 1rem;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.58rem;
+
+    line-height: 1.5;
+}
+
+.edma-program-card__preview small strong {
+    color: var(--edma-blue);
+}
+
+
+/* =========================================================
+   Empty
+   ========================================================= */
+
+.edma-programs-empty {
+    padding: 5rem 2rem;
+
+    border:
+        1px solid rgba(0, 23, 73, 0.08);
+
+    border-radius: 1.3rem;
+
+    text-align: center;
+
+    background: #f8f9fb;
+}
+
+.edma-programs-empty i {
+    color: var(--edma-orange);
+
+    font-size: 2rem;
+}
+
+.edma-programs-empty h3 {
+    margin: 1rem 0 0;
+
+    color: var(--edma-blue);
+}
+
+.edma-programs-empty p {
+    color: var(--edma-text-muted);
+}
+
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+
+.edma-level-path__summary span,
+.edma-level-path__summary small {
+    display: block;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.55rem;
+}
+
+.edma-level-path__summary strong {
+    display: block;
+
+    margin: 0.25rem 0;
+
+    color: var(--edma-blue);
+
+    font-size: 1rem;
+
+    font-weight: 850;
+}
+
+
+/* =========================================================
+   Ruta
+   ========================================================= */
+
+.edma-level-path__route {
+    position: relative;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-bottom: 3rem;
+
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+
+    padding:
+        0.5rem
+        0.2rem
+        1.3rem;
+}
+
+.edma-level-path__line {
+    position: absolute;
+
+    top: 54px;
+    left: 4%;
+
+    width: 92%;
+    height: 2px;
+
+    background:
+        rgba(0, 23, 73, 0.1);
+}
+
+
+/* =========================================================
+   Node
+   ========================================================= */
+
+.edma-level-node {
+    position: relative;
+    z-index: 2;
+
+    min-width: 115px;
+
+    display: flex;
+
+    flex: 1;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    padding: 0;
+
+    border: 0;
+
+    color: inherit;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+
+.edma-level-node__position {
+    margin-bottom: 0.65rem;
+
+    color: rgba(0, 23, 73, 0.25);
+
+    font-size: 0.55rem;
+
+    font-weight: 850;
+}
+
+.edma-level-node__point {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        4px solid #f7f8fb;
+
+    border-radius: 50%;
+
+    color: rgba(0, 23, 73, 0.32);
+
+    background: #e5e9ef;
+
+    box-shadow:
+        0 0 0 1px
+        rgba(0, 23, 73, 0.06);
+
+    transition:
+        transform 250ms ease,
+        background-color 250ms ease,
+        color 250ms ease,
+        box-shadow 250ms ease;
+}
+
+.edma-level-node:hover
+.edma-level-node__point {
+    transform: translateY(-3px);
+
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-level-node.is-active
+.edma-level-node__point {
+    color: #ffffff;
+
+    background: var(--edma-orange);
+
+    box-shadow:
+        0 8px 22px
+        rgba(233, 124, 21, 0.25);
+
+    transform: scale(1.08);
+}
+
+.edma-level-node__code {
+    margin-top: 0.8rem;
+
+    color: var(--edma-orange);
+
+    font-size: 0.55rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.04em;
+}
+
+.edma-level-node strong {
+    max-width: 130px;
+
+    margin-top: 0.2rem;
+
+    color: var(--edma-blue);
+
+    font-size: 0.66rem;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   Detalle
+   ========================================================= */
+
+.edma-level-details {
+    position: relative;
+}
+
+.edma-level-detail {
+    display: none;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(280px, 0.65fr);
+
+    gap: 2rem;
+
+    padding: 2.3rem;
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(0, 23, 73, 0.08);
+
+    border-radius: 1.4rem;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 24px 60px
+        rgba(0, 23, 73, 0.07);
+}
+
+.edma-level-detail.is-active {
+    display: grid;
+
+    animation:
+        edmaLevelReveal
+        350ms ease both;
+}
+
+@keyframes edmaLevelReveal {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   Información principal
+   ========================================================= */
+
+.edma-level-detail__main {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        minmax(0, 1fr);
+
+    gap: 1.4rem;
+}
+
+.edma-level-detail__number {
+    color:
+        rgba(0, 23, 73, 0.08);
+
+    font-size: 4rem;
+
+    font-weight: 900;
+
+    line-height: 0.9;
+}
+
+.edma-level-detail__label {
+    color: var(--edma-orange);
+
+    font-size: 0.55rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+.edma-level-detail__main h3 {
+    margin: 0.35rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(1.7rem, 2.5vw, 2.5rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.04em;
+}
+
+.edma-level-detail__main p {
+    max-width: 620px;
+
+    margin: 0.8rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.73rem;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   Facts
+   ========================================================= */
+
+.edma-level-detail__info {
+    display: grid;
+
+    gap: 0.6rem;
+}
+
+.edma-level-detail__fact {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    padding: 0.8rem;
+
+    border-radius: 0.85rem;
+
+    background: #f6f8fb;
+}
+
+.edma-level-detail__fact-icon {
+    flex: 0 0 auto;
+
+    width: 39px;
+    height: 39px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.65rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+}
+
+.edma-level-detail__fact:nth-child(2)
+.edma-level-detail__fact-icon {
+    background: var(--edma-orange);
+}
+
+.edma-level-detail__fact:nth-child(3)
+.edma-level-detail__fact-icon {
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-level-detail__fact div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-level-detail__fact small {
+    color: var(--edma-text-muted);
+
+    font-size: 0.5rem;
+}
+
+.edma-level-detail__fact strong {
+    color: var(--edma-blue);
+
+    font-size: 0.65rem;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   Footer del detalle
+   ========================================================= */
+
+.edma-level-detail__footer {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding-top: 1.2rem;
+
+    border-top:
+        1px solid rgba(0, 23, 73, 0.07);
+}
+
+.edma-level-detail__footer > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.55rem;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.6rem;
+}
+
+.edma-level-detail__footer > div i {
+    color: var(--edma-orange);
+}
+
+.edma-level-detail__cta {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 0.55rem;
+
+    padding:
+        0.8rem
+        1rem;
+
+    border-radius: 0.7rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+
+    font-size: 0.62rem;
+
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+        transform 200ms ease,
+        box-shadow 200ms ease,
+        background-color 200ms ease;
+}
+
+.edma-level-detail__cta:hover {
+    color: #ffffff;
+
+    background: #062861;
+
+    box-shadow:
+        0 10px 25px
+        rgba(0, 23, 73, 0.16);
+
+    transform:
+        translateY(-2px);
+}
+
+/* =========================================================
+   Experiencia académica
+   ========================================================= */
+
+.edma-program-experience {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 7rem 0;
+
+    background: var(--edma-blue);
+}
+
+.edma-program-experience::before {
+    content: "";
+
+    position: absolute;
+
+    top: -220px;
+    left: -180px;
+
+    width: 480px;
+    height: 480px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.09),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+.edma-program-experience::after {
+    content: "";
+
+    position: absolute;
+
+    right: -170px;
+    bottom: -250px;
+
+    width: 520px;
+    height: 520px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.05);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   Grid
+   ========================================================= */
+
+.edma-program-experience__grid {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.85fr)
+        minmax(420px, 1fr);
+
+    align-items: center;
+
+    gap: clamp(4rem, 8vw, 8rem);
+}
+
+
+/* =========================================================
+   Contenido
+   ========================================================= */
+
+.edma-program-experience
+.edma-section-eyebrow {
+    color: var(--edma-yellow);
+}
+
+.edma-program-experience__content h2 {
+    max-width: 650px;
+
+    margin: 0.8rem 0 0;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(3rem, 4.8vw, 5.2rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.96;
+}
+
+.edma-program-experience__content h2 span {
+    display: block;
+
+    color: var(--edma-yellow);
+}
+
+.edma-program-experience__content > p {
+    max-width: 570px;
+
+    margin: 1.5rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.62);
+
+    font-size: 0.8rem;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   Habilidades
+   ========================================================= */
+
+.edma-program-experience__skills {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.55rem;
+
+    margin-top: 2rem;
+}
+
+.edma-program-experience__skills span {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.45rem;
+
+    padding:
+        0.65rem
+        0.8rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.13);
+
+    border-radius: 0.65rem;
+
+    color:
+        rgba(255, 255, 255, 0.8);
+
+    background:
+        rgba(255, 255, 255, 0.055);
+
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    font-size: 0.62rem;
+
+    font-weight: 700;
+
+    transition:
+        transform 220ms ease,
+        background-color 220ms ease,
+        border-color 220ms ease;
+}
+
+.edma-program-experience__skills span:hover {
+    border-color:
+        rgba(255, 181, 28, 0.28);
+
+    background:
+        rgba(255, 255, 255, 0.09);
+
+    transform:
+        translateY(-3px);
+}
+
+.edma-program-experience__skills i {
+    color: var(--edma-yellow);
+}
+
+
+/* =========================================================
+   Facts
+   ========================================================= */
+
+.edma-program-experience__facts {
+    position: relative;
+
+    display: grid;
+}
+
+.edma-program-experience__fact {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        45px
+        minmax(0, 1fr);
+
+    gap: 1.2rem;
+
+    padding:
+        1.6rem
+        0;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.1);
+}
+
+.edma-program-experience__fact:first-child {
+    border-top:
+        1px solid rgba(255, 255, 255, 0.1);
+}
+
+.edma-program-experience__fact-number {
+    padding-top: 0.15rem;
+
+    color:
+        rgba(255, 255, 255, 0.25);
+
+    font-size: 0.55rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.06em;
+}
+
+.edma-program-experience__fact > div {
+    position: relative;
+
+    padding-left: 3.2rem;
+}
+
+.edma-program-experience__fact i {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 38px;
+    height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.65rem;
+
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-program-experience__fact:nth-child(2) i {
+    color: #ffffff;
+
+    background: var(--edma-orange);
+}
+
+.edma-program-experience__fact:nth-child(3) i {
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.12);
+}
+
+.edma-program-experience__fact h3 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 0.9rem;
+
+    font-weight: 800;
+}
+
+.edma-program-experience__fact p {
+    max-width: 500px;
+
+    margin: 0.45rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.53);
+
+    font-size: 0.66rem;
+
+    line-height: 1.65;
+}
+
+/* =========================================================
+   Modal académico de Programas
+   ========================================================= */
+
+.edma-program-modal {
+    --bs-modal-zindex: 1060;
+}
+
+.edma-program-modal .modal-dialog {
+    max-width: 1100px;
+}
+
+.edma-program-modal .modal-content {
+    overflow: hidden;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.65);
+
+    border-radius: 1.5rem;
+
+    background:
+        rgba(255, 255, 255, 0.97);
+
+    box-shadow:
+        0 35px 100px
+        rgba(0, 23, 73, 0.22);
+
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+}
+
+.edma-program-modal .modal-body {
+    padding: 0;
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.edma-program-modal__header {
+    position: relative;
+
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 2rem;
+
+    padding:
+        2.2rem
+        2.4rem
+        1.8rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-blue),
+            #062861
+        );
+}
+
+.edma-program-modal__header::after {
+    content: "";
+
+    position: absolute;
+
+    top: -100px;
+    right: 80px;
+
+    width: 260px;
+    height: 260px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.12),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+.edma-program-modal__header > div {
+    position: relative;
+    z-index: 2;
+}
+
+.edma-program-modal__eyebrow {
+    color: var(--edma-yellow);
+
+    font-size: 0.58rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.edma-program-modal__header h2 {
+    max-width: 720px;
+
+    margin: 0.35rem 0 0;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(1.8rem, 3vw, 2.8rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.045em;
+}
+
+.edma-program-modal__header p {
+    max-width: 650px;
+
+    margin: 0.7rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.58);
+
+    font-size: 0.7rem;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   Close
+   ========================================================= */
+
+.edma-program-modal__close {
+    position: relative;
+    z-index: 3;
+
+    flex: 0 0 auto;
+
+    width: 40px;
+    height: 40px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.16);
+
+    border-radius: 0.7rem;
+
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    transition:
+        transform 200ms ease,
+        background-color 200ms ease;
+}
+
+.edma-program-modal__close:hover {
+    background:
+        rgba(255, 255, 255, 0.14);
+
+    transform: rotate(5deg);
+}
+
+
+/* =========================================================
+   Meta
+   ========================================================= */
+
+.edma-program-modal__meta {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    border-bottom:
+        1px solid rgba(0, 23, 73, 0.07);
+
+    background: #ffffff;
+}
+
+.edma-program-modal__meta > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.7rem;
+
+    padding:
+        1rem
+        1.4rem;
+
+    border-right:
+        1px solid rgba(0, 23, 73, 0.07);
+}
+
+.edma-program-modal__meta > div:last-child {
+    border-right: 0;
+}
+
+.edma-program-modal__meta i {
+    width: 37px;
+    height: 37px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    border-radius: 0.65rem;
+
+    color: var(--edma-blue);
+
+    background:
+        rgba(0, 23, 73, 0.06);
+}
+
+.edma-program-modal__meta span {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-program-modal__meta small {
+    color: var(--edma-text-muted);
+
+    font-size: 0.5rem;
+}
+
+.edma-program-modal__meta strong {
+    margin-top: 0.08rem;
+
+    color: var(--edma-blue);
+
+    font-size: 0.64rem;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   Área de niveles
+   ========================================================= */
+
+.edma-modal-level-path {
+    padding:
+        2rem
+        2.4rem;
+}
+
+.edma-program-modal__section-label {
+    display: block;
+
+    margin-bottom: 0.7rem;
+
+    color: var(--edma-orange);
+
+    font-size: 0.56rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+
+/* Compactamos la ruta para el modal */
+
+.edma-modal-level-path
+.edma-level-path__route {
+    margin-bottom: 1.6rem;
+}
+
+.edma-modal-level-path
+.edma-level-detail {
+    padding: 1.6rem;
+
+    box-shadow:
+        0 15px 35px
+        rgba(0, 23, 73, 0.05);
+}
+
+
+/* =========================================================
+   Footer
+   ========================================================= */
+
+.edma-program-modal__footer {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding:
+        1rem
+        2.4rem;
+
+    border-top:
+        1px solid rgba(0, 23, 73, 0.07);
+
+    background: #f7f8fa;
+}
+
+.edma-program-modal__footer > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.5rem;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.6rem;
+}
+
+.edma-program-modal__footer > div i {
+    color: var(--edma-orange);
+}
+
+
+/* =========================================================
+   Botón de programa
+   ========================================================= */
+
+button.edma-program-card__action {
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+
+/* =========================================================
+   CTA final de Programas
+   ========================================================= */
+
+.edma-programs-cta {
+    padding: 6rem 0;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   Panel
+   ========================================================= */
+
+.edma-programs-cta__panel {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(330px, 0.65fr);
+
+    align-items: center;
+
+    gap: clamp(3rem, 6vw, 6rem);
+
+    overflow: hidden;
+
+    padding:
+        clamp(2.8rem, 5vw, 4.8rem);
+
+    border-radius: 1.6rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-blue-dark),
+            var(--edma-blue) 65%,
+            #06265f
+        );
+
+    box-shadow:
+        0 28px 70px
+        rgba(0, 23, 73, 0.17);
+}
+
+
+/* =========================================================
+   Decoración
+   ========================================================= */
+
+.edma-programs-cta__panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: -130px;
+    right: -90px;
+
+    width: 310px;
+    height: 310px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.13),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   Contenido
+   ========================================================= */
+
+.edma-programs-cta__content,
+.edma-programs-cta__facts {
+    position: relative;
+    z-index: 2;
+}
+
+.edma-programs-cta__eyebrow {
+    display: block;
+
+    margin-bottom: 0.9rem;
+
+    color: var(--edma-yellow);
+
+    font-size: 0.66rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.edma-programs-cta__content h2 {
+    max-width: 680px;
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(2.8rem, 4.5vw, 4.8rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-programs-cta__content h2 span {
+    display: block;
+
+    color: var(--edma-yellow);
+}
+
+.edma-programs-cta__content > p {
+    max-width: 590px;
+
+    margin: 1.3rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.62);
+
+    font-size: 0.78rem;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   Acciones
+   ========================================================= */
+
+.edma-programs-cta__actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.7rem;
+
+    margin-top: 1.8rem;
+}
+
+.edma-programs-cta__primary,
+.edma-programs-cta__secondary {
+    min-height: 48px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.55rem;
+
+    padding:
+        0.78rem
+        1rem;
+
+    border-radius: 0.72rem;
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+
+    transition:
+        transform 200ms ease,
+        box-shadow 200ms ease,
+        background-color 200ms ease;
+}
+
+
+/* Primary */
+
+.edma-programs-cta__primary {
+    color: var(--edma-blue);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+
+    box-shadow:
+        0 12px 27px
+        rgba(233, 124, 21, 0.23);
+}
+
+.edma-programs-cta__primary:hover {
+    color: var(--edma-blue);
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 17px 34px
+        rgba(233, 124, 21, 0.3);
+}
+
+
+/* Secondary */
+
+.edma-programs-cta__secondary {
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.18);
+
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+}
+
+.edma-programs-cta__secondary:hover {
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   Datos económicos
+   ========================================================= */
+
+.edma-programs-cta__facts {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 0.7rem;
+}
+
+.edma-programs-cta__facts article {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.7rem;
+
+    padding: 0.9rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.14);
+
+    border-radius: 0.85rem;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    transition:
+        transform 220ms ease,
+        background-color 220ms ease;
+}
+
+.edma-programs-cta__facts article:hover {
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    transform: translateY(-4px);
+}
+
+.edma-programs-cta__facts article > span {
+    width: 38px;
+    height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 0.65rem;
+
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-programs-cta__facts article:nth-child(2) > span {
+    color: #ffffff;
+
+    background: var(--edma-orange);
+}
+
+.edma-programs-cta__facts article div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-programs-cta__facts small {
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    font-size: 0.54rem;
+}
+
+.edma-programs-cta__facts strong {
+    margin-top: 0.08rem;
+
+    color: #ffffff;
+
+    font-size: 0.84rem;
+
+    font-weight: 850;
+}
+
+
+/* =========================================================
+   Nota
+   ========================================================= */
+
+.edma-programs-cta__note {
+    grid-column: 1 / -1;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 0.55rem;
+
+    margin-top: 0.25rem;
+
+    padding: 0.7rem 0.2rem;
+}
+
+.edma-programs-cta__note i {
+    margin-top: 0.05rem;
+
+    color: var(--edma-yellow);
+
+    font-size: 0.7rem;
+}
+
+.edma-programs-cta__note p {
+    margin: 0;
+
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    font-size: 0.59rem;
+
+    line-height: 1.5;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .edma-programs-cta__panel {
+    grid-template-columns: 1fr;
+
+    gap: 2.5rem;
+}
+
+    .edma-program-experience__grid {
+    grid-template-columns: 1fr;
+    gap: 3.5rem;
+}
+
+    .edma-level-path__header {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.edma-level-path__summary {
+    width: fit-content;
+}
+
+.edma-level-detail {
+    grid-template-columns: 1fr;
+}
+
+.edma-level-detail__footer {
+    grid-column: auto;
+}
+
+    .edma-programs-hero__grid {
+        grid-template-columns: 1fr;
+
+        gap: 2rem;
+    }
+
+    .edma-programs-hero__visual {
+        min-height: 350px;
+    }
+
+    .edma-programs-catalog__header {
+        grid-template-columns: 1fr;
+
+        gap: 1.3rem;
+    }
+
+    .edma-program-card {
+        grid-template-columns:
+            120px
+            minmax(0, 1fr);
+    }
+
+    .edma-program-card__preview {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 767.98px) {
+
+    .edma-program-modal .modal-dialog {
+        margin: 0.7rem;
+    }
+
+    .edma-program-modal__header {
+        padding: 1.6rem;
+    }
+
+    .edma-program-modal__meta {
+        grid-template-columns: 1fr;
+    }
+
+    .edma-program-modal__meta > div {
+        border-right: 0;
+
+        border-bottom:
+            1px solid rgba(0, 23, 73, 0.06);
+    }
+
+    .edma-modal-level-path {
+        padding: 1.5rem;
+    }
+
+    .edma-program-modal__footer {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        padding: 1.2rem 1.5rem;
+    }
+
+    .edma-program-modal__footer
+    .edma-level-detail__cta {
+        width: 100%;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    .edma-programs-cta {
+    padding: 4.5rem 0;
+}
+
+.edma-programs-cta__panel {
+    padding:
+        2.8rem
+        1.4rem;
+
+    border-radius: 1.2rem;
+}
+
+.edma-programs-cta__actions {
+    flex-direction: column;
+}
+
+.edma-programs-cta__primary,
+.edma-programs-cta__secondary {
+    width: 100%;
+}
+
+.edma-programs-cta__facts {
+    grid-template-columns: 1fr;
+}
+
+.edma-programs-cta__note {
+    grid-column: auto;
+}
+
+    .edma-program-experience {
+    padding: 5rem 0;
+}
+
+.edma-program-experience__skills {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.edma-program-experience__skills span {
+    justify-content: center;
+}
+
+.edma-program-experience__fact {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 0.7rem;
+}
+
+.edma-program-experience__fact > div {
+    padding-left: 3rem;
+}
+
+    .edma-level-path {
+    padding: 5rem 0;
+}
+
+.edma-level-path__header {
+    margin-bottom: 3rem;
+}
+
+.edma-level-path__route {
+    justify-content: flex-start;
+}
+
+.edma-level-node {
+    flex: 0 0 105px;
+}
+
+.edma-level-path__line {
+    left: 50px;
+    width: calc(100% - 100px);
+}
+
+.edma-level-detail {
+    padding: 1.3rem;
+}
+
+.edma-level-detail__main {
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+}
+
+.edma-level-detail__number {
+    font-size: 2.5rem;
+}
+
+.edma-level-detail__footer {
+    align-items: stretch;
+    flex-direction: column;
+}
+
+.edma-level-detail__cta {
+    width: 100%;
+}
+
+    .edma-programs-hero {
+        padding:
+            8rem 0
+            4.5rem;
+    }
+
+    .edma-programs-hero__title {
+        font-size:
+            clamp(3.1rem, 15vw, 4.5rem);
+    }
+
+    .edma-programs-hero__floating {
+        right: 0;
+    }
+
+    .edma-programs-catalog {
+        padding: 5rem 0;
+    }
+
+    .edma-program-card {
+        grid-template-columns: 1fr;
+
+        padding: 0.9rem;
+    }
+
+    .edma-program-card__identity {
+        min-height: 135px;
+    }
+
+    .edma-program-card__content {
+        padding: 0.8rem 0.3rem;
+    }
+
+    .edma-program-card__preview {
+        grid-column: auto;
+    }
+}
