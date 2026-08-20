@@ -1,0 +1,1531 @@
+/*
+|--------------------------------------------------------------------------
+| EDMA WEB - Empleos
+|--------------------------------------------------------------------------
+*/
+
+
+/* =========================================================
+   Hero
+   ========================================================= */
+
+.edma-jobs-hero {
+    position: relative;
+    overflow: hidden;
+
+    padding: 9rem 0 6rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f5f7fb,
+            #ffffff 58%,
+            #fff8ee
+        );
+}
+
+.edma-jobs-hero::before {
+    content: "";
+
+    position: absolute;
+
+    top: -230px;
+    right: -130px;
+
+    width: 520px;
+    height: 520px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.11),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   Layout
+   ========================================================= */
+
+.edma-jobs-hero__layout {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.9fr)
+        minmax(480px, 1.1fr);
+
+    align-items: center;
+
+    gap: clamp(4rem, 7vw, 7rem);
+}
+
+
+/* =========================================================
+   Hero content
+   ========================================================= */
+
+.edma-jobs-hero__eyebrow {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.65rem;
+
+    margin-bottom: 1.15rem;
+
+    color: var(--edma-orange);
+
+    font-size: 0.68rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.edma-jobs-hero__eyebrow::before {
+    content: "";
+
+    width: 28px;
+    height: 2px;
+
+    background: var(--edma-orange);
+}
+
+.edma-jobs-hero__title {
+    max-width: 760px;
+
+    margin: 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(3.5rem, 5.7vw, 6.3rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.065em;
+
+    line-height: 0.92;
+}
+
+.edma-jobs-hero__title span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+.edma-jobs-hero__description {
+    max-width: 610px;
+
+    margin: 1.7rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.9rem;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   Acciones
+   ========================================================= */
+
+.edma-jobs-hero__actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.75rem;
+
+    margin-top: 2rem;
+}
+
+.edma-jobs-hero__primary,
+.edma-jobs-hero__secondary {
+    min-height: 49px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.55rem;
+
+    padding: 0.8rem 1.05rem;
+
+    border-radius: 0.75rem;
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+
+    transition:
+        transform 200ms ease,
+        box-shadow 200ms ease,
+        background-color 200ms ease;
+}
+
+.edma-jobs-hero__primary {
+    color: #ffffff;
+
+    background: var(--edma-blue);
+
+    box-shadow:
+        0 13px 30px
+        rgba(0, 23, 73, 0.17);
+}
+
+.edma-jobs-hero__primary:hover {
+    color: #ffffff;
+
+    transform: translateY(-3px);
+}
+
+.edma-jobs-hero__secondary {
+    border:
+        1px solid rgba(0, 23, 73, 0.1);
+
+    color: var(--edma-blue);
+
+    background:
+        rgba(255, 255, 255, 0.7);
+}
+
+.edma-jobs-hero__secondary:hover {
+    color: var(--edma-blue);
+
+    background: #ffffff;
+
+    transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   Hero visual
+   ========================================================= */
+
+.edma-jobs-hero__visual {
+    position: relative;
+
+    min-height: 520px;
+}
+
+.edma-jobs-hero__image {
+    position: absolute;
+
+    inset: 0 2rem 0 0;
+
+    overflow: hidden;
+
+    border-radius:
+        1.7rem
+        1.7rem
+        1.7rem
+        5rem;
+
+    box-shadow:
+        0 35px 85px
+        rgba(0, 23, 73, 0.18);
+}
+
+.edma-jobs-hero__image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 900ms ease;
+}
+
+.edma-jobs-hero__visual:hover
+.edma-jobs-hero__image img {
+    transform: scale(1.025);
+}
+
+.edma-jobs-hero__overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 23, 73, 0.43),
+            transparent 50%
+        );
+}
+
+
+/* =========================================================
+   Glass
+   ========================================================= */
+
+.edma-jobs-hero__glass {
+    position: absolute;
+
+    z-index: 4;
+
+    right: 0;
+    bottom: 1.4rem;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.7rem;
+
+    padding:
+        0.85rem
+        1rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.5);
+
+    border-radius: 0.9rem;
+
+    background:
+        rgba(255, 255, 255, 0.78);
+
+    box-shadow:
+        0 18px 42px
+        rgba(0, 23, 73, 0.15);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.edma-jobs-hero__glass > span {
+    width: 40px;
+    height: 40px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.65rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+}
+
+.edma-jobs-hero__glass div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-jobs-hero__glass small {
+    color: var(--edma-text-muted);
+
+    font-size: 0.52rem;
+}
+
+.edma-jobs-hero__glass strong {
+    color: var(--edma-blue);
+
+    font-size: 0.68rem;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   Badge
+   ========================================================= */
+
+.edma-jobs-hero__badge {
+    position: absolute;
+
+    z-index: 4;
+
+    top: 1.3rem;
+    left: -2rem;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.65rem;
+
+    padding: 0.75rem 0.9rem;
+
+    border-radius: 0.85rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+
+    box-shadow:
+        0 15px 35px
+        rgba(0, 23, 73, 0.18);
+}
+
+.edma-jobs-hero__badge i {
+    color: var(--edma-yellow);
+}
+
+.edma-jobs-hero__badge span {
+    font-size: 0.58rem;
+
+    font-weight: 750;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================================
+   Beneficios
+   ========================================================= */
+
+.edma-jobs-benefits {
+    padding: 7rem 0;
+
+    background: #ffffff;
+}
+
+.edma-jobs-benefits__header {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 0.65fr);
+
+    align-items: end;
+
+    gap: 4rem;
+
+    margin-bottom: 3rem;
+}
+
+.edma-jobs-benefits__header h2 {
+    max-width: 700px;
+
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(2.9rem, 4.5vw, 4.9rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-jobs-benefits__header h2 span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+.edma-jobs-benefits__header > p {
+    max-width: 500px;
+
+    margin: 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.8rem;
+
+    line-height: 1.75;
+}
+
+.edma-jobs-benefits__grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 0.85rem;
+}
+
+.edma-job-benefit {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr;
+
+    gap: 0.9rem;
+
+    padding: 1.3rem;
+
+    border:
+        1px solid
+        rgba(0, 23, 73, 0.075);
+
+    border-radius: 1rem;
+
+    background: #f7f8fa;
+
+    transition:
+        transform 250ms ease,
+        border-color 250ms ease,
+        box-shadow 250ms ease;
+}
+
+.edma-job-benefit:hover {
+    border-color:
+        rgba(255, 181, 28, 0.28);
+
+    box-shadow:
+        0 16px 35px
+        rgba(0, 23, 73, 0.07);
+
+    transform: translateY(-5px);
+}
+
+.edma-job-benefit > span {
+    width: 43px;
+    height: 43px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.7rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+}
+
+.edma-job-benefit:nth-child(2) > span {
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-job-benefit:nth-child(3) > span {
+    background: var(--edma-orange);
+}
+
+.edma-job-benefit small {
+    display: block;
+
+    color: var(--edma-orange);
+
+    font-size: 0.48rem;
+
+    font-weight: 800;
+}
+
+.edma-job-benefit h3 {
+    margin: 0.1rem 0 0;
+    color: var(--edma-blue);
+    font-size: 1rem;
+    font-weight: 850;
+}
+
+.edma-job-benefit p {
+    margin: 0.4rem 0 0;
+    color: var(--edma-text-muted);
+    font-size: 0.82rem;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   Vacantes
+   ========================================================= */
+
+.edma-jobs-openings {
+    padding: 7rem 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f6f8fb,
+            #ffffff
+        );
+
+    scroll-margin-top: 7rem;
+}
+
+.edma-jobs-openings__header {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 0.6fr);
+
+    align-items: end;
+
+    gap: 4rem;
+
+    margin-bottom: 3rem;
+}
+
+.edma-jobs-openings__header h2 {
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(2.9rem, 4.5vw, 4.8rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-jobs-openings__header h2 span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+.edma-jobs-openings__header > p {
+    margin: 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.78rem;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   Vacante
+   ========================================================= */
+
+.edma-job-opening {
+    display: grid;
+
+    grid-template-columns:
+        220px
+        minmax(0, 1fr)
+        minmax(300px, 0.65fr);
+
+    gap: 1.4rem;
+
+    overflow: hidden;
+
+    padding: 1.2rem;
+
+    border:
+        1px solid
+        rgba(0, 23, 73, 0.08);
+
+    border-radius: 1.4rem;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 22px 55px
+        rgba(0, 23, 73, 0.07);
+}
+
+
+/* Identidad */
+
+.edma-job-opening__identity {
+    min-height: 310px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    padding: 1.2rem;
+
+    border-radius: 1rem;
+
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--edma-blue-dark),
+            var(--edma-blue)
+        );
+}
+
+.edma-job-opening__status {
+    width: fit-content;
+
+    padding:
+        0.35rem
+        0.55rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.16);
+
+    border-radius: 999px;
+
+    color: var(--edma-yellow);
+
+    background:
+        rgba(255, 255, 255, 0.06);
+
+    font-size: 0.51rem;
+
+    font-weight: 800;
+}
+
+.edma-job-opening__icon {
+    width: 52px;
+    height: 52px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.8rem;
+
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+
+    font-size: 1.2rem;
+}
+
+.edma-job-opening__identity small {
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    font-size: 0.52rem;
+}
+
+.edma-job-opening__identity strong {
+    display: block;
+
+    margin-top: 0.15rem;
+
+    font-size: 0.87rem;
+
+    font-weight: 850;
+}
+
+
+/* Contenido */
+
+.edma-job-opening__content {
+    align-self: center;
+
+    padding: 1rem;
+}
+
+.edma-job-opening__content h3 {
+    margin: 0;
+
+    color: var(--edma-blue);
+
+    font-size: 1.5rem;
+
+    font-weight: 850;
+
+    letter-spacing: -0.035em;
+}
+
+.edma-job-opening__content > p {
+    max-width: 620px;
+    margin: 0.75rem 0 0;
+    color: var(--edma-text-muted);
+    font-size: 0.86rem;
+    line-height: 1.7;
+}
+
+
+/* Condiciones */
+
+.edma-job-opening__conditions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 0.55rem;
+
+    margin-top: 1.3rem;
+}
+
+.edma-job-opening__conditions > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.55rem;
+
+    padding: 0.7rem;
+
+    border-radius: 0.7rem;
+
+    background: #f6f8fb;
+}
+
+.edma-job-opening__conditions i {
+    color: var(--edma-orange);
+}
+
+.edma-job-opening__conditions span {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-job-opening__conditions small {
+    font-size: 0.62rem;
+}
+
+.edma-job-opening__conditions strong {
+    font-size: 0.78rem;
+}
+
+
+/* Requisitos */
+
+.edma-job-opening__requirements {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 1.2rem;
+
+    border-radius: 1rem;
+
+    background: #f6f8fb;
+}
+
+.edma-job-opening__requirements-label {
+    color: var(--edma-orange);
+
+    font-size: 0.7rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.06em;
+
+    text-transform: uppercase;
+}
+
+.edma-job-opening__requirements ul {
+    list-style: none;
+
+    display: grid;
+
+    gap: 0.55rem;
+
+    margin:
+        1rem
+        0
+        0;
+
+    padding: 0;
+}
+
+.edma-job-opening__requirements li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: var(--edma-text-muted);
+    font-size: 0.8rem;
+    line-height: 1.55;
+}
+
+.edma-job-opening__requirements li i {
+    margin-top: 0.05rem;
+
+    color: var(--edma-orange);
+}
+
+
+/* Botón */
+
+.edma-job-opening__button {
+    min-height: 46px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.55rem;
+
+    margin-top: 1.3rem;
+
+    padding:
+        0.75rem
+        0.9rem;
+
+    border-radius: 0.7rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+
+    font-size: 0.66rem;
+
+    font-weight: 800;
+
+    transition:
+        transform 200ms ease,
+        box-shadow 200ms ease;
+}
+
+.edma-job-opening__button:hover {
+    color: #ffffff;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 11px 25px
+        rgba(0, 23, 73, 0.15);
+}
+
+.edma-job-opening__form-note {
+    display: block;
+
+    margin-top: 0.6rem;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.68rem;
+
+    line-height: 1.4;
+
+    text-align: center;
+}
+
+/* =========================================================
+   Proceso de postulación
+   ========================================================= */
+
+.edma-jobs-process {
+    padding: 7rem 0;
+
+    background: #ffffff;
+}
+
+.edma-jobs-process__header {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(320px, 0.65fr);
+
+    align-items: end;
+
+    gap: 4rem;
+
+    margin-bottom: 3rem;
+}
+
+.edma-jobs-process__header h2 {
+    max-width: 740px;
+
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(2.9rem, 4.5vw, 4.9rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-jobs-process__header h2 span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+.edma-jobs-process__header > p {
+    max-width: 510px;
+
+    margin: 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.9rem;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   Pasos
+   ========================================================= */
+
+.edma-jobs-process__steps {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 0.85rem;
+}
+
+.edma-job-process-step {
+    position: relative;
+
+    min-height: 255px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding: 1.4rem;
+
+    border:
+        1px solid rgba(0, 23, 73, 0.08);
+
+    border-radius: 1rem;
+
+    background: #f7f8fa;
+
+    transition:
+        transform 250ms ease,
+        border-color 250ms ease,
+        box-shadow 250ms ease;
+}
+
+.edma-job-process-step:hover {
+    border-color:
+        rgba(255, 181, 28, 0.28);
+
+    box-shadow:
+        0 18px 38px
+        rgba(0, 23, 73, 0.08);
+
+    transform: translateY(-5px);
+}
+
+.edma-job-process-step__number {
+    color:
+        rgba(0, 23, 73, 0.2);
+
+    font-size: 0.68rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.06em;
+}
+
+.edma-job-process-step__icon {
+    width: 44px;
+    height: 44px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 1.1rem;
+
+    border-radius: 0.72rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+}
+
+.edma-job-process-step:nth-child(2)
+.edma-job-process-step__icon {
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-job-process-step:nth-child(3)
+.edma-job-process-step__icon {
+    background: var(--edma-orange);
+}
+
+.edma-job-process-step:nth-child(4)
+.edma-job-process-step__icon {
+    background: var(--edma-blue-light);
+}
+
+.edma-job-process-step div {
+    margin-top: auto;
+
+    padding-top: 1.3rem;
+}
+
+.edma-job-process-step h3 {
+    margin: 0;
+
+    color: var(--edma-blue);
+
+    font-size: 1rem;
+
+    font-weight: 850;
+}
+
+.edma-job-process-step p {
+    margin: 0.5rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.82rem;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   CTA final
+   ========================================================= */
+
+.edma-jobs-cta {
+    padding: 0 0 7rem;
+
+    background: #ffffff;
+}
+
+.edma-jobs-cta__panel {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(300px, 0.55fr);
+
+    align-items: center;
+
+    gap: clamp(3rem, 6vw, 6rem);
+
+    overflow: hidden;
+
+    padding:
+        clamp(2.8rem, 5vw, 4.8rem);
+
+    border-radius: 1.5rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-blue-dark),
+            var(--edma-blue) 68%,
+            #06265f
+        );
+
+    box-shadow:
+        0 28px 70px
+        rgba(0, 23, 73, 0.17);
+}
+
+.edma-jobs-cta__panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: -130px;
+    right: -100px;
+
+    width: 320px;
+    height: 320px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.14),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+.edma-jobs-cta__content,
+.edma-jobs-cta__glass {
+    position: relative;
+    z-index: 2;
+}
+
+.edma-jobs-cta__eyebrow {
+    display: block;
+
+    margin-bottom: 0.9rem;
+
+    color: var(--edma-yellow);
+
+    font-size: 0.68rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.edma-jobs-cta__content h2 {
+    max-width: 700px;
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(2.8rem, 4.5vw, 4.8rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-jobs-cta__content h2 span {
+    display: block;
+
+    color: var(--edma-yellow);
+}
+
+.edma-jobs-cta__content > p {
+    max-width: 610px;
+
+    margin: 1.3rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.64);
+
+    font-size: 0.86rem;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   CTA acciones
+   ========================================================= */
+
+.edma-jobs-cta__actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.75rem;
+
+    margin-top: 1.8rem;
+}
+
+.edma-jobs-cta__primary,
+.edma-jobs-cta__secondary {
+    min-height: 48px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.55rem;
+
+    padding:
+        0.78rem
+        1rem;
+
+    border-radius: 0.72rem;
+
+    font-size: 0.76rem;
+
+    font-weight: 800;
+
+    transition:
+        transform 200ms ease,
+        box-shadow 200ms ease,
+        background-color 200ms ease;
+}
+
+.edma-jobs-cta__primary {
+    color: var(--edma-blue);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+}
+
+.edma-jobs-cta__primary:hover {
+    color: var(--edma-blue);
+
+    transform: translateY(-3px);
+}
+
+.edma-jobs-cta__secondary {
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.18);
+
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+}
+
+.edma-jobs-cta__secondary:hover {
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    transform: translateY(-3px);
+}
+
+.edma-jobs-cta__note {
+    display: block;
+
+    margin-top: 0.9rem;
+
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    font-size: 0.68rem;
+}
+
+
+/* =========================================================
+   Glass CTA
+   ========================================================= */
+
+.edma-jobs-cta__glass {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.85rem;
+
+    padding: 1.1rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.15);
+
+    border-radius: 1rem;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.edma-jobs-cta__glass > span {
+    width: 48px;
+    height: 48px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 0.75rem;
+
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-jobs-cta__glass div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-jobs-cta__glass small {
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    font-size: 0.65rem;
+}
+
+.edma-jobs-cta__glass strong {
+    margin-top: 0.1rem;
+
+    color: #ffffff;
+
+    font-size: 0.82rem;
+
+    font-weight: 800;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 1099.98px) {
+
+    .edma-job-opening {
+        grid-template-columns:
+            180px
+            minmax(0, 1fr);
+    }
+
+    .edma-job-opening__requirements {
+        grid-column: 1 / -1;
+    }
+}
+
+
+@media (max-width: 991.98px) {
+
+    .edma-jobs-process__header,
+.edma-jobs-cta__panel {
+    grid-template-columns: 1fr;
+}
+
+.edma-jobs-process__header {
+    gap: 1.3rem;
+}
+
+.edma-jobs-process__steps {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+    .edma-jobs-hero__layout,
+    .edma-jobs-benefits__header,
+    .edma-jobs-openings__header {
+        grid-template-columns: 1fr;
+    }
+
+    .edma-jobs-benefits__header,
+    .edma-jobs-openings__header {
+        gap: 1.3rem;
+    }
+
+    .edma-jobs-hero__visual {
+        min-height: 500px;
+    }
+
+    .edma-jobs-benefits__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .edma-job-opening {
+        grid-template-columns: 1fr;
+    }
+
+    .edma-job-opening__identity {
+        min-height: 190px;
+    }
+
+    .edma-job-opening__requirements {
+        grid-column: auto;
+    }
+
+    .edma-job-opening__conditions {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 575.98px) {
+
+    .edma-jobs-process {
+    padding: 5rem 0;
+}
+
+.edma-jobs-process__steps {
+    grid-template-columns: 1fr;
+}
+
+.edma-jobs-cta {
+    padding-bottom: 4.5rem;
+}
+
+.edma-jobs-cta__panel {
+    padding:
+        2.8rem
+        1.4rem;
+
+    border-radius: 1.2rem;
+}
+
+.edma-jobs-cta__actions {
+    flex-direction: column;
+}
+
+.edma-jobs-cta__primary,
+.edma-jobs-cta__secondary {
+    width: 100%;
+}
+
+    .edma-jobs-hero {
+        padding:
+            8rem 0
+            4.5rem;
+    }
+
+    .edma-jobs-hero__title {
+        font-size:
+            clamp(3rem, 14vw, 4.5rem);
+    }
+
+    .edma-jobs-hero__actions {
+        flex-direction: column;
+    }
+
+    .edma-jobs-hero__primary,
+    .edma-jobs-hero__secondary {
+        width: 100%;
+    }
+
+    .edma-jobs-hero__visual {
+        min-height: 410px;
+    }
+
+    .edma-jobs-hero__image {
+        inset: 0;
+    }
+
+    .edma-jobs-hero__badge {
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .edma-jobs-hero__glass {
+        right: 0.8rem;
+        bottom: 0.8rem;
+        left: 0.8rem;
+    }
+
+    .edma-jobs-benefits,
+    .edma-jobs-openings {
+        padding: 5rem 0;
+    }
+}
