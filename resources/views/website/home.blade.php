@@ -244,4 +244,23 @@
 
     </section>
 
+
+
+
+
+    @include('website.sections.programs-home')
+
+    @include('website.sections.methodology-home')
+
+    @include('website.sections.schedules-home')
+
+    @include('website.sections.campus-home')
+
+    @include('website.sections.trust-home')
+    
+    @include('website.sections.gallery-home')
+
+    @include('website.sections.admission-cta-home')
+
+    
 @endsection

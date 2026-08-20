@@ -22,3 +22,7 @@ import '../css/app.css';
 
 /* EDMA Portal */
 import './portal/portal';
+
+/* EDMA Website */
+import './website/programs-home';
+import './website/reveal';

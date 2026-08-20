@@ -1,0 +1,453 @@
+/*
+|--------------------------------------------------------------------------
+| CTA final de inscripción
+|--------------------------------------------------------------------------
+*/
+
+.edma-admission-cta {
+    padding: 0 0 7rem;
+
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   Panel
+   ========================================================= */
+
+.edma-admission-cta__panel {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(420px, 0.82fr);
+
+    align-items: center;
+
+    gap: clamp(3rem, 6vw, 6rem);
+
+    overflow: hidden;
+
+    padding:
+        clamp(3rem, 5vw, 5.5rem);
+
+    border-radius: 1.8rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-blue-dark),
+            var(--edma-blue) 60%,
+            #06265f
+        );
+
+    box-shadow:
+        0 32px 80px rgba(0, 23, 73, 0.2);
+}
+
+
+/* =========================================================
+   Luz ambiental
+   ========================================================= */
+
+.edma-admission-cta__panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: -130px;
+    right: -110px;
+
+    width: 340px;
+    height: 340px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.14),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+.edma-admission-cta__panel::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: -170px;
+    left: 30%;
+
+    width: 380px;
+    height: 380px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.045),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   Contenido
+   ========================================================= */
+
+.edma-admission-cta__content {
+    position: relative;
+    z-index: 2;
+}
+
+.edma-admission-cta__eyebrow {
+    display: block;
+
+    margin-bottom: 1rem;
+
+    color: var(--edma-yellow);
+
+    font-size: 0.72rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.edma-admission-cta__title {
+    max-width: 680px;
+
+    margin: 0;
+
+    color: var(--edma-white);
+
+    font-size:
+        clamp(3rem, 4.8vw, 5.4rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-admission-cta__title span {
+    display: block;
+
+    color: var(--edma-yellow);
+}
+
+.edma-admission-cta__description {
+    max-width: 600px;
+
+    margin: 1.5rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.66);
+
+    font-size: 0.92rem;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   Botones
+   ========================================================= */
+
+.edma-admission-cta__actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.8rem;
+
+    margin-top: 2rem;
+}
+
+.edma-admission-cta__primary,
+.edma-admission-cta__secondary {
+    min-height: 50px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.6rem;
+
+    padding:
+        0.82rem
+        1.1rem;
+
+    border-radius: 0.78rem;
+
+    font-size: 0.77rem;
+
+    font-weight: 800;
+
+    transition:
+        transform var(--edma-transition-fast),
+        box-shadow var(--edma-transition-fast),
+        background-color var(--edma-transition-fast);
+}
+
+
+.edma-admission-cta__primary {
+    color: var(--edma-blue);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+
+    box-shadow:
+        0 14px 30px
+        rgba(233, 124, 21, 0.23);
+}
+
+.edma-admission-cta__primary:hover {
+    color: var(--edma-blue);
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 18px 38px
+        rgba(233, 124, 21, 0.3);
+}
+
+
+.edma-admission-cta__secondary {
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.22);
+
+    color: var(--edma-white);
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.edma-admission-cta__secondary:hover {
+    color: var(--edma-white);
+
+    background:
+        rgba(255, 255, 255, 0.12);
+
+    transform:
+        translateY(-3px);
+}
+
+
+/* =========================================================
+   Resumen
+   ========================================================= */
+
+.edma-admission-cta__summary {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    gap: 0.85rem;
+}
+
+
+/* =========================================================
+   Tarjetas Glass
+   ========================================================= */
+
+.edma-admission-summary {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr;
+
+    align-items: start;
+
+    gap: 0.85rem;
+
+    padding: 1rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.15);
+
+    border-radius: 1rem;
+
+    background:
+        rgba(255, 255, 255, 0.075);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    transition:
+        transform var(--edma-transition-normal),
+        background-color var(--edma-transition-normal),
+        border-color var(--edma-transition-normal);
+}
+
+.edma-admission-summary:hover {
+    border-color:
+        rgba(255, 181, 28, 0.25);
+
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    transform:
+        translateX(-5px);
+}
+
+
+/* =========================================================
+   Iconos
+   ========================================================= */
+
+.edma-admission-summary__icon {
+    width: 42px;
+    height: 42px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.72rem;
+
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-admission-summary:nth-child(2)
+.edma-admission-summary__icon {
+    color: var(--edma-white);
+
+    background: var(--edma-orange);
+}
+
+.edma-admission-summary:nth-child(3)
+.edma-admission-summary__icon {
+    color: var(--edma-white);
+
+    background:
+        var(--edma-blue-light);
+}
+
+
+/* =========================================================
+   Texto
+   ========================================================= */
+
+.edma-admission-summary div {
+    min-width: 0;
+}
+
+.edma-admission-summary small {
+    display: block;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+}
+
+.edma-admission-summary strong {
+    display: block;
+
+    margin-top: 0.08rem;
+
+    color: var(--edma-white);
+
+    font-size: 0.9rem;
+
+    font-weight: 850;
+}
+
+.edma-admission-summary p {
+    margin: 0.4rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.57);
+
+    font-size: 0.64rem;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .edma-admission-cta {
+        padding-bottom: 5.5rem;
+    }
+
+    .edma-admission-cta__panel {
+        grid-template-columns: 1fr;
+
+        gap: 3rem;
+    }
+
+    .edma-admission-cta__summary {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .edma-admission-cta__summary {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 575.98px) {
+
+    .edma-admission-cta {
+        padding-bottom: 4.5rem;
+    }
+
+    .edma-admission-cta__panel {
+        padding:
+            3rem
+            1.4rem;
+
+        border-radius: 1.25rem;
+    }
+
+    .edma-admission-cta__actions {
+        flex-direction: column;
+    }
+
+    .edma-admission-cta__primary,
+    .edma-admission-cta__secondary {
+        width: 100%;
+    }
+}
