@@ -45,3 +45,37 @@ main {
     width: min(100% - 2rem, 1320px);
     margin-inline: auto;
 }
+
+
+/* =========================================================
+   Accesibilidad — Movimiento reducido
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior: auto !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =========================================================
+   Accesibilidad — Focus visible
+   ========================================================= */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: 3px solid rgba(255, 181, 28, 0.45);
+    outline-offset: 3px;
+}

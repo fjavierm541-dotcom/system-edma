@@ -1,3 +1,4 @@
+@extends('layouts.web')
 @section(
     'title',
     'Contacto | Edumerican Academy Honduras'
