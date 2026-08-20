@@ -20,6 +20,7 @@ use App\Http\Controllers\Portal\GrupoDocenteController;
 use App\Http\Controllers\SolicitudInscripcionPublicaController;
 use App\Http\Controllers\Portal\SolicitudInscripcionController;
 use App\Http\Controllers\Portal\DashboardController;
+use App\Http\Controllers\Website\ContactoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,12 @@ Route::get('/contacto', [WebsiteController::class, 'contact'])
 
         Route::get('/cursos', [WebsiteProgramaController::class, 'index'])
     ->name('website.courses');
+
+    // Para el correo de contacto del sitio web
+    Route::post(
+        '/contacto',
+        [ContactoController::class, 'store']
+    )->name('website.contact.store');
 
 
 /*

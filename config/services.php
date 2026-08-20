@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'edma' => [
+        'contact_email' => env('EDMA_CONTACT_EMAIL'),
+    ],
+
 ];
