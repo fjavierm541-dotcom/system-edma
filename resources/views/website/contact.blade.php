@@ -1,10 +1,11 @@
-@extends('layouts.web')
-
-@section('title', 'Contacto | Edumerican Academy Honduras')
+@section(
+    'title',
+    'Contacto | Edumerican Academy Honduras'
+)
 
 @section(
     'description',
-    'Comunícate con Edumerican Academy Honduras. Estamos disponibles para orientarte sobre nuestros programas, inscripciones y servicios educativos.'
+    'Comunícate con Edumerican Academy Honduras para recibir información sobre programas, inscripción, horarios y nuestros servicios educativos.'
 )
 
 @section('content')

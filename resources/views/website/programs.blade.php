@@ -1,6 +1,14 @@
 @extends('layouts.web')
 
-@section('title', 'Programas | Edumerican Academy Honduras')
+@section(
+    'title',
+    'Programas de inglés | Edumerican Academy Honduras'
+)
+
+@section(
+    'description',
+    'Conoce los programas de inglés de Edumerican Academy Honduras y explora los niveles que conforman cada recorrido académico.'
+)
 
 @section('content')
 

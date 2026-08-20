@@ -1,10 +1,11 @@
-@extends('layouts.web')
-
-@section('title', 'Nosotros | Edumerican Academy Honduras')
+@section(
+    'title',
+    'Nosotros | Edumerican Academy Honduras'
+)
 
 @section(
     'description',
-    'Conoce Edumerican Academy Honduras, nuestra propuesta educativa y la experiencia académica que acompaña a nuestros estudiantes.'
+    'Conoce Edumerican Academy Honduras, nuestra misión, visión, valores y compromiso con una educación accesible, innovadora y de calidad.'
 )
 
 @section('content')

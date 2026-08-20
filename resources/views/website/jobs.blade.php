@@ -1,10 +1,11 @@
-@extends('layouts.web')
-
-@section('title', 'Empleos | Edumerican Academy Honduras')
+@section(
+    'title',
+    'Trabaja con nosotros | Edumerican Academy Honduras'
+)
 
 @section(
     'description',
-    'Conoce las oportunidades laborales disponibles en Edumerican Academy Honduras y forma parte de nuestro equipo académico.'
+    'Conoce las oportunidades para formar parte del equipo de Edumerican Academy Honduras y contribuir a la formación de nuestros estudiantes.'
 )
 
 @section('content')
