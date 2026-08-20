@@ -1,0 +1,1936 @@
+/*
+|--------------------------------------------------------------------------
+| EDMA WEB - Nosotros
+|--------------------------------------------------------------------------
+*/
+
+
+/* =========================================================
+   Hero
+   ========================================================= */
+
+.edma-about-page-hero {
+    position: relative;
+    overflow: hidden;
+
+    padding: 9rem 0 6rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-blue-dark),
+            var(--edma-blue) 62%,
+            #06265f
+        );
+}
+
+.edma-about-page-hero::before {
+    content: "";
+
+    position: absolute;
+    top: -200px;
+    right: -120px;
+
+    width: 500px;
+    height: 500px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.12),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   Layout Hero
+   ========================================================= */
+
+.edma-about-page-hero__layout {
+    position: relative;
+    z-index: 2;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.92fr)
+        minmax(480px, 1.08fr);
+
+    align-items: center;
+
+    gap: clamp(4rem, 7vw, 7rem);
+}
+
+
+/* =========================================================
+   Hero contenido
+   ========================================================= */
+
+.edma-about-page-hero__eyebrow {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.65rem;
+
+    margin-bottom: 1.2rem;
+
+    color: var(--edma-yellow);
+
+    font-size: 0.68rem;
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.edma-about-page-hero__eyebrow::before {
+    content: "";
+
+    width: 28px;
+    height: 2px;
+
+    background: var(--edma-yellow);
+}
+
+.edma-about-page-hero__title {
+    max-width: 720px;
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(3.5rem, 5.7vw, 6.4rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.065em;
+
+    line-height: 0.92;
+}
+
+.edma-about-page-hero__title span {
+    display: block;
+
+    color: var(--edma-yellow);
+}
+
+.edma-about-page-hero__description {
+    max-width: 610px;
+
+    margin: 1.7rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.64);
+
+    font-size: 0.9rem;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   Acciones
+   ========================================================= */
+
+.edma-about-page-hero__actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.75rem;
+
+    margin-top: 2rem;
+}
+
+.edma-about-page-hero__primary,
+.edma-about-page-hero__secondary {
+    min-height: 49px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.55rem;
+
+    padding:
+        0.8rem
+        1.05rem;
+
+    border-radius: 0.75rem;
+
+    font-size: 0.73rem;
+    font-weight: 800;
+
+    transition:
+        transform 200ms ease,
+        background-color 200ms ease,
+        box-shadow 200ms ease;
+}
+
+.edma-about-page-hero__primary {
+    color: var(--edma-blue);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+
+    box-shadow:
+        0 13px 30px
+        rgba(233, 124, 21, 0.23);
+}
+
+.edma-about-page-hero__primary:hover {
+    color: var(--edma-blue);
+
+    transform: translateY(-3px);
+}
+
+.edma-about-page-hero__secondary {
+    border:
+        1px solid rgba(255, 255, 255, 0.18);
+
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+}
+
+.edma-about-page-hero__secondary:hover {
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   Hero visual
+   ========================================================= */
+
+.edma-about-page-hero__visual {
+    position: relative;
+
+    min-height: 520px;
+}
+
+.edma-about-page-hero__image {
+    position: absolute;
+
+    inset: 0 2rem 0 0;
+
+    overflow: hidden;
+
+    border-radius:
+        1.8rem
+        1.8rem
+        5rem
+        1.8rem;
+
+    box-shadow:
+        0 38px 85px
+        rgba(0, 0, 0, 0.25);
+}
+
+.edma-about-page-hero__image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition:
+        transform 900ms ease;
+}
+
+.edma-about-page-hero__visual:hover
+.edma-about-page-hero__image img {
+    transform: scale(1.025);
+}
+
+.edma-about-page-hero__overlay {
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 23, 73, 0.45),
+            transparent 50%
+        );
+}
+
+
+/* =========================================================
+   Glass Hero
+   ========================================================= */
+
+.edma-about-page-hero__glass {
+    position: absolute;
+
+    z-index: 4;
+
+    right: 0;
+    bottom: 1.7rem;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.7rem;
+
+    padding: 0.85rem 1rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.4);
+
+    border-radius: 0.9rem;
+
+    background:
+        rgba(255, 255, 255, 0.78);
+
+    box-shadow:
+        0 18px 42px
+        rgba(0, 0, 0, 0.17);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.edma-about-page-hero__glass > span {
+    width: 40px;
+    height: 40px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.65rem;
+
+    color: #ffffff;
+
+    background: var(--edma-orange);
+}
+
+.edma-about-page-hero__glass div {
+    display: flex;
+    flex-direction: column;
+}
+
+.edma-about-page-hero__glass small {
+    color: var(--edma-text-muted);
+
+    font-size: 0.52rem;
+}
+
+.edma-about-page-hero__glass strong {
+    color: var(--edma-blue);
+
+    font-size: 0.68rem;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   Indicador
+   ========================================================= */
+
+.edma-about-page-hero__index {
+    position: absolute;
+
+    z-index: 4;
+
+    top: 1.5rem;
+    left: -2rem;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.6rem;
+
+    padding: 0.8rem 1rem;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.14);
+
+    border-radius: 0.85rem;
+
+    background:
+        rgba(0, 23, 73, 0.55);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.edma-about-page-hero__index strong {
+    color: var(--edma-yellow);
+
+    font-size: 1.8rem;
+
+    font-weight: 900;
+}
+
+.edma-about-page-hero__index span {
+    color:
+        rgba(255, 255, 255, 0.68);
+
+    font-size: 0.58rem;
+
+    font-weight: 700;
+
+    line-height: 1.25;
+}
+
+
+/* =========================================================
+   Quiénes somos
+   ========================================================= */
+
+.edma-about-intro {
+    padding: 7rem 0;
+
+    background: #ffffff;
+
+    scroll-margin-top: 7rem;
+}
+
+
+/* =========================================================
+   Intro
+   ========================================================= */
+
+.edma-about-intro__layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 0.85fr)
+        minmax(420px, 1fr);
+
+    gap: clamp(4rem, 8vw, 8rem);
+
+    align-items: start;
+
+    margin-bottom: 4rem;
+}
+
+.edma-about-intro__heading h2 {
+    max-width: 650px;
+
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(2.9rem, 4.5vw, 4.9rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-about-intro__heading h2 span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+.edma-about-intro__content {
+    padding-top: 1.7rem;
+}
+
+.edma-about-intro__content > p {
+    max-width: 620px;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.78rem;
+
+    line-height: 1.8;
+}
+
+.edma-about-intro__lead {
+    margin-top: 0;
+
+    color: var(--edma-blue) !important;
+
+    font-size: 0.98rem !important;
+
+    font-weight: 650;
+}
+
+
+/* =========================================================
+   Firma
+   ========================================================= */
+
+.edma-about-intro__signature {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.8rem;
+
+    margin-top: 1.7rem;
+}
+
+.edma-about-intro__signature > span {
+    width: 36px;
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+}
+
+.edma-about-intro__signature div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-about-intro__signature small {
+    color: var(--edma-text-muted);
+
+    font-size: 0.52rem;
+}
+
+.edma-about-intro__signature strong {
+    margin-top: 0.08rem;
+
+    color: var(--edma-blue);
+
+    font-size: 0.68rem;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   Visual inferior
+   ========================================================= */
+
+.edma-about-intro__visual {
+    display: grid;
+
+    grid-template-columns:
+        minmax(420px, 1.1fr)
+        minmax(0, 0.9fr);
+
+    gap: 1rem;
+}
+
+.edma-about-intro__photo {
+    min-height: 470px;
+
+    overflow: hidden;
+
+    margin: 0;
+
+    border-radius: 1.4rem;
+
+    box-shadow:
+        0 22px 55px
+        rgba(0, 23, 73, 0.1);
+}
+
+.edma-about-intro__photo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition:
+        transform 900ms ease;
+}
+
+.edma-about-intro__photo:hover img {
+    transform: scale(1.03);
+}
+
+
+/* =========================================================
+   Principios
+   ========================================================= */
+
+.edma-about-intro__principles {
+    display: grid;
+
+    gap: 0.7rem;
+}
+
+.edma-about-principle {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr;
+
+    align-items: center;
+
+    gap: 0.85rem;
+
+    padding: 1.1rem;
+
+    border:
+        1px solid rgba(0, 23, 73, 0.075);
+
+    border-radius: 1rem;
+
+    background: #f7f8fa;
+
+    transition:
+        transform 250ms ease,
+        border-color 250ms ease,
+        box-shadow 250ms ease;
+}
+
+.edma-about-principle:hover {
+    border-color:
+        rgba(255, 181, 28, 0.27);
+
+    box-shadow:
+        0 14px 30px
+        rgba(0, 23, 73, 0.07);
+
+    transform:
+        translateX(5px);
+}
+
+.edma-about-principle > span {
+    width: 43px;
+    height: 43px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.7rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+}
+
+.edma-about-principle:nth-child(2) > span {
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-about-principle:nth-child(3) > span {
+    background: var(--edma-orange);
+}
+
+.edma-about-principle small {
+    display: block;
+
+    color: var(--edma-orange);
+
+    font-size: 0.5rem;
+
+    font-weight: 800;
+}
+
+.edma-about-principle strong {
+    display: block;
+
+    margin-top: 0.1rem;
+
+    color: var(--edma-blue);
+
+    font-size: 0.8rem;
+
+    font-weight: 850;
+}
+
+.edma-about-principle p {
+    margin: 0.35rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.64rem;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================================
+   Misión, visión y valores
+   ========================================================= */
+
+.edma-about-purpose {
+    position: relative;
+    overflow: hidden;
+
+    padding: 7rem 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f5f7fb 0%,
+            #ffffff 100%
+        );
+}
+
+.edma-about-purpose::before {
+    content: "";
+
+    position: absolute;
+
+    top: -180px;
+    right: -160px;
+
+    width: 430px;
+    height: 430px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.08),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+.edma-about-purpose .edma-container {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* =========================================================
+   Encabezado
+   ========================================================= */
+
+.edma-about-purpose__header {
+    max-width: 760px;
+
+    margin-bottom: 3rem;
+}
+
+.edma-about-purpose__header h2 {
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(2.9rem, 4.6vw, 5rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-about-purpose__header h2 span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+
+/* =========================================================
+   Grid principal
+   ========================================================= */
+
+.edma-about-purpose__grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 1rem;
+}
+
+
+/* =========================================================
+   Tarjetas
+   ========================================================= */
+
+.edma-purpose-card {
+    position: relative;
+
+    min-height: 390px;
+
+    overflow: hidden;
+
+    padding: 2rem;
+
+    border-radius: 1.35rem;
+
+    transition:
+        transform 280ms ease,
+        box-shadow 280ms ease;
+}
+
+.edma-purpose-card:hover {
+    transform: translateY(-6px);
+}
+
+
+/* Misión */
+
+.edma-purpose-card--mission {
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--edma-blue-dark),
+            var(--edma-blue)
+        );
+
+    box-shadow:
+        0 25px 60px rgba(0, 23, 73, 0.16);
+}
+
+
+/* Visión */
+
+.edma-purpose-card--vision {
+    border:
+        1px solid rgba(0, 23, 73, 0.08);
+
+    background: #ffffff;
+
+    box-shadow:
+        0 20px 50px rgba(0, 23, 73, 0.07);
+}
+
+
+/* =========================================================
+   Cabecera tarjetas
+   ========================================================= */
+
+.edma-purpose-card__top {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 3.2rem;
+}
+
+.edma-purpose-card__number {
+    font-size: 0.62rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+}
+
+.edma-purpose-card--mission
+.edma-purpose-card__number {
+    color:
+        rgba(255, 255, 255, 0.32);
+}
+
+.edma-purpose-card--vision
+.edma-purpose-card__number {
+    color:
+        rgba(0, 23, 73, 0.22);
+}
+
+.edma-purpose-card__icon {
+    width: 46px;
+    height: 46px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.75rem;
+}
+
+.edma-purpose-card--mission
+.edma-purpose-card__icon {
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-purpose-card--vision
+.edma-purpose-card__icon {
+    color: #ffffff;
+
+    background: var(--edma-orange);
+}
+
+
+/* =========================================================
+   Contenido tarjetas
+   ========================================================= */
+
+.edma-purpose-card__label {
+    display: block;
+
+    margin-bottom: 0.55rem;
+
+    font-size: 0.61rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.07em;
+
+    text-transform: uppercase;
+}
+
+.edma-purpose-card--mission
+.edma-purpose-card__label {
+    color: var(--edma-yellow);
+}
+
+.edma-purpose-card--vision
+.edma-purpose-card__label {
+    color: var(--edma-orange);
+}
+
+.edma-purpose-card h3 {
+    max-width: 520px;
+
+    margin: 0;
+
+    font-size:
+        clamp(1.6rem, 2.3vw, 2.25rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.04em;
+
+    line-height: 1.05;
+}
+
+.edma-purpose-card--mission h3 {
+    color: #ffffff;
+}
+
+.edma-purpose-card--vision h3 {
+    color: var(--edma-blue);
+}
+
+.edma-purpose-card p {
+    max-width: 590px;
+
+    margin: 1rem 0 0;
+
+    font-size: 0.75rem;
+
+    line-height: 1.75;
+}
+
+.edma-purpose-card--mission p {
+    color:
+        rgba(255, 255, 255, 0.62);
+}
+
+.edma-purpose-card--vision p {
+    color: var(--edma-text-muted);
+}
+
+
+/* =========================================================
+   Línea inferior
+   ========================================================= */
+
+.edma-purpose-card__accent {
+    position: absolute;
+
+    right: 2rem;
+    bottom: 0;
+    left: 2rem;
+
+    height: 3px;
+
+    border-radius:
+        999px
+        999px
+        0
+        0;
+
+    transform: scaleX(0.35);
+
+    transform-origin: left;
+
+    transition:
+        transform 350ms ease;
+}
+
+.edma-purpose-card:hover
+.edma-purpose-card__accent {
+    transform: scaleX(1);
+}
+
+.edma-purpose-card--mission
+.edma-purpose-card__accent {
+    background:
+        linear-gradient(
+            90deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+}
+
+.edma-purpose-card--vision
+.edma-purpose-card__accent {
+    background:
+        linear-gradient(
+            90deg,
+            var(--edma-blue),
+            var(--edma-orange)
+        );
+}
+
+
+/* =========================================================
+   Valores
+   ========================================================= */
+
+.edma-about-values {
+    display: grid;
+
+    grid-template-columns:
+        minmax(250px, 0.55fr)
+        minmax(0, 1.45fr);
+
+    gap: clamp(2rem, 5vw, 5rem);
+
+    align-items: center;
+
+    margin-top: 1rem;
+
+    padding: 2rem;
+
+    border:
+        1px solid rgba(0, 23, 73, 0.08);
+
+    border-radius: 1.3rem;
+
+    background:
+        rgba(255, 255, 255, 0.82);
+
+    box-shadow:
+        0 18px 45px rgba(0, 23, 73, 0.06);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+
+/* =========================================================
+   Encabezado Valores
+   ========================================================= */
+
+.edma-about-values__heading {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.85rem;
+}
+
+.edma-about-values__icon {
+    width: 48px;
+    height: 48px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 0.8rem;
+
+    color: var(--edma-blue);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+}
+
+.edma-about-values__heading div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-about-values__heading small {
+    color: var(--edma-orange);
+
+    font-size: 0.55rem;
+
+    font-weight: 750;
+
+    text-transform: uppercase;
+}
+
+.edma-about-values__heading h3 {
+    margin: 0.15rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size: 1.4rem;
+
+    font-weight: 850;
+}
+
+
+/* =========================================================
+   Contenido Valores
+   ========================================================= */
+
+.edma-about-values__content > p {
+    max-width: 790px;
+
+    margin: 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.74rem;
+
+    line-height: 1.75;
+}
+
+.edma-about-values__keywords {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.5rem;
+
+    margin-top: 1.3rem;
+}
+
+.edma-about-values__keywords span {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.4rem;
+
+    padding:
+        0.55rem
+        0.7rem;
+
+    border-radius: 999px;
+
+    color: var(--edma-blue);
+
+    background:
+        #f2f4f8;
+
+    font-size: 0.6rem;
+
+    font-weight: 750;
+
+    transition:
+        transform 200ms ease,
+        background-color 200ms ease;
+}
+
+.edma-about-values__keywords span:hover {
+    background:
+        rgba(255, 181, 28, 0.17);
+
+    transform:
+        translateY(-2px);
+}
+
+.edma-about-values__keywords i {
+    color: var(--edma-orange);
+}
+
+/* =========================================================
+   Equipo académico / Forma de enseñar
+   ========================================================= */
+
+.edma-about-academic {
+    position: relative;
+
+    padding: 7rem 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f6f8fb 0%,
+            #eef2f7 100%
+        );
+}
+
+.edma-about-academic__layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(440px, 0.95fr)
+        minmax(0, 1.05fr);
+
+    align-items: center;
+
+    gap: clamp(4rem, 7vw, 7.5rem);
+}
+
+
+/* =========================================================
+   Imagen
+   ========================================================= */
+
+.edma-about-academic__media {
+    position: relative;
+
+    min-height: 560px;
+
+    overflow: hidden;
+
+    border-radius: 1.5rem;
+
+    background: #e8ecf2;
+
+    box-shadow:
+        0 26px 65px
+        rgba(0, 23, 73, 0.13);
+}
+
+.edma-about-academic__media img {
+    width: 100%;
+    height: 560px;
+
+    object-fit: cover;
+    object-position: center;
+
+    transition:
+        transform 850ms ease;
+}
+
+.edma-about-academic__media:hover img {
+    transform: scale(1.025);
+}
+
+.edma-about-academic__overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            to top,
+            rgba(0, 23, 73, 0.42),
+            transparent 48%
+        );
+}
+
+
+/* =========================================================
+   Glass
+   ========================================================= */
+
+.edma-about-academic__glass {
+    position: absolute;
+
+    right: 1.2rem;
+    bottom: 1.2rem;
+    left: 1.2rem;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.75rem;
+
+    padding:
+        0.85rem
+        0.95rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.42);
+
+    border-radius: 0.9rem;
+
+    background:
+        rgba(255, 255, 255, 0.76);
+
+    box-shadow:
+        0 16px 38px
+        rgba(0, 23, 73, 0.16);
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.edma-about-academic__glass > span {
+    width: 41px;
+    height: 41px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 0.7rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+}
+
+.edma-about-academic__glass div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-about-academic__glass small {
+    color: var(--edma-text-muted);
+
+    font-size: 0.52rem;
+}
+
+.edma-about-academic__glass strong {
+    margin-top: 0.05rem;
+
+    color: var(--edma-blue);
+
+    font-size: 0.7rem;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   Contenido
+   ========================================================= */
+
+.edma-about-academic__content h2 {
+    max-width: 650px;
+
+    margin: 0.7rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size:
+        clamp(2.9rem, 4.5vw, 4.8rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-about-academic__content h2 span {
+    display: block;
+
+    color: var(--edma-orange);
+}
+
+.edma-about-academic__content > p {
+    max-width: 620px;
+
+    margin: 1.4rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.8rem;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   Pilares
+   ========================================================= */
+
+.edma-about-academic__pillars {
+    display: grid;
+
+    gap: 0;
+
+    margin-top: 2rem;
+}
+
+.edma-about-academic__pillars article {
+    display: grid;
+
+    grid-template-columns:
+        auto
+        1fr;
+
+    align-items: start;
+
+    gap: 0.9rem;
+
+    padding: 1.15rem 0;
+
+    border-bottom:
+        1px solid rgba(0, 23, 73, 0.08);
+
+    transition:
+        padding-left 220ms ease;
+}
+
+.edma-about-academic__pillars article:first-child {
+    border-top:
+        1px solid rgba(0, 23, 73, 0.08);
+}
+
+.edma-about-academic__pillars article:hover {
+    padding-left: 0.45rem;
+}
+
+.edma-about-academic__pillar-icon {
+    width: 43px;
+    height: 43px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 0.7rem;
+
+    color: #ffffff;
+
+    background: var(--edma-blue);
+}
+
+.edma-about-academic__pillars article:nth-child(2)
+.edma-about-academic__pillar-icon {
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-about-academic__pillars article:nth-child(3)
+.edma-about-academic__pillar-icon {
+    background: var(--edma-orange);
+}
+
+.edma-about-academic__pillars small {
+    display: block;
+
+    color: var(--edma-orange);
+
+    font-size: 0.48rem;
+
+    font-weight: 800;
+}
+
+.edma-about-academic__pillars h3 {
+    margin: 0.08rem 0 0;
+
+    color: var(--edma-blue);
+
+    font-size: 0.82rem;
+
+    font-weight: 850;
+}
+
+.edma-about-academic__pillars p {
+    max-width: 520px;
+
+    margin: 0.35rem 0 0;
+
+    color: var(--edma-text-muted);
+
+    font-size: 0.64rem;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   Enlace
+   ========================================================= */
+
+.edma-about-academic__link {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 0.55rem;
+
+    margin-top: 1.8rem;
+
+    color: var(--edma-blue);
+
+    font-size: 0.7rem;
+
+    font-weight: 800;
+}
+
+.edma-about-academic__link i {
+    color: var(--edma-orange);
+
+    transition:
+        transform 200ms ease;
+}
+
+.edma-about-academic__link:hover {
+    color: var(--edma-blue);
+}
+
+.edma-about-academic__link:hover i {
+    transform: translateX(4px);
+}
+
+/* =========================================================
+   CTA final Nosotros
+   ========================================================= */
+
+.edma-about-cta {
+    padding: 6rem 0;
+
+    background: #ffffff;
+}
+
+.edma-about-cta__panel {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(280px, 0.55fr);
+
+    align-items: center;
+
+    gap: clamp(3rem, 6vw, 6rem);
+
+    overflow: hidden;
+
+    padding:
+        clamp(2.8rem, 5vw, 4.8rem);
+
+    border-radius: 1.5rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-blue-dark),
+            var(--edma-blue) 68%,
+            #06265f
+        );
+
+    box-shadow:
+        0 28px 70px
+        rgba(0, 23, 73, 0.17);
+}
+
+.edma-about-cta__panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: -120px;
+    right: -90px;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 181, 28, 0.14),
+            transparent 68%
+        );
+
+    pointer-events: none;
+}
+
+.edma-about-cta__content,
+.edma-about-cta__visual {
+    position: relative;
+    z-index: 2;
+}
+
+.edma-about-cta__eyebrow {
+    display: block;
+
+    margin-bottom: 0.9rem;
+
+    color: var(--edma-yellow);
+
+    font-size: 0.65rem;
+
+    font-weight: 850;
+
+    letter-spacing: 0.08em;
+
+    text-transform: uppercase;
+}
+
+.edma-about-cta__content h2 {
+    max-width: 680px;
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(2.8rem, 4.5vw, 4.8rem);
+
+    font-weight: 850;
+
+    letter-spacing: -0.06em;
+
+    line-height: 0.98;
+}
+
+.edma-about-cta__content h2 span {
+    display: block;
+
+    color: var(--edma-yellow);
+}
+
+.edma-about-cta__content > p {
+    max-width: 580px;
+
+    margin: 1.3rem 0 0;
+
+    color:
+        rgba(255, 255, 255, 0.62);
+
+    font-size: 0.76rem;
+
+    line-height: 1.75;
+}
+
+
+/* =========================================================
+   Acciones
+   ========================================================= */
+
+.edma-about-cta__actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.75rem;
+
+    margin-top: 1.8rem;
+}
+
+.edma-about-cta__primary,
+.edma-about-cta__secondary {
+    min-height: 48px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.55rem;
+
+    padding:
+        0.78rem
+        1rem;
+
+    border-radius: 0.72rem;
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+
+    transition:
+        transform 200ms ease,
+        box-shadow 200ms ease,
+        background-color 200ms ease;
+}
+
+.edma-about-cta__primary {
+    color: var(--edma-blue);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--edma-yellow),
+            var(--edma-orange)
+        );
+
+    box-shadow:
+        0 12px 27px
+        rgba(233, 124, 21, 0.23);
+}
+
+.edma-about-cta__primary:hover {
+    color: var(--edma-blue);
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 17px 34px
+        rgba(233, 124, 21, 0.3);
+}
+
+.edma-about-cta__secondary {
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.18);
+
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.06);
+}
+
+.edma-about-cta__secondary:hover {
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.11);
+
+    transform: translateY(-3px);
+}
+
+
+/* =========================================================
+   Visual
+   ========================================================= */
+
+.edma-about-cta__visual {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.9rem;
+
+    padding: 1.1rem;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.14);
+
+    border-radius: 1rem;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.edma-about-cta__icon {
+    width: 48px;
+    height: 48px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 0.75rem;
+
+    color: var(--edma-blue);
+
+    background: var(--edma-yellow);
+}
+
+.edma-about-cta__visual div {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.edma-about-cta__visual small {
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    font-size: 0.52rem;
+}
+
+.edma-about-cta__visual strong {
+    margin-top: 0.08rem;
+
+    color: #ffffff;
+
+    font-size: 0.72rem;
+
+    font-weight: 800;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .edma-about-cta {
+    padding: 4.5rem 0;
+}
+
+.edma-about-cta__panel {
+    padding:
+        2.8rem
+        1.4rem;
+
+    border-radius: 1.2rem;
+}
+
+.edma-about-cta__actions {
+    flex-direction: column;
+}
+
+.edma-about-cta__primary,
+.edma-about-cta__secondary {
+    width: 100%;
+}
+
+    .edma-about-academic__layout {
+    grid-template-columns: 1fr;
+
+    gap: 3.5rem;
+}
+
+.edma-about-academic__media {
+    width: min(100%, 680px);
+
+    margin-inline: auto;
+}
+
+    .edma-about-purpose__grid {
+    grid-template-columns: 1fr;
+}
+
+.edma-about-values {
+    grid-template-columns: 1fr;
+}
+
+    .edma-about-page-hero__layout,
+    .edma-about-intro__layout,
+    .edma-about-intro__visual {
+        grid-template-columns: 1fr;
+    }
+
+    .edma-about-page-hero__visual {
+        min-height: 500px;
+    }
+
+    .edma-about-intro__content {
+        padding-top: 0;
+    }
+
+    .edma-about-intro__photo {
+        min-height: 430px;
+    }
+}
+
+
+@media (max-width: 575.98px) {
+
+    .edma-about-academic {
+    padding: 5rem 0;
+}
+
+.edma-about-academic__media {
+    min-height: 420px;
+}
+
+.edma-about-academic__media img {
+    height: 420px;
+}
+
+    .edma-about-purpose {
+    padding: 5rem 0;
+}
+
+.edma-purpose-card {
+    min-height: auto;
+
+    padding: 1.5rem;
+}
+
+.edma-purpose-card__top {
+    margin-bottom: 2.2rem;
+}
+
+.edma-about-values {
+    padding: 1.5rem;
+}
+
+    .edma-about-page-hero {
+        padding:
+            8rem 0
+            4.5rem;
+    }
+
+    .edma-about-page-hero__title {
+        font-size:
+            clamp(3rem, 14vw, 4.5rem);
+    }
+
+    .edma-about-page-hero__actions {
+        flex-direction: column;
+    }
+
+    .edma-about-page-hero__primary,
+    .edma-about-page-hero__secondary {
+        width: 100%;
+    }
+
+    .edma-about-page-hero__visual {
+        min-height: 410px;
+    }
+
+    .edma-about-page-hero__image {
+        inset: 0;
+    }
+
+    .edma-about-page-hero__index {
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .edma-about-page-hero__glass {
+        right: 0.8rem;
+        bottom: 0.8rem;
+        left: 0.8rem;
+    }
+
+    .edma-about-intro {
+        padding: 5rem 0;
+    }
+
+    .edma-about-intro__visual {
+        gap: 1.4rem;
+    }
+
+    .edma-about-intro__photo {
+        min-height: 350px;
+    }
+}

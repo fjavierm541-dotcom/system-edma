@@ -10,17 +10,20 @@ class ProgramaController extends Controller
     public function index()
     {
         $programas = Programa::query()
-            ->where('estado', 'activo')
+            ->activos()
             ->with([
                 'niveles' => function ($query) {
                     $query
-                        ->where('estado', 'activo')
+                        ->activos()
                         ->orderBy('orden');
-                }
+                },
             ])
             ->orderBy('nombre')
             ->get();
 
-        return view('website.programs', compact('programas'));
+        return view(
+            'website.programs',
+            compact('programas')
+        );
     }
 }
