@@ -69,6 +69,8 @@
                     <img
                         src="{{ asset('images/website/jobs/jobs-hero.jpg') }}"
                         alt="Docente impartiendo una clase virtual"
+                        loading="lazy"
+                        decoding="async"
                     >
 
                     <div class="edma-jobs-hero__overlay"></div>

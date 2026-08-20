@@ -43,6 +43,7 @@
                 <img
                     src="{{ asset('images/website/gallery/gallery-01.jpg') }}"
                     alt="Estudiantes participando en una clase de inglés"
+                    loading="lazy" decoding="async"
                 >
 
                 <div class="edma-gallery-item__overlay"></div>
@@ -73,6 +74,8 @@
                 <img
                     src="{{ asset('images/website/gallery/gallery-02.jpg') }}"
                     alt="Estudiantes compartiendo durante una actividad académica"
+                    loading="lazy"
+                    decoding="async"
                 >
 
                 <div class="edma-gallery-item__overlay"></div>
@@ -103,6 +106,8 @@
                 <img
                     src="{{ asset('images/website/gallery/gallery-03.jpg') }}"
                     alt="Estudiante utilizando recursos digitales"
+                    loading="lazy"
+                    decoding="async"
                 >
 
                 <div class="edma-gallery-item__overlay"></div>
@@ -133,6 +138,8 @@
                 <img
                     src="{{ asset('images/website/gallery/gallery-04.jpg') }}"
                     alt="Docente acompañando el proceso de aprendizaje"
+                    loading="lazy"
+                    decoding="async"
                 >
 
                 <div class="edma-gallery-item__overlay"></div>
@@ -163,6 +170,8 @@
                 <img
                     src="{{ asset('images/website/gallery/gallery-05.jpg') }}"
                     alt="Estudiantes desarrollando habilidades de comunicación"
+                    loading="lazy"
+                decoding="async"
                 >
 
                 <div class="edma-gallery-item__overlay"></div>
