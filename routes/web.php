@@ -1,27 +1,52 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Controllers - Autenticación
+|--------------------------------------------------------------------------
+*/
+
+use App\Http\Controllers\Auth\CambiarPasswordController;
+use App\Http\Controllers\Auth\LoginController;
+
+/*
+|--------------------------------------------------------------------------
+| Controllers - Portal
+|--------------------------------------------------------------------------
+*/
+
+use App\Http\Controllers\Portal\CuentaBancariaController;
+use App\Http\Controllers\Portal\DashboardController;
+use App\Http\Controllers\Portal\DocenteController;
 use App\Http\Controllers\Portal\EmpleadoController;
 use App\Http\Controllers\Portal\EstudianteController;
 use App\Http\Controllers\Portal\EstudianteResponsableController;
-use App\Http\Controllers\Portal\PersonaController;
-use App\Http\Controllers\WebsiteController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Portal\FormacionAcademicaController;
-use App\Http\Controllers\Portal\CuentaBancariaController;
-use App\Http\Controllers\Portal\DocenteController;
-use App\Http\Controllers\Portal\ProgramaController;
-use App\Http\Controllers\Website\ProgramaController as WebsiteProgramaController;
+use App\Http\Controllers\Portal\GrupoController;
+use App\Http\Controllers\Portal\GrupoDocenteController;
+use App\Http\Controllers\Portal\GrupoHorarioController;
+use App\Http\Controllers\Portal\HorarioController;
+use App\Http\Controllers\Portal\InicioPortalController;
+use App\Http\Controllers\Portal\MiMatriculaController;
 use App\Http\Controllers\Portal\NivelController;
 use App\Http\Controllers\Portal\PeriodoAcademicoController;
-use App\Http\Controllers\Portal\HorarioController;
-use App\Http\Controllers\Portal\GrupoController;
-use App\Http\Controllers\Portal\GrupoHorarioController;
-use App\Http\Controllers\Portal\GrupoDocenteController;
-use App\Http\Controllers\SolicitudInscripcionPublicaController;
+use App\Http\Controllers\Portal\PersonaController;
+use App\Http\Controllers\Portal\ProgramaController;
 use App\Http\Controllers\Portal\SolicitudInscripcionController;
-use App\Http\Controllers\Portal\DashboardController;
+
+/*
+|--------------------------------------------------------------------------
+| Controllers - Sitio web público
+|--------------------------------------------------------------------------
+*/
+
+use App\Http\Controllers\SolicitudInscripcionPublicaController;
+use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\Website\ContactoController;
-use App\Http\Controllers\Portal\MiMatriculaController;
+use App\Http\Controllers\Website\ProgramaController as WebsiteProgramaController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +60,7 @@ Route::get('/', [WebsiteController::class, 'home'])
 Route::get('/nosotros', [WebsiteController::class, 'about'])
     ->name('website.about');
 
-Route::get('/cursos', [WebsiteController::class, 'courses'])
+Route::get('/cursos', [WebsiteProgramaController::class, 'index'])
     ->name('website.courses');
 
 Route::get('/inscripciones', [WebsiteController::class, 'admissions'])
@@ -47,260 +72,404 @@ Route::get('/empleos', [WebsiteController::class, 'jobs'])
 Route::get('/contacto', [WebsiteController::class, 'contact'])
     ->name('website.contact');
 
-        Route::get('/cursos', [WebsiteProgramaController::class, 'index'])
-    ->name('website.courses');
-
-    // Para el correo de contacto del sitio web
-    Route::post(
-        '/contacto',
-        [ContactoController::class, 'store']
-    )->name('website.contact.store');
+Route::post('/contacto', [ContactoController::class, 'store'])
+    ->name('website.contact.store');
 
 
 /*
 |--------------------------------------------------------------------------
-| Portal administrativo
+| Solicitud pública de inscripción
 |--------------------------------------------------------------------------
+|
+| Estas rutas son públicas.
+| El aspirante todavía no posee una cuenta en el sistema.
+|
 */
 
-Route::prefix('portal')
-    ->name('portal.')
+Route::prefix('inscripciones')
+    ->name('inscripciones.')
     ->group(function () {
 
         Route::get(
+            '/solicitud',
+            [SolicitudInscripcionPublicaController::class, 'create']
+        )->name('solicitud');
+
+        Route::post(
+            '/solicitud',
+            [SolicitudInscripcionPublicaController::class, 'store']
+        )->name('solicitud.store');
+
+        Route::get(
+            '/solicitud/enviada/{codigo}',
+            [SolicitudInscripcionPublicaController::class, 'success']
+        )->name('solicitud.exito');
+    });
+
+
+/*
+|--------------------------------------------------------------------------
+| Autenticación
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Inicio de sesión
+|--------------------------------------------------------------------------
+|
+| Solo pueden acceder usuarios que NO tengan una sesión iniciada.
+|
+*/
+
+Route::middleware('guest')->group(function () {
+
+    Route::get(
+        '/login',
+        [LoginController::class, 'create']
+    )->name('login');
+
+    Route::post(
+        '/login',
+        [LoginController::class, 'store']
+    )->name('login.store');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Acciones para usuarios autenticados
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cambio obligatorio de contraseña
+    |--------------------------------------------------------------------------
+    |
+    | Estas rutas no utilizan password.change.required porque deben permanecer
+    | disponibles precisamente cuando debe_cambiar_password = true.
+    |
+    */
+
+    Route::get(
+        '/cambiar-password',
+        [CambiarPasswordController::class, 'edit']
+    )->name('password.change.edit');
+
+    Route::put(
+        '/cambiar-password',
+        [CambiarPasswordController::class, 'update']
+    )->name('password.change.update');
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cerrar sesión
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post(
+        '/logout',
+        [LoginController::class, 'destroy']
+    )->name('logout');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| EDMA Portal
+|--------------------------------------------------------------------------
+|
+| Todas las rutas del Portal requieren:
+|
+| 1. Usuario autenticado.
+| 2. Haber cambiado la contraseña temporal.
+|
+| Después, cada área aplica los permisos correspondientes según el rol.
+|
+*/
+
+Route::middleware([
+        'auth',
+        'password.change.required',
+    ])
+    ->prefix('portal')
+    ->name('portal.')
+    ->group(function () {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Entrada general al Portal
+        |--------------------------------------------------------------------------
+        |
+        | InicioPortalController determina a dónde enviar al usuario
+        | dependiendo de su rol.
+        |
+        */
+
+        Route::get(
             '/',
-            [DashboardController::class, 'index']
-        )->name('dashboard');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Personas
-        |--------------------------------------------------------------------------
-        */
-
-        Route::patch(
-            'personas/{persona}/estado',
-            [PersonaController::class, 'cambiarEstado']
-        )->name('personas.cambiar-estado');
-
-        Route::resource(
-            'personas',
-            PersonaController::class
-        )->except('destroy');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Estudiantes
-        |--------------------------------------------------------------------------
-        */
-
-        Route::patch(
-            'estudiantes/{estudiante}/estado',
-            [EstudianteController::class, 'cambiarEstado']
-        )->name('estudiantes.cambiar-estado');
-
-        Route::resource(
-            'estudiantes',
-            EstudianteController::class
-        )->except('destroy');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Responsables de estudiantes
-        |--------------------------------------------------------------------------
-        */
-
-        Route::post(
-            'estudiantes/{estudiante}/responsables',
-            [EstudianteResponsableController::class, 'store']
-        )->name('estudiantes.responsables.store');
-
-        Route::put(
-            'estudiantes/{estudiante}/responsables/{responsable}',
-            [EstudianteResponsableController::class, 'update']
-        )->name('estudiantes.responsables.update');
-
-        Route::patch(
-            'estudiantes/{estudiante}/responsables/{responsable}/estado',
-            [EstudianteResponsableController::class, 'cambiarEstado']
-        )->name('estudiantes.responsables.cambiar-estado');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Empleados
-        |--------------------------------------------------------------------------
-        */
-
-        Route::patch(
-            'empleados/{empleado}/estado',
-            [EmpleadoController::class, 'cambiarEstado']
-        )->name('empleados.cambiar-estado');
-
-        Route::resource(
-            'empleados',
-            EmpleadoController::class
-        )->except('destroy');
-
-
-                /*
-        |--------------------------------------------------------------------------
-        | Formación académica
-        |--------------------------------------------------------------------------
-        */
-
-        Route::post(
-            'empleados/{empleado}/formaciones-academicas',
-            [FormacionAcademicaController::class, 'store']
-        )->name('empleados.formaciones-academicas.store');
-
-        Route::put(
-            'empleados/{empleado}/formaciones-academicas/{formacion}',
-            [FormacionAcademicaController::class, 'update']
-        )->name('empleados.formaciones-academicas.update');
-
-        Route::patch(
-            'empleados/{empleado}/formaciones-academicas/{formacion}/estado',
-            [FormacionAcademicaController::class, 'cambiarEstado']
-        )->name('empleados.formaciones-academicas.cambiar-estado');
-
+            InicioPortalController::class
+        )->name('inicio');
 
 
         /*
         |--------------------------------------------------------------------------
-        | Cuentas bancarias
+        | PORTAL - ADMINISTRADOR
         |--------------------------------------------------------------------------
         */
 
-        Route::post(
-            'empleados/{empleado}/cuentas-bancarias',
-            [CuentaBancariaController::class, 'store']
-        )->name('empleados.cuentas-bancarias.store');
-
-        Route::put(
-            'empleados/{empleado}/cuentas-bancarias/{cuenta}',
-            [CuentaBancariaController::class, 'update']
-        )->name('empleados.cuentas-bancarias.update');
-
-        Route::patch(
-            'empleados/{empleado}/cuentas-bancarias/{cuenta}/estado',
-            [CuentaBancariaController::class, 'cambiarEstado']
-        )->name('empleados.cuentas-bancarias.cambiar-estado');
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Docentes
-        |--------------------------------------------------------------------------
-        */
-
-        Route::patch(
-            'docentes/{docente}/estado',
-            [DocenteController::class, 'cambiarEstado']
-        )->name('docentes.cambiar-estado');
-
-        Route::resource(
-            'docentes',
-            DocenteController::class
-        )->except('destroy');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Programas académicos
-        |--------------------------------------------------------------------------
-        */
-
-        Route::patch(
-            'programas/{programa}/estado',
-            [ProgramaController::class, 'cambiarEstado']
-        )->name('programas.cambiar-estado');
-
-        Route::resource(
-            'programas',
-            ProgramaController::class
-        )->except('destroy');
+        Route::middleware('rol:Administrador')->group(function () {
 
             /*
-    |--------------------------------------------------------------------------
-    | Niveles académicos
-    |--------------------------------------------------------------------------
-    */
+            |--------------------------------------------------------------------------
+            | Dashboard
+            |--------------------------------------------------------------------------
+            */
 
-    Route::patch(
-        'niveles/{nivel}/estado',
-        [NivelController::class, 'cambiarEstado']
-    )->name('niveles.cambiar-estado');
-
-    Route::resource(
-        'niveles',
-        NivelController::class
-    )
-        ->parameters([
-            'niveles' => 'nivel',
-        ])
-        ->except('destroy');
+            Route::get(
+                '/dashboard',
+                [DashboardController::class, 'index']
+            )->name('dashboard');
 
 
-        /*
-    |--------------------------------------------------------------------------
-    | Períodos académicos
-    |--------------------------------------------------------------------------
-    */
+            /*
+            |--------------------------------------------------------------------------
+            | Personas
+            |--------------------------------------------------------------------------
+            */
 
-    Route::patch(
-        'periodos/{periodo}/estado',
-        [PeriodoAcademicoController::class, 'cambiarEstado']
-    )->name('periodos.cambiar-estado');
+            Route::patch(
+                'personas/{persona}/estado',
+                [PersonaController::class, 'cambiarEstado']
+            )->name('personas.cambiar-estado');
 
-    Route::resource(
-        'periodos',
-        PeriodoAcademicoController::class
-    )
-        ->parameters([
-            'periodos' => 'periodo',
-        ])
-        ->except('destroy');
+            Route::resource(
+                'personas',
+                PersonaController::class
+            )->except('destroy');
 
 
-        /*
-    |--------------------------------------------------------------------------
-    | Horarios
-    |--------------------------------------------------------------------------
-    */
+            /*
+            |--------------------------------------------------------------------------
+            | Estudiantes
+            |--------------------------------------------------------------------------
+            */
 
-    Route::patch(
-        'horarios/{horario}/estado',
-        [HorarioController::class, 'cambiarEstado']
-    )->name('horarios.cambiar-estado');
+            Route::patch(
+                'estudiantes/{estudiante}/estado',
+                [EstudianteController::class, 'cambiarEstado']
+            )->name('estudiantes.cambiar-estado');
 
-    Route::resource(
-        'horarios',
-        HorarioController::class
-    )
-        ->parameters([
-            'horarios' => 'horario',
-        ])
-        ->except('destroy');
+            Route::resource(
+                'estudiantes',
+                EstudianteController::class
+            )->except('destroy');
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Grupos académicos
-        |--------------------------------------------------------------------------
-        */
+            /*
+            |--------------------------------------------------------------------------
+            | Responsables de estudiantes
+            |--------------------------------------------------------------------------
+            */
 
-        Route::patch(
-            'grupos/{grupo}/estado',
-            [GrupoController::class, 'cambiarEstado']
-        )->name('grupos.cambiar-estado');
+            Route::post(
+                'estudiantes/{estudiante}/responsables',
+                [EstudianteResponsableController::class, 'store']
+            )->name('estudiantes.responsables.store');
 
-        Route::resource(
-            'grupos',
-            GrupoController::class
-        )
-            ->parameters([
-                'grupos' => 'grupo',
-            ])
-            ->except('destroy');
+            Route::put(
+                'estudiantes/{estudiante}/responsables/{responsable}',
+                [EstudianteResponsableController::class, 'update']
+            )->name('estudiantes.responsables.update');
+
+            Route::patch(
+                'estudiantes/{estudiante}/responsables/{responsable}/estado',
+                [EstudianteResponsableController::class, 'cambiarEstado']
+            )->name('estudiantes.responsables.cambiar-estado');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Empleados
+            |--------------------------------------------------------------------------
+            */
+
+            Route::patch(
+                'empleados/{empleado}/estado',
+                [EmpleadoController::class, 'cambiarEstado']
+            )->name('empleados.cambiar-estado');
+
+            Route::resource(
+                'empleados',
+                EmpleadoController::class
+            )->except('destroy');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Formación académica de empleados
+            |--------------------------------------------------------------------------
+            */
+
+            Route::post(
+                'empleados/{empleado}/formaciones-academicas',
+                [FormacionAcademicaController::class, 'store']
+            )->name('empleados.formaciones-academicas.store');
+
+            Route::put(
+                'empleados/{empleado}/formaciones-academicas/{formacion}',
+                [FormacionAcademicaController::class, 'update']
+            )->name('empleados.formaciones-academicas.update');
+
+            Route::patch(
+                'empleados/{empleado}/formaciones-academicas/{formacion}/estado',
+                [FormacionAcademicaController::class, 'cambiarEstado']
+            )->name('empleados.formaciones-academicas.cambiar-estado');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Cuentas bancarias de empleados
+            |--------------------------------------------------------------------------
+            */
+
+            Route::post(
+                'empleados/{empleado}/cuentas-bancarias',
+                [CuentaBancariaController::class, 'store']
+            )->name('empleados.cuentas-bancarias.store');
+
+            Route::put(
+                'empleados/{empleado}/cuentas-bancarias/{cuenta}',
+                [CuentaBancariaController::class, 'update']
+            )->name('empleados.cuentas-bancarias.update');
+
+            Route::patch(
+                'empleados/{empleado}/cuentas-bancarias/{cuenta}/estado',
+                [CuentaBancariaController::class, 'cambiarEstado']
+            )->name('empleados.cuentas-bancarias.cambiar-estado');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Docentes
+            |--------------------------------------------------------------------------
+            */
+
+            Route::patch(
+                'docentes/{docente}/estado',
+                [DocenteController::class, 'cambiarEstado']
+            )->name('docentes.cambiar-estado');
+
+            Route::resource(
+                'docentes',
+                DocenteController::class
+            )->except('destroy');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Programas académicos
+            |--------------------------------------------------------------------------
+            */
+
+            Route::patch(
+                'programas/{programa}/estado',
+                [ProgramaController::class, 'cambiarEstado']
+            )->name('programas.cambiar-estado');
+
+            Route::resource(
+                'programas',
+                ProgramaController::class
+            )->except('destroy');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Niveles académicos
+            |--------------------------------------------------------------------------
+            */
+
+            Route::patch(
+                'niveles/{nivel}/estado',
+                [NivelController::class, 'cambiarEstado']
+            )->name('niveles.cambiar-estado');
+
+            Route::resource(
+                'niveles',
+                NivelController::class
+            )
+                ->parameters([
+                    'niveles' => 'nivel',
+                ])
+                ->except('destroy');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Períodos académicos
+            |--------------------------------------------------------------------------
+            */
+
+            Route::patch(
+                'periodos/{periodo}/estado',
+                [PeriodoAcademicoController::class, 'cambiarEstado']
+            )->name('periodos.cambiar-estado');
+
+            Route::resource(
+                'periodos',
+                PeriodoAcademicoController::class
+            )
+                ->parameters([
+                    'periodos' => 'periodo',
+                ])
+                ->except('destroy');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Horarios
+            |--------------------------------------------------------------------------
+            */
+
+            Route::patch(
+                'horarios/{horario}/estado',
+                [HorarioController::class, 'cambiarEstado']
+            )->name('horarios.cambiar-estado');
+
+            Route::resource(
+                'horarios',
+                HorarioController::class
+            )
+                ->parameters([
+                    'horarios' => 'horario',
+                ])
+                ->except('destroy');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Grupos académicos
+            |--------------------------------------------------------------------------
+            */
+
+            Route::patch(
+                'grupos/{grupo}/estado',
+                [GrupoController::class, 'cambiarEstado']
+            )->name('grupos.cambiar-estado');
+
+            Route::resource(
+                'grupos',
+                GrupoController::class
+            )
+                ->parameters([
+                    'grupos' => 'grupo',
+                ])
+                ->except('destroy');
+
 
             /*
             |--------------------------------------------------------------------------
@@ -326,7 +495,7 @@ Route::prefix('portal')
 
             /*
             |--------------------------------------------------------------------------
-            | Docentes de grupos
+            | Docentes asignados a grupos
             |--------------------------------------------------------------------------
             */
 
@@ -345,120 +514,79 @@ Route::prefix('portal')
                 [GrupoDocenteController::class, 'cambiarEstado']
             )->name('grupos.docentes.cambiar-estado');
 
-            
+
+            /*
+            |--------------------------------------------------------------------------
+            | Solicitudes de inscripción
+            |--------------------------------------------------------------------------
+            */
+
+            Route::patch(
+                'solicitudes-inscripcion/{solicitud}/iniciar-revision',
+                [SolicitudInscripcionController::class, 'iniciarRevision']
+            )->name('solicitudes-inscripcion.iniciar-revision');
+
+            Route::get(
+                'solicitudes-inscripcion/{solicitud}/comprobantes/{comprobante}',
+                [SolicitudInscripcionController::class, 'comprobante']
+            )->name('solicitudes-inscripcion.comprobantes.show');
+
+            Route::patch(
+                'solicitudes-inscripcion/{solicitud}/aprobar',
+                [SolicitudInscripcionController::class, 'aprobar']
+            )->name('solicitudes-inscripcion.aprobar');
+
+            Route::patch(
+                'solicitudes-inscripcion/{solicitud}/rechazar',
+                [SolicitudInscripcionController::class, 'rechazar']
+            )->name('solicitudes-inscripcion.rechazar');
+
+            Route::resource(
+                'solicitudes-inscripcion',
+                SolicitudInscripcionController::class
+            )
+                ->parameters([
+                    'solicitudes-inscripcion' => 'solicitud',
+                ])
+                ->only([
+                    'index',
+                    'show',
+                ]);
+        });
+
 
         /*
         |--------------------------------------------------------------------------
-        | Solicitudes de inscripción
+        | PORTAL - ESTUDIANTE
         |--------------------------------------------------------------------------
         */
 
+        Route::middleware('rol:Estudiante')->group(function () {
 
-        Route::patch(
-            'solicitudes-inscripcion/{solicitud}/iniciar-revision',
-            [
-                SolicitudInscripcionController::class,
-                'iniciarRevision',
-            ]
-        )->name(
-            'solicitudes-inscripcion.iniciar-revision'
-        );
+            /*
+            |--------------------------------------------------------------------------
+            | Matrícula del estudiante
+            |--------------------------------------------------------------------------
+            */
 
-        Route::get(
-            'solicitudes-inscripcion/{solicitud}/comprobantes/{comprobante}',
-            [
-                SolicitudInscripcionController::class,
-                'comprobante',
-            ]
-        )->name(
-            'solicitudes-inscripcion.comprobantes.show'
-        );
-
-        Route::patch(
-            'solicitudes-inscripcion/{solicitud}/aprobar',
-            [
-                SolicitudInscripcionController::class,
-                'aprobar',
-            ]
-        )->name(
-            'solicitudes-inscripcion.aprobar'
-        );
-
-        Route::patch(
-            'solicitudes-inscripcion/{solicitud}/rechazar',
-            [
-                SolicitudInscripcionController::class,
-                'rechazar',
-            ]
-        )->name(
-            'solicitudes-inscripcion.rechazar'
-        );
-
-        Route::resource(
-            'solicitudes-inscripcion',
-            SolicitudInscripcionController::class
-        )
-            ->parameters([
-                'solicitudes-inscripcion' => 'solicitud',
-            ])
-            ->only([
-                'index',
-                'show',
-            ]);
+            Route::get(
+                'mi-matricula',
+                [MiMatriculaController::class, 'index']
+            )->name('mi-matricula.index');
+        });
 
 
-
-
-            //MATICULA
-            Route::middleware('auth')
-            ->group(function () {
-
-                Route::get(
-                    'mi-matricula',
-                    [MiMatriculaController::class, 'index']
-                )->name('mi-matricula.index');
-
-            });
+        /*
+        |--------------------------------------------------------------------------
+        | PORTAL - DOCENTE
+        |--------------------------------------------------------------------------
+        |
+        | Las rutas correspondientes al Portal Docente se agregarán aquí
+        | cuando iniciemos el desarrollo de sus funcionalidades.
+        |
+        */
 
     });
-
-
-
-
-                /*
-                |--------------------------------------------------------------------------
-                | Solicitud pública de inscripción
-                |--------------------------------------------------------------------------
-                */
-
-                Route::prefix('inscripciones')
-                    ->name('inscripciones.')
-                    ->group(function () {
-
-                        Route::get(
-                            '/solicitud',
-                            [
-                                SolicitudInscripcionPublicaController::class,
-                                'create'
-                            ]
-                        )->name('solicitud');
-
-                        Route::post(
-                            '/solicitud',
-                            [
-                                SolicitudInscripcionPublicaController::class,
-                                'store'
-                            ]
-                        )->name('solicitud.store');
-
-                        Route::get(
-                            '/solicitud/enviada/{codigo}',
-                            [
-                                SolicitudInscripcionPublicaController::class,
-                                'success'
-                            ]
-                        )->name('solicitud.exito');
-                    });
 
 
 /*
@@ -467,8 +595,11 @@ Route::prefix('portal')
 |--------------------------------------------------------------------------
 */
 
-Route::get('/campus', [WebsiteController::class, 'campus'])
-    ->name('website.campus');
+Route::get(
+    '/campus',
+    [WebsiteController::class, 'campus']
+)->name('website.campus');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -477,5 +608,37 @@ Route::get('/campus', [WebsiteController::class, 'campus'])
 |
 | npm run dev
 | php artisan storage:link
+| php artisan optimize:clear
+|
+|--------------------------------------------------------------------------
+| Primer usuario administrador de pruebas
+|--------------------------------------------------------------------------
+|
+| php artisan tinker
+|
+| $rol = App\Models\Rol::where('nombre', 'Administrador')->first();
+|
+| $user = App\Models\User::create([
+|     'persona_id' => null,
+|     'username' => 'ADMIN-EDMA',
+|     'email' => null,
+|     'password' => 'Edma2026*',
+|     'debe_cambiar_password' => true,
+|     'activo' => true,
+|     'ultimo_acceso_at' => null,
+| ]);
+|
+| $user->roles()->attach($rol->id);
+|
+| $user->load('roles');
+|
+| exit
+|
+|--------------------------------------------------------------------------
+| Credenciales temporales del usuario de pruebas
+|--------------------------------------------------------------------------
+|
+| Usuario:    ADMIN-EDMA
+| Contraseña: Edma2026*
 |
 */

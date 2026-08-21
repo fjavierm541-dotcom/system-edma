@@ -74,7 +74,7 @@
                 <li>
                     <a
                         class="dropdown-item"
-                        href="#"
+                        href="{{ route('password.change.edit') }}"
                     >
                         <i class="bi bi-key"></i>
                         Cambiar contraseña
@@ -86,13 +86,21 @@
                 </li>
 
                 <li>
-                    <a
-                        class="dropdown-item text-danger"
-                        href="#"
+                    <form
+                        method="POST"
+                        action="{{ route('logout') }}"
+                        class="m-0"
                     >
-                        <i class="bi bi-box-arrow-right"></i>
-                        Cerrar sesión
-                    </a>
+                        @csrf
+
+                        <button
+                            type="submit"
+                            class="dropdown-item text-danger"
+                        >
+                            <i class="bi bi-box-arrow-right"></i>
+                            Cerrar sesión
+                        </button>
+                    </form>
                 </li>
 
             </ul>
