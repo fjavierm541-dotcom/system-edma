@@ -14,8 +14,7 @@ class ObtenerPeriodoMatriculaService
 
         return PeriodoAcademico::query()
             ->where(
-                'estado',
-                'activo'
+                'estado', 'matricula_abierta'
             )
             ->whereDate(
                 'fecha_inicio_matricula',

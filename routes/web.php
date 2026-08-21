@@ -21,6 +21,7 @@ use App\Http\Controllers\SolicitudInscripcionPublicaController;
 use App\Http\Controllers\Portal\SolicitudInscripcionController;
 use App\Http\Controllers\Portal\DashboardController;
 use App\Http\Controllers\Website\ContactoController;
+use App\Http\Controllers\Portal\MiMatriculaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -404,6 +405,20 @@ Route::prefix('portal')
                 'index',
                 'show',
             ]);
+
+
+
+
+            //MATICULA
+            Route::middleware('auth')
+            ->group(function () {
+
+                Route::get(
+                    'mi-matricula',
+                    [MiMatriculaController::class, 'index']
+                )->name('mi-matricula.index');
+
+            });
 
     });
 

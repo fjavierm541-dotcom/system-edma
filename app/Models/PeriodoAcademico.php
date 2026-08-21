@@ -53,15 +53,32 @@ class PeriodoAcademico extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function scopeActivos(Builder $query): Builder
-    {
-        return $query->where('estado', 'activo');
-    }
+    public function scopeMatriculaAbierta(
+    Builder $query
+): Builder {
+    return $query->where(
+        'estado',
+        'matricula_abierta'
+    );
+}
 
-    public function scopeInactivos(Builder $query): Builder
-    {
-        return $query->where('estado', 'inactivo');
-    }
+public function scopeEnCurso(
+    Builder $query
+): Builder {
+    return $query->where(
+        'estado',
+        'en_curso'
+    );
+}
+
+public function scopeFinalizados(
+    Builder $query
+): Builder {
+    return $query->where(
+        'estado',
+        'finalizado'
+    );
+}
 
     public function scopeBuscar(
         Builder $query,

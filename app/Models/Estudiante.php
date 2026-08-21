@@ -70,6 +70,21 @@ class Estudiante extends Model
         );
     }
 
+    
+
+
+
+    public function matriculas(): HasMany
+{
+    return $this->hasMany(
+        Matricula::class,
+        'estudiante_id'
+    );
+}
+
+
+
+
     /*
     |--------------------------------------------------------------------------
     | Scopes

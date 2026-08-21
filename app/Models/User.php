@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -41,6 +42,18 @@ class User extends Authenticatable
     | Relaciones
     |--------------------------------------------------------------------------
     */
+
+    public function estudiante(): HasOneThrough
+{
+    return $this->hasOneThrough(
+        Estudiante::class,
+        Persona::class,
+        'id',
+        'persona_id',
+        'persona_id',
+        'id'
+    );
+}
 
     public function persona(): BelongsTo
     {

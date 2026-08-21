@@ -129,14 +129,13 @@ class Grupo extends Model
         );
     }
 
-    public function scopeInactivos(
-        Builder $query
-    ): Builder {
-        return $query->where(
-            'estado',
-            'inactivo'
-        );
-    }
+public function matriculas(): HasMany
+{
+    return $this->hasMany(
+        Matricula::class,
+        'grupo_id'
+    );
+}
 
     public function scopeBuscar(
         Builder $query,
