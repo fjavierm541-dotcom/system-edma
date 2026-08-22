@@ -417,6 +417,20 @@
              ===================================================== --}}
         <div class="portal-menu-section">
 
+        <a
+            href="{{ route('portal.usuarios.index') }}"
+            class="portal-menu-link
+                {{ request()->routeIs('portal.usuarios.*')
+                    ? 'active'
+                    : '' }}"
+        >
+            <i class="bi bi-person-lock"></i>
+
+            <span>
+                Usuarios
+            </span>
+        </a>
+
             <span class="portal-menu-label">
                 Sistema
             </span>

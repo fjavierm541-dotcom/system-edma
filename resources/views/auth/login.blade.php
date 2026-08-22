@@ -51,7 +51,7 @@
                             <div class="mb-3">
 
                                 <label for="username" class="form-label fw-semibold">
-                                    Usuario
+                                    Código EDMA
                                 </label>
 
                                 <input
@@ -60,6 +60,7 @@
                                     id="username"
                                     name="username"
                                     value="{{ old('username') }}"
+                                    placeholder="Ej. EDMA-2026-00001"
                                     autocomplete="username"
                                     autofocus
                                     required

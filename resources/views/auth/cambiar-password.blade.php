@@ -68,6 +68,37 @@
                                 </div>
                             @enderror
 
+                            <div class="mb-3">
+
+                                <label
+                                    for="password"
+                                    class="form-label"
+                                >
+                                    Nueva contraseña
+                                </label>
+
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    required
+                                    autofocus
+                                >
+
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+
+                                <div class="form-text">
+                                    Debe contener al menos 8 caracteres, incluyendo una letra mayúscula,
+                                    una letra minúscula, un número y un carácter especial.
+                                </div>
+
+                            </div>
+
                         </div>
 
                         <div class="mb-4">

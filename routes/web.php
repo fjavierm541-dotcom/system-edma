@@ -47,6 +47,8 @@ use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\Website\ContactoController;
 use App\Http\Controllers\Website\ProgramaController as WebsiteProgramaController;
 
+use App\Http\Controllers\Portal\UsuarioController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -234,6 +236,32 @@ Route::middleware([
                 '/dashboard',
                 [DashboardController::class, 'index']
             )->name('dashboard');
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | Usuarios y acceso al sistema
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                'usuarios',
+                [UsuarioController::class, 'index']
+            )->name('usuarios.index');
+            Route::get(
+                'usuarios',
+                [UsuarioController::class, 'index']
+            )->name('usuarios.index');
+
+            Route::patch(
+                'usuarios/{usuario}/estado',
+                [UsuarioController::class, 'cambiarEstado']
+            )->name('usuarios.cambiar-estado');
+
+            Route::patch(
+                'usuarios/{usuario}/restablecer-password',
+                [UsuarioController::class, 'restablecerPassword']
+            )->name('usuarios.restablecer-password');
 
 
             /*
