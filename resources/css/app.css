@@ -35,3 +35,1208 @@
 @import "./portal/sidebar.css";
 @import "./portal/navbar.css";
 @import "./portal/components.css";
+
+
+/* ==========================================================================
+   EDMA AUTH - LOGIN PORTAL
+   ========================================================================== */
+
+.edma-auth-page {
+    margin: 0;
+    min-height: 100vh;
+    overflow: hidden;
+    background: #06152f;
+}
+
+
+.edma-auth {
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+
+    isolation: isolate;
+}
+
+
+/* ==========================================================================
+   Fondo
+   ========================================================================== */
+
+.edma-auth__background {
+    position: fixed;
+    inset: 0;
+
+    z-index: 0;
+
+    background:
+        linear-gradient(
+            rgba(3, 12, 29, 0.08),
+            rgba(3, 12, 29, 0.16)
+        ),
+        url('/images/auth/login-portal-bg-alt.png');
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    transform: scale(1.015);
+}
+
+
+/* ==========================================================================
+   Halo cursor
+   ========================================================================== */
+
+.edma-auth__cursor-glow {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            380px circle
+            at
+            var(--mouse-x)
+            var(--mouse-y),
+            rgba(115, 181, 255, 0.075),
+            rgba(46, 107, 190, 0.025) 38%,
+            transparent 72%
+        );
+}
+
+
+/* ==========================================================================
+   Destellos
+   ========================================================================== */
+
+.edma-auth__sparkles {
+    position: fixed;
+    inset: 0;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
+.edma-auth__sparkle {
+    position: absolute;
+
+    width: 3px;
+    height: 3px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.72);
+
+    box-shadow:
+        0 0 10px
+        rgba(118, 181, 255, 0.5);
+
+    opacity: 0.38;
+
+    transition:
+        transform
+        0.16s
+        ease-out;
+}
+
+
+.edma-auth__sparkle--1 {
+    top: 17%;
+    left: 13%;
+}
+
+
+.edma-auth__sparkle--2 {
+    top: 71%;
+    left: 37%;
+
+    width: 2px;
+    height: 2px;
+}
+
+
+.edma-auth__sparkle--3 {
+    top: 27%;
+    right: 15%;
+
+    background:
+        rgba(229, 191, 94, 0.9);
+
+    box-shadow:
+        0 0 10px
+        rgba(229, 191, 94, 0.44);
+}
+
+
+.edma-auth__sparkle--4 {
+    bottom: 18%;
+    right: 24%;
+
+    width: 2px;
+    height: 2px;
+}
+
+
+.edma-auth__sparkle--5 {
+    bottom: 23%;
+    left: 19%;
+
+    background:
+        rgba(229, 191, 94, 0.72);
+
+    box-shadow:
+        0 0 8px
+        rgba(229, 191, 94, 0.38);
+}
+
+
+/* ==========================================================================
+   Centrado
+   ========================================================================== */
+
+.edma-auth__center {
+    position: relative;
+
+    z-index: 5;
+
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        32px
+        20px;
+}
+
+
+/* ==========================================================================
+   Tarjeta
+   ========================================================================== */
+
+.edma-auth-card {
+    --card-light-x: 50%;
+    --card-light-y: 18%;
+
+    position: relative;
+
+    width: min(
+        100%,
+        610px
+    );
+
+    padding:
+        40px
+        54px
+        28px;
+
+    border:
+        1px solid
+        rgba(185, 218, 255, 0.34);
+
+    border-radius: 34px;
+
+    background:
+        linear-gradient(
+            155deg,
+            rgba(35, 78, 135, 0.18),
+            rgba(3, 18, 43, 0.52)
+        );
+
+    backdrop-filter:
+        blur(28px)
+        saturate(115%);
+
+    -webkit-backdrop-filter:
+        blur(28px)
+        saturate(115%);
+
+    box-shadow:
+        0 35px 90px
+        rgba(0, 0, 0, 0.35),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.26),
+
+        0 -8px 50px
+        rgba(116, 180, 255, 0.08);
+
+    transform-style: preserve-3d;
+
+    transition:
+        transform
+        0.18s
+        ease-out,
+
+        box-shadow
+        0.25s
+        ease;
+
+    overflow: hidden;
+}
+
+
+/* Luz superior */
+
+.edma-auth-card__top-light {
+    position: absolute;
+
+    top: -95px;
+    left: 8%;
+
+    width: 84%;
+    height: 190px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(206, 231, 255, 0.29) 0%,
+            rgba(117, 181, 255, 0.14) 30%,
+            rgba(75, 136, 207, 0.04) 52%,
+            transparent 72%
+        );
+
+    filter: blur(18px);
+
+    pointer-events: none;
+}
+
+
+.edma-auth-card::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            260px circle
+            at
+            var(--card-light-x)
+            var(--card-light-y),
+            rgba(255, 255, 255, 0.085),
+            transparent 70%
+        );
+}
+
+
+.edma-auth-card::after {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 10%;
+
+    width: 80%;
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(215, 236, 255, 0.92),
+            transparent
+        );
+
+    box-shadow:
+        0 0 20px
+        rgba(133, 194, 255, 0.42);
+}
+
+
+/* ==========================================================================
+   Logo
+   ========================================================================== */
+
+.edma-auth-card__logo-wrap {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    justify-content: center;
+
+    margin-bottom: 18px;
+}
+
+
+.edma-auth-card__logo {
+    width: 94px;
+    height: 94px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.7);
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(230, 239, 249, 0.94)
+        );
+
+    box-shadow:
+        0 14px 34px
+        rgba(0, 0, 0, 0.22),
+
+        0 0 26px
+        rgba(152, 205, 255, 0.16),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 1);
+
+    overflow: hidden;
+}
+
+
+.edma-auth-card__logo img {
+    width: 74px;
+    height: 74px;
+
+    object-fit: contain;
+}
+
+
+/* ==========================================================================
+   Encabezado
+   ========================================================================== */
+
+.edma-auth-card__header {
+    position: relative;
+    z-index: 2;
+
+    text-align: center;
+
+    margin-bottom: 31px;
+}
+
+
+.edma-auth-card__eyebrow {
+    display: inline-block;
+
+    margin-bottom: 9px;
+
+    color: #e8c35c;
+
+    font-size: 1.02rem;
+    font-weight: 700;
+
+    letter-spacing: 0.18em;
+}
+
+
+.edma-auth-card__header h1 {
+    margin:
+        0
+        0
+        8px;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(
+            2.4rem,
+            4vw,
+            3rem
+        );
+
+    font-weight: 700;
+
+    letter-spacing: -0.025em;
+}
+
+
+.edma-auth-card__header p {
+    margin: 0 auto;
+
+    max-width: 430px;
+
+    color:
+        rgba(255, 255, 255, 0.63);
+
+    font-size: 0.96rem;
+    line-height: 1.6;
+}
+
+
+/* ==========================================================================
+   Formulario
+   ========================================================================== */
+
+.edma-auth-form {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+.edma-auth-field__label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color:
+        rgba(255, 255, 255, 0.88);
+
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+
+.edma-auth-field__control {
+    position: relative;
+
+    min-height: 59px;
+
+    display: flex;
+    align-items: center;
+
+    border:
+        1px solid
+        rgba(180, 209, 242, 0.2);
+
+    border-radius: 16px;
+
+    background:
+        rgba(2, 15, 37, 0.52);
+
+    box-shadow:
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.035);
+
+    transition:
+        border-color
+        0.2s
+        ease,
+
+        background
+        0.2s
+        ease,
+
+        box-shadow
+        0.2s
+        ease;
+}
+
+
+.edma-auth-field__control:focus-within {
+    border-color:
+        rgba(229, 189, 89, 0.72);
+
+    background:
+        rgba(3, 18, 42, 0.64);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(229, 189, 89, 0.055),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.05);
+}
+
+
+.edma-auth-field__control > i {
+    margin-left: 18px;
+
+    color:
+        rgba(220, 232, 247, 0.55);
+
+    font-size: 1.05rem;
+}
+
+
+.edma-auth-field__control input {
+    width: 100%;
+
+    padding:
+        17px
+        49px
+        17px
+        14px;
+
+    border: 0;
+    outline: 0;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    font-size: 0.96rem;
+}
+
+
+.edma-auth-field__control input::placeholder {
+    color:
+        rgba(255, 255, 255, 0.31);
+}
+
+
+.edma-auth-field__control--error {
+    border-color:
+        rgba(255, 112, 112, 0.72);
+}
+
+
+.edma-auth-field__error {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 7px;
+
+    color: #ffb4b4;
+
+    font-size: 0.78rem;
+}
+
+
+.edma-auth-password-toggle {
+    position: absolute;
+
+    right: 12px;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: transparent;
+
+    color:
+        rgba(255, 255, 255, 0.47);
+
+    transition:
+        background
+        0.2s
+        ease,
+
+        color
+        0.2s
+        ease;
+}
+
+
+.edma-auth-password-toggle:hover {
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    color: #ffffff;
+}
+
+
+/* ==========================================================================
+   Botón
+   ========================================================================== */
+
+.edma-auth-submit {
+    position: relative;
+
+    width: 100%;
+    min-height: 59px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 13px;
+
+    margin-top: 4px;
+
+    border:
+        1px solid
+        rgba(255, 223, 130, 0.5);
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e8c15a,
+            #d5aa3b
+        );
+
+    color: #09234b;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    box-shadow:
+        0 13px 30px
+        rgba(212, 175, 55, 0.18),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.42);
+
+    overflow: hidden;
+
+    transition:
+        transform
+        0.2s
+        ease,
+
+        box-shadow
+        0.2s
+        ease;
+}
+
+
+.edma-auth-submit::before {
+    content: "";
+
+    position: absolute;
+
+    left: -120%;
+    top: 0;
+
+    width: 75%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.45),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    transition:
+        left
+        0.65s
+        ease;
+}
+
+
+.edma-auth-submit:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 18px 38px
+        rgba(212, 175, 55, 0.24),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.42);
+}
+
+
+.edma-auth-submit:hover::before {
+    left: 140%;
+}
+
+
+.edma-auth-submit i {
+    transition:
+        transform
+        0.2s
+        ease;
+}
+
+
+.edma-auth-submit:hover i {
+    transform: translateX(4px);
+}
+
+
+/* ==========================================================================
+   Acerca de
+   ========================================================================== */
+
+.edma-auth-card__info {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    justify-content: center;
+
+    margin-top: 27px;
+    padding-top: 22px;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+}
+
+
+.edma-auth-info-button {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding:
+        7px
+        11px;
+
+    border: 0;
+    border-radius: 10px;
+
+    background: transparent;
+
+    color:
+        rgba(255, 255, 255, 0.5);
+
+    font-size: 0.86rem;
+
+    transition:
+        color
+        0.2s
+        ease,
+
+        background
+        0.2s
+        ease;
+}
+
+
+.edma-auth-info-button:hover {
+    color: #ffffff;
+
+    background:
+        rgba(255, 255, 255, 0.055);
+}
+
+
+.edma-auth-info-button i {
+    color:
+        rgba(229, 189, 89, 0.78);
+}
+
+
+/* ==========================================================================
+   Copyright
+   ========================================================================== */
+
+.edma-auth__copyright {
+    margin-top: 20px;
+
+    color:
+        rgba(255, 255, 255, 0.34);
+
+    font-size: 0.72rem;
+
+    text-align: center;
+}
+
+
+/* ==========================================================================
+   MODAL - CAPAS
+   ========================================================================== */
+
+/*
+ * Bootstrap normalmente usa:
+ * modal-backdrop = 1050
+ * modal          = 1055
+ *
+ * Aquí usamos valores mayores para garantizar que el backdrop
+ * nunca quede por encima del modal de autenticación.
+ */
+
+body .modal-backdrop {
+    z-index: 3000 !important;
+
+    background-color: #020b1c !important;
+}
+
+
+body .modal-backdrop.show {
+    opacity: 0.48 !important;
+}
+
+
+body .edma-auth-modal {
+    z-index: 3010 !important;
+}
+
+
+/* ==========================================================================
+   Modal
+   ========================================================================== */
+
+.edma-auth-modal .modal-dialog {
+    position: relative;
+
+    z-index: 3011;
+}
+
+
+.edma-auth-modal__content {
+    position: relative;
+
+    z-index: 3012;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(184, 215, 250, 0.31);
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            150deg,
+            rgba(26, 62, 108, 0.98),
+            rgba(6, 25, 56, 0.99)
+        );
+
+    color: #ffffff;
+
+    backdrop-filter:
+        blur(30px);
+
+    -webkit-backdrop-filter:
+        blur(30px);
+
+    box-shadow:
+        0 35px 100px
+        rgba(0, 0, 0, 0.55),
+
+        0 0 65px
+        rgba(91, 159, 240, 0.16),
+
+        inset 0 1px 0
+        rgba(255, 255, 255, 0.2);
+}
+
+
+.edma-auth-modal__header {
+    padding:
+        22px
+        24px;
+
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+}
+
+
+.edma-auth-modal__eyebrow {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #e5bd59;
+
+    font-size: 0.67rem;
+    font-weight: 700;
+
+    letter-spacing: 0.15em;
+
+    text-transform: uppercase;
+}
+
+
+.edma-auth-modal__header .modal-title {
+    color: #ffffff;
+
+    font-weight: 700;
+}
+
+
+.edma-auth-modal__body {
+    padding: 24px;
+}
+
+
+.edma-auth-modal__brand {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 25px;
+}
+
+
+.edma-auth-modal__logo {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex:
+        0
+        0
+        55px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.96);
+
+    overflow: hidden;
+}
+
+
+.edma-auth-modal__logo img {
+    width: 45px;
+    height: 45px;
+
+    object-fit: contain;
+}
+
+
+.edma-auth-modal__brand strong,
+.edma-auth-modal__brand span {
+    display: block;
+}
+
+
+.edma-auth-modal__brand strong {
+    color: #ffffff;
+
+    font-size: 0.98rem;
+}
+
+
+.edma-auth-modal__brand span {
+    margin-top: 2px;
+
+    color:
+        rgba(255, 255, 255, 0.56);
+
+    font-size: 0.77rem;
+}
+
+
+.edma-auth-modal__section {
+    margin-top: 18px;
+}
+
+
+.edma-auth-modal__label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        rgba(229, 189, 89, 0.88);
+
+    font-size: 0.68rem;
+    font-weight: 700;
+
+    letter-spacing: 0.09em;
+
+    text-transform: uppercase;
+}
+
+
+.edma-auth-modal__section p {
+    color:
+        rgba(255, 255, 255, 0.69);
+
+    font-size: 0.84rem;
+    line-height: 1.6;
+}
+
+
+.edma-auth-modal__grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+
+    margin-top: 18px;
+}
+
+
+.edma-auth-modal__grid > div {
+    padding:
+        13px
+        15px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.08);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255, 255, 255, 0.04);
+}
+
+
+.edma-auth-modal__grid strong {
+    display: block;
+
+    color: #ffffff;
+
+    font-size: 0.9rem;
+}
+
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 767.98px) {
+
+    .edma-auth__center {
+        padding:
+            22px
+            15px;
+    }
+
+
+    .edma-auth-card {
+        width:
+            min(
+                100%,
+                520px
+            );
+
+        padding:
+            32px
+            25px
+            25px;
+
+        border-radius: 27px;
+    }
+
+
+    .edma-auth-card__logo {
+        width: 82px;
+        height: 82px;
+    }
+
+
+    .edma-auth-card__logo img {
+        width: 64px;
+        height: 64px;
+    }
+
+
+    .edma-auth-card__eyebrow {
+        font-size: 0.9rem;
+    }
+
+
+    .edma-auth-card__header h1 {
+        font-size: 2.25rem;
+    }
+
+
+    .edma-auth-modal__grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-height: 780px) and (min-width: 768px) {
+
+    .edma-auth__center {
+        padding:
+            22px
+            20px;
+    }
+
+
+    .edma-auth-card {
+        padding:
+            29px
+            46px
+            23px;
+    }
+
+
+    .edma-auth-card__logo {
+        width: 76px;
+        height: 76px;
+    }
+
+
+    .edma-auth-card__logo img {
+        width: 59px;
+        height: 59px;
+    }
+
+
+    .edma-auth-card__logo-wrap {
+        margin-bottom: 13px;
+    }
+
+
+    .edma-auth-card__header {
+        margin-bottom: 23px;
+    }
+
+
+    .edma-auth-card__header h1 {
+        font-size: 2.3rem;
+    }
+
+
+    .edma-auth-field__control {
+        min-height: 53px;
+    }
+
+
+    .edma-auth-submit {
+        min-height: 53px;
+    }
+
+
+    .edma-auth-form {
+        gap: 15px;
+    }
+
+
+    .edma-auth-card__info {
+        margin-top: 20px;
+        padding-top: 16px;
+    }
+
+}
+
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .edma-auth-card,
+    .edma-auth__sparkle,
+    .edma-auth-submit {
+        transition: none;
+    }
+
+}
