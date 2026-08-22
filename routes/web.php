@@ -248,10 +248,16 @@ Route::middleware([
                 'usuarios',
                 [UsuarioController::class, 'index']
             )->name('usuarios.index');
+
             Route::get(
+                'usuarios/crear',
+                [UsuarioController::class, 'create']
+            )->name('usuarios.create');
+
+            Route::post(
                 'usuarios',
-                [UsuarioController::class, 'index']
-            )->name('usuarios.index');
+                [UsuarioController::class, 'store']
+            )->name('usuarios.store');
 
             Route::patch(
                 'usuarios/{usuario}/estado',
@@ -666,7 +672,7 @@ Route::get(
 | Credenciales temporales del usuario de pruebas
 |--------------------------------------------------------------------------
 |
-| Usuario:    ADMIN-EDMA
-| Contraseña: Edma2026*
+| Usuario:    EDMA-2026-00006
+| Contraseña: T4penade.
 |
 */

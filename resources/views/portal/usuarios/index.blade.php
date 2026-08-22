@@ -4,9 +4,10 @@
 
 @section('page-title', 'Usuarios')
 
+
 @section('page-header')
 
-    <div class="portal-page-heading">
+    <div class="portal-page-heading d-flex justify-content-between align-items-start gap-3">
 
         <div>
 
@@ -25,6 +26,14 @@
 
         </div>
 
+        <a
+            href="{{ route('portal.usuarios.create') }}"
+            class="btn portal-btn-primary"
+        >
+            <i class="bi bi-person-plus me-1"></i>
+            Crear usuario
+        </a>
+
     </div>
 
 @endsection
@@ -33,10 +42,13 @@
 @section('content')
 
     {{-- =========================================================
-         Modal de contraseña temporal generada
+         Modal - Contraseña temporal generada
          ========================================================= --}}
 
-    @if (session('password_temporal'))
+    @if (
+        session('modal_tipo') === 'password_generado'
+        && session('password_temporal')
+    )
 
         <div
             class="modal fade"
@@ -121,6 +133,79 @@
                         <p class="small text-muted mt-3 mb-0">
                             Esta contraseña se muestra únicamente ahora.
                             El usuario deberá cambiarla cuando inicie sesión.
+                        </p>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-bs-dismiss="modal"
+                        >
+                            Entendido
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    @endif
+
+
+    {{-- =========================================================
+         Modal - Error
+         ========================================================= --}}
+
+    @if (session('modal_tipo') === 'error')
+
+        <div
+            class="modal fade"
+            id="modalErrorUsuario"
+            tabindex="-1"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content border-0 shadow">
+
+                    <div class="modal-header">
+
+                        <div>
+
+                            <h5 class="modal-title">
+                                {{ session('modal_titulo', 'Ocurrió un problema') }}
+                            </h5>
+
+                            <p class="text-muted small mb-0">
+                                No se pudo completar la operación.
+                            </p>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Cerrar"
+                        ></button>
+
+                    </div>
+
+                    <div class="modal-body">
+
+                        <p class="mb-0">
+                            {{
+                                session(
+                                    'modal_mensaje',
+                                    'Intente nuevamente.'
+                                )
+                            }}
                         </p>
 
                     </div>
@@ -255,7 +340,7 @@
 
 
     {{-- =========================================================
-         Listado de usuarios
+         Listado
          ========================================================= --}}
 
     <section class="portal-card">
@@ -501,7 +586,7 @@
                                 </td>
 
 
-                                {{-- Código EDMA --}}
+                                {{-- Código --}}
                                 <td>
 
                                     <div class="portal-table-primary">
@@ -634,7 +719,7 @@
                                                     data-bs-target="#modalRestablecerPassword"
                                                     data-usuario-id="{{ $usuario->id }}"
                                                     data-usuario-codigo="{{ $usuario->username }}"
-                                                    data-usuario-nombre="{{ $usuario->persona?->nombre_completo ?? 'este usuario' }}"
+                                                    data-usuario-nombre="{{ $usuario->persona?->nombre_completo ?? 'Cuenta del sistema' }}"
                                                 >
                                                     <i class="bi bi-key me-2"></i>
                                                     Restablecer contraseña
@@ -650,7 +735,7 @@
                                             {{-- Activar / desactivar --}}
                                             <li>
 
-                                                @if (auth()->id() === $usuario->id)
+                                                @if ((int) auth()->id() === (int) $usuario->id)
 
                                                     <button
                                                         type="button"
@@ -663,34 +748,31 @@
 
                                                 @else
 
-                                                    <form
-                                                        method="POST"
-                                                        action="{{ route('portal.usuarios.cambiar-estado', $usuario) }}"
+                                                    <button
+                                                        type="button"
+                                                        class="dropdown-item btn-cambiar-estado-usuario
+                                                            {{ $usuario->activo ? 'text-danger' : 'text-success' }}"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalCambiarEstadoUsuario"
+                                                        data-usuario-id="{{ $usuario->id }}"
+                                                        data-usuario-codigo="{{ $usuario->username }}"
+                                                        data-usuario-nombre="{{ $usuario->persona?->nombre_completo ?? 'Cuenta del sistema' }}"
+                                                        data-usuario-activo="{{ $usuario->activo ? '1' : '0' }}"
                                                     >
 
-                                                        @csrf
-                                                        @method('PATCH')
+                                                        @if ($usuario->activo)
 
-                                                        <button
-                                                            type="submit"
-                                                            class="dropdown-item {{ $usuario->activo ? 'text-danger' : 'text-success' }}"
-                                                        >
+                                                            <i class="bi bi-person-slash me-2"></i>
+                                                            Desactivar acceso
 
-                                                            @if ($usuario->activo)
+                                                        @else
 
-                                                                <i class="bi bi-person-slash me-2"></i>
-                                                                Desactivar acceso
+                                                            <i class="bi bi-person-check me-2"></i>
+                                                            Activar acceso
 
-                                                            @else
+                                                        @endif
 
-                                                                <i class="bi bi-person-check me-2"></i>
-                                                                Activar acceso
-
-                                                            @endif
-
-                                                        </button>
-
-                                                    </form>
+                                                    </button>
 
                                                 @endif
 
@@ -736,7 +818,7 @@
 
 
     {{-- =========================================================
-         Modal de confirmación - Restablecer contraseña
+         Modal - Restablecer contraseña
          ========================================================= --}}
 
     <div
@@ -746,7 +828,6 @@
         aria-labelledby="modalRestablecerPasswordLabel"
         aria-hidden="true"
     >
-
         <div class="modal-dialog modal-dialog-centered">
 
             <div class="modal-content border-0 shadow">
@@ -782,7 +863,6 @@
                     method="POST"
                     id="formRestablecerPassword"
                 >
-
                     @csrf
                     @method('PATCH')
 
@@ -844,12 +924,15 @@
     </div>
 
 
-    @if (session('modal_tipo') === 'error')
+    {{-- =========================================================
+         Modal - Activar / desactivar usuario
+         ========================================================= --}}
 
     <div
         class="modal fade"
-        id="modalErrorUsuario"
+        id="modalCambiarEstadoUsuario"
         tabindex="-1"
+        aria-labelledby="modalCambiarEstadoUsuarioLabel"
         aria-hidden="true"
     >
         <div class="modal-dialog modal-dialog-centered">
@@ -859,13 +942,19 @@
                 <div class="modal-header">
 
                     <div>
-                        <h5 class="modal-title">
-                            {{ session('modal_titulo', 'Ocurrió un problema') }}
+
+                        <h5
+                            class="modal-title"
+                            id="modalCambiarEstadoUsuarioLabel"
+                        >
+                            Cambiar estado del usuario
                         </h5>
 
-                        <p class="text-muted small mb-0">
-                            No se pudo completar la operación.
-                        </p>
+                        <p
+                            class="text-muted small mb-0"
+                            id="descripcionCambiarEstado"
+                        ></p>
+
                     </div>
 
                     <button
@@ -877,38 +966,81 @@
 
                 </div>
 
-                <div class="modal-body">
 
-                    <p class="mb-0">
-                        {{
-                            session(
-                                'modal_mensaje',
-                                'Intente nuevamente.'
-                            )
-                        }}
-                    </p>
+                <form
+                    method="POST"
+                    id="formCambiarEstadoUsuario"
+                >
+                    @csrf
+                    @method('PATCH')
 
-                </div>
+                    <div class="modal-body">
 
-                <div class="modal-footer">
+                        <div class="mb-3">
 
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        data-bs-dismiss="modal"
-                    >
-                        Entendido
-                    </button>
+                            <div class="small text-muted">
+                                Usuario
+                            </div>
 
-                </div>
+                            <div
+                                class="fw-semibold"
+                                id="nombreCambiarEstado"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+                        <div class="p-3 bg-light rounded-3">
+
+                            <div class="small text-muted">
+                                Código EDMA
+                            </div>
+
+                            <div
+                                class="fw-semibold"
+                                id="codigoCambiarEstado"
+                            >
+                                —
+                            </div>
+
+                        </div>
+
+                        <p
+                            class="small text-muted mt-3 mb-0"
+                            id="mensajeCambiarEstado"
+                        ></p>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-light"
+                            data-bs-dismiss="modal"
+                        >
+                            Cancelar
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn"
+                            id="botonConfirmarEstado"
+                        >
+                            Confirmar
+                        </button>
+
+                    </div>
+
+                </form>
 
             </div>
 
         </div>
 
     </div>
-
-@endif
 
 @endsection
 
@@ -920,7 +1052,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Modal para restablecer contraseña
+    | Restablecer contraseña
     |--------------------------------------------------------------------------
     */
 
@@ -933,16 +1065,22 @@ document.addEventListener('DOMContentLoaded', function () {
             'show.bs.modal',
             function (event) {
 
-                const button = event.relatedTarget;
+                const button =
+                    event.relatedTarget;
+
+                if (! button) {
+                    return;
+                }
 
                 const usuarioId =
-                    button.getAttribute('data-usuario-id');
+                    button.dataset.usuarioId;
 
                 const codigo =
-                    button.getAttribute('data-usuario-codigo');
+                    button.dataset.usuarioCodigo;
 
                 const nombre =
-                    button.getAttribute('data-usuario-nombre');
+                    button.dataset.usuarioNombre;
+
 
                 document.getElementById(
                     'codigoUsuarioRestablecer'
@@ -951,6 +1089,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById(
                     'nombreUsuarioRestablecer'
                 ).textContent = nombre;
+
 
                 const form =
                     document.getElementById(
@@ -963,20 +1102,114 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     }
 
-    @if (session('modal_tipo') === 'error')
 
-    const modalErrorElement =
-        document.getElementById('modalErrorUsuario');
+    /*
+    |--------------------------------------------------------------------------
+    | Activar / desactivar usuario
+    |--------------------------------------------------------------------------
+    */
 
-    if (modalErrorElement) {
+    const botonesCambiarEstado =
+        document.querySelectorAll(
+            '.btn-cambiar-estado-usuario'
+        );
 
-        const modalError =
-            new bootstrap.Modal(modalErrorElement);
+    botonesCambiarEstado.forEach(
+        function (button) {
 
-        modalError.show();
-    }
+            button.addEventListener(
+                'click',
+                function () {
 
-@endif
+                    const usuarioId =
+                        this.dataset.usuarioId;
+
+                    const codigo =
+                        this.dataset.usuarioCodigo;
+
+                    const nombre =
+                        this.dataset.usuarioNombre;
+
+                    const activo =
+                        this.dataset.usuarioActivo === '1';
+
+
+                    const nombreElement =
+                        document.getElementById(
+                            'nombreCambiarEstado'
+                        );
+
+                    const codigoElement =
+                        document.getElementById(
+                            'codigoCambiarEstado'
+                        );
+
+                    const descripcionElement =
+                        document.getElementById(
+                            'descripcionCambiarEstado'
+                        );
+
+                    const mensajeElement =
+                        document.getElementById(
+                            'mensajeCambiarEstado'
+                        );
+
+                    const botonConfirmar =
+                        document.getElementById(
+                            'botonConfirmarEstado'
+                        );
+
+                    const form =
+                        document.getElementById(
+                            'formCambiarEstadoUsuario'
+                        );
+
+
+                    nombreElement.textContent =
+                        nombre;
+
+                    codigoElement.textContent =
+                        codigo;
+
+
+                    if (activo) {
+
+                        descripcionElement.textContent =
+                            'Desactivar acceso al sistema';
+
+                        mensajeElement.textContent =
+                            'El usuario ya no podrá iniciar sesión, pero conservará toda su información e historial dentro del sistema.';
+
+                        botonConfirmar.className =
+                            'btn btn-danger';
+
+                        botonConfirmar.innerHTML =
+                            '<i class="bi bi-person-slash me-1"></i> Desactivar acceso';
+
+                    } else {
+
+                        descripcionElement.textContent =
+                            'Activar acceso al sistema';
+
+                        mensajeElement.textContent =
+                            'El usuario podrá volver a iniciar sesión utilizando sus credenciales actuales.';
+
+                        botonConfirmar.className =
+                            'btn btn-success';
+
+                        botonConfirmar.innerHTML =
+                            '<i class="bi bi-person-check me-1"></i> Activar acceso';
+                    }
+
+
+                    form.action =
+                        `{{ url('/portal/usuarios') }}/${usuarioId}/estado`;
+
+                }
+            );
+
+        }
+    );
 
 
     /*
@@ -986,9 +1219,9 @@ document.addEventListener('DOMContentLoaded', function () {
     */
 
     @if (
-    session('modal_tipo') === 'password_generado'
-    && session('password_temporal')
-)
+        session('modal_tipo') === 'password_generado'
+        && session('password_temporal')
+    )
 
         const passwordModalElement =
             document.getElementById(
@@ -1005,12 +1238,6 @@ document.addEventListener('DOMContentLoaded', function () {
             passwordModal.show();
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Copiar contraseña temporal
-        |--------------------------------------------------------------------------
-        */
 
         const botonCopiar =
             document.getElementById(
@@ -1036,6 +1263,32 @@ document.addEventListener('DOMContentLoaded', function () {
                         '<i class="bi bi-check-lg"></i> Copiada';
                 }
             );
+        }
+
+    @endif
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mostrar modal de error
+    |--------------------------------------------------------------------------
+    */
+
+    @if (session('modal_tipo') === 'error')
+
+        const modalErrorElement =
+            document.getElementById(
+                'modalErrorUsuario'
+            );
+
+        if (modalErrorElement) {
+
+            const modalError =
+                new bootstrap.Modal(
+                    modalErrorElement
+                );
+
+            modalError.show();
         }
 
     @endif
