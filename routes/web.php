@@ -36,7 +36,7 @@ use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\Portal\ProgramaController;
 use App\Http\Controllers\Portal\SolicitudInscripcionController;
 use App\Http\Controllers\Portal\ComprobanteMatriculaController;
-
+use App\Http\Controllers\Portal\PagosEstudianteController;
 /*
 |--------------------------------------------------------------------------
 | Controllers - Sitio web público
@@ -633,6 +633,18 @@ Route::middleware([
             )->name(
                 'comprobante-matricula.index'
             );
+
+
+//Pagos de estudiantes
+            Route::get(
+                'pagos',
+                [PagosEstudianteController::class, 'index']
+            )->name('pagos.index');
+
+            Route::post(
+                'pagos',
+                [PagosEstudianteController::class, 'store']
+            )->name('pagos.store');
         /*
         |--------------------------------------------------------------------------
         | PORTAL - DOCENTE
