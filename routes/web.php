@@ -303,6 +303,8 @@ Route::middleware([
                 EstudianteController::class
             )->except('destroy');
 
+            
+
 
             /*
             |--------------------------------------------------------------------------
@@ -609,7 +611,17 @@ Route::middleware([
             )->name('mi-matricula.index');
         });
 
+        Route::post(
+                'mi-matricula',
+                [MiMatriculaController::class, 'store']
+            )->name('mi-matricula.store');
 
+            Route::post(
+                'mi-matricula/cambiar-grupo',
+                [MiMatriculaController::class, 'cambiarGrupo']
+            )->name(
+                'mi-matricula.cambiar-grupo'
+            );
         /*
         |--------------------------------------------------------------------------
         | PORTAL - DOCENTE

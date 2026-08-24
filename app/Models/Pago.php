@@ -85,4 +85,13 @@ class Pago extends Model
             'pago_id'
         );
     }
+
+
+    public function aplicacionesCuotas(): HasMany
+{
+    return $this->hasMany(
+        PagoCuota::class,
+        'pago_id'
+    );
+}
 }

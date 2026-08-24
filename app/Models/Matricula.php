@@ -92,4 +92,30 @@ class Matricula extends Model
             'activa'
         );
     }
+
+
+
+    public function cuotas(): HasMany
+{
+    return $this->hasMany(
+        MatriculaCuota::class,
+        'matricula_id'
+    );
+}
+
+public function historialEstados(): HasMany
+{
+    return $this->hasMany(
+        HistorialEstadoMatricula::class,
+        'matricula_id'
+    );
+}
+
+public function historialCambiosGrupo(): HasMany
+{
+    return $this->hasMany(
+        HistorialCambioGrupoMatricula::class,
+        'matricula_id'
+    );
+}
 }

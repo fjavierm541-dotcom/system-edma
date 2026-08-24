@@ -7,13 +7,13 @@ use App\Models\Grupo;
 use App\Models\Matricula;
 use App\Models\Pago;
 use App\Models\PeriodoAcademico;
-use Illuminate\Database\Eloquent\Collection;
 use RuntimeException;
 
 class ObtenerOpcionesMatriculaService
 {
-    public function ejecutar(Estudiante $estudiante): array
-    {
+    public function ejecutar(
+        Estudiante $estudiante
+    ): array {
         /*
         |--------------------------------------------------------------------------
         | 1. Validar estado del estudiante
@@ -78,57 +78,125 @@ class ObtenerOpcionesMatriculaService
 
         /*
         |--------------------------------------------------------------------------
-        | 4. Impedir matrícula duplicada
+        | 4. Buscar matrícula activa del estudiante
         |--------------------------------------------------------------------------
-        |
-        | El nivel y período se obtienen mediante el grupo.
-        |
         */
 
-        $yaMatriculado = Matricula::query()
+        $matriculaActiva = Matricula::query()
             ->where(
                 'estudiante_id',
                 $estudiante->id
             )
+            ->where(
+                'estado',
+                'activa'
+            )
             ->whereHas(
                 'grupo',
-                function ($query) use (
-                    $estudiante,
-                    $periodo
-                ): void {
-                    $query
-                        ->where(
-                            'nivel_id',
-                            $estudiante->nivel_autorizado_id
-                        )
-                        ->where(
-                            'periodo_academico_id',
-                            $periodo->id
-                        );
+                function ($query) use ($periodo): void {
+                    $query->where(
+                        'periodo_academico_id',
+                        $periodo->id
+                    );
                 }
             )
-            ->whereIn(
-                'estado',
-                [
-                    'pendiente',
-                    'activa',
-                ]
-            )
-            ->exists();
+            ->with([
+                'grupo.nivel.programa',
+                'grupo.periodoAcademico',
+                'grupo.horarios.horario',
+                'grupo.docentes.docente.empleado.persona',
+            ])
+            ->first();
 
-        if ($yaMatriculado) {
-            throw new RuntimeException(
-                'Ya tienes una matrícula registrada para este nivel y período académico.'
-            );
+        /*
+        |--------------------------------------------------------------------------
+        | 5. Si ya tiene matrícula, obtener grupos compatibles para cambio
+        |--------------------------------------------------------------------------
+        */
+
+        if ($matriculaActiva) {
+            $gruposCambio = Grupo::query()
+                ->where(
+                    'nivel_id',
+                    $matriculaActiva
+                        ->grupo
+                        ->nivel_id
+                )
+                ->where(
+                    'periodo_academico_id',
+                    $matriculaActiva
+                        ->grupo
+                        ->periodo_academico_id
+                )
+                ->where(
+                    'estado',
+                    'activo'
+                )
+                ->with([
+                    'nivel.programa',
+                    'periodoAcademico',
+                    'horarios.horario',
+                    'docentes.docente.empleado.persona',
+                ])
+                ->withCount([
+                    'matriculas as matriculas_activas_count' =>
+                        function ($query): void {
+                            $query->where(
+                                'estado',
+                                'activa'
+                            );
+                        },
+                ])
+                ->get()
+                ->filter(
+                    function (Grupo $grupo) use (
+                        $matriculaActiva
+                    ): bool {
+                        /*
+                         * El grupo actual siempre debe mostrarse,
+                         * aunque esté lleno, porque queremos marcarlo
+                         * como "Clase matriculada".
+                         */
+                        if (
+                            $grupo->id
+                            ===
+                            $matriculaActiva->grupo_id
+                        ) {
+                            return true;
+                        }
+
+                        return
+                            $grupo->matriculas_activas_count
+                            < $grupo->cupo_maximo;
+                    }
+                )
+                ->values();
+
+            return [
+                'periodo' =>
+                    $periodo,
+
+                'pago' =>
+                    null,
+
+                'grupos' =>
+                    collect(),
+
+                'matriculaActiva' =>
+                    $matriculaActiva,
+
+                'gruposCambio' =>
+                    $gruposCambio,
+            ];
         }
 
         /*
         |--------------------------------------------------------------------------
-        | 5. Validar pago aprobado
+        | 6. Validar pago aprobado
         |--------------------------------------------------------------------------
         |
-        | En la primera matrícula este será el pago aprobado durante
-        | la Solicitud de Inscripción.
+        | Para la primera matrícula se utiliza el pago que fue
+        | aprobado durante la Solicitud de Inscripción.
         |
         */
 
@@ -159,7 +227,7 @@ class ObtenerOpcionesMatriculaService
 
         /*
         |--------------------------------------------------------------------------
-        | 6. Obtener grupos compatibles
+        | 7. Obtener grupos compatibles para primera matrícula
         |--------------------------------------------------------------------------
         */
 
@@ -179,18 +247,15 @@ class ObtenerOpcionesMatriculaService
             ->with([
                 'nivel.programa',
                 'periodoAcademico',
-                'horarios',
-                'docentes.docente.persona',
+                'horarios.horario',
+                'docentes.docente.empleado.persona',
             ])
             ->withCount([
                 'matriculas as matriculas_activas_count' =>
                     function ($query): void {
-                        $query->whereIn(
+                        $query->where(
                             'estado',
-                            [
-                                'pendiente',
-                                'activa',
-                            ]
+                            'activa'
                         );
                     },
             ])
@@ -209,9 +274,20 @@ class ObtenerOpcionesMatriculaService
         }
 
         return [
-            'periodo' => $periodo,
-            'pago' => $pago,
-            'grupos' => $grupos,
+            'periodo' =>
+                $periodo,
+
+            'pago' =>
+                $pago,
+
+            'grupos' =>
+                $grupos,
+
+            'matriculaActiva' =>
+                null,
+
+            'gruposCambio' =>
+                collect(),
         ];
     }
 }
