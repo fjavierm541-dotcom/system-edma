@@ -20,118 +20,202 @@ use Throwable;
 
 class GrupoController extends Controller
 {
-    public function __construct(
-        private readonly CrearGrupoService $crearGrupoService
-    ) {
-    }
+   public function __construct(
+    private readonly CrearGrupoService $crearGrupoService
+) {
+}
 
-    public function index(Request $request): View
-    {
-        $termino = trim(
-            (string) $request->query(
-                'buscar',
-                ''
-            )
-        );
+public function index(Request $request): View
+{
+    $termino = trim(
+        (string) $request->query(
+            'buscar',
+            ''
+        )
+    );
 
-        $estado = $request->query('estado');
+    $estado = $request->query('estado');
 
-        $programaId = $request->integer(
-            'programa'
-        );
+    $programaId = $request->integer(
+        'programa'
+    );
 
-        $periodoId = $request->integer(
-            'periodo'
-        );
+    $periodoId = $request->integer(
+        'periodo'
+    );
 
-        $grupos = Grupo::query()
-            ->with([
-                'nivel.programa',
-                'periodoAcademico',
-            ])
-            ->buscar($termino)
-            ->when(
-                $programaId > 0,
-                fn (Builder $query) =>
-                    $query->whereHas(
-                        'nivel',
-                        fn (Builder $nivelQuery) =>
-                            $nivelQuery->where(
-                                'programa_id',
-                                $programaId
-                            )
-                    )
-            )
-            ->when(
-                $periodoId > 0,
-                fn (Builder $query) =>
-                    $query->where(
-                        'periodo_academico_id',
-                        $periodoId
-                    )
-            )
-            ->when(
-                in_array(
-                    $estado,
-                    ['activo', 'inactivo'],
-                    true
-                ),
-                fn (Builder $query) =>
-                    $query->where(
-                        'estado',
-                        $estado
-                    )
-            )
-            ->orderByDesc('fecha_inicio')
-            ->orderBy('nombre')
-            ->paginate(15)
-            ->withQueryString();
+    /*
+    |--------------------------------------------------------------------------
+    | Estados oficiales de grupos
+    |--------------------------------------------------------------------------
+    */
 
-        $programas = Programa::query()
-            ->orderBy('nombre')
-            ->get([
-                'id',
-                'codigo',
-                'nombre',
-            ]);
+    $estadosValidos = [
+        'planificado',
+        'activo',
+        'finalizado',
+        'cancelado',
+    ];
 
-        $periodos = PeriodoAcademico::query()
-            ->orderByDesc('fecha_inicio')
-            ->get([
-                'id',
-                'codigo',
-                'nombre',
-                'estado',
-            ]);
+    /*
+    |--------------------------------------------------------------------------
+    | Consulta principal
+    |--------------------------------------------------------------------------
+    */
 
-        $resumen = [
-            'total' =>
-                Grupo::query()->count(),
+    $grupos = Grupo::query()
+        ->with([
+            'nivel.programa',
+            'periodoAcademico',
+        ])
+        ->buscar($termino)
+        ->when(
+            $programaId > 0,
+            fn (Builder $query) =>
+                $query->whereHas(
+                    'nivel',
+                    fn (Builder $nivelQuery) =>
+                        $nivelQuery->where(
+                            'programa_id',
+                            $programaId
+                        )
+                )
+        )
+        ->when(
+            $periodoId > 0,
+            fn (Builder $query) =>
+                $query->where(
+                    'periodo_academico_id',
+                    $periodoId
+                )
+        )
+        ->when(
+            in_array(
+                $estado,
+                $estadosValidos,
+                true
+            ),
+            fn (Builder $query) =>
+                $query->where(
+                    'estado',
+                    $estado
+                )
+        )
+        ->orderByDesc('fecha_inicio')
+        ->orderBy('nombre')
+        ->paginate(15)
+        ->withQueryString();
 
-            'activos' =>
-                Grupo::query()
-                    ->activos()
-                    ->count(),
+    /*
+    |--------------------------------------------------------------------------
+    | Programas para filtro
+    |--------------------------------------------------------------------------
+    */
 
-            'inactivos' =>
-                Grupo::query()
-                    ->inactivos()
-                    ->count(),
-        ];
+    $programas = Programa::query()
+        ->orderBy('nombre')
+        ->get([
+            'id',
+            'codigo',
+            'nombre',
+        ]);
 
-        return view('portal.grupos.index', [
-            'grupos' => $grupos,
-            'programas' => $programas,
-            'periodos' => $periodos,
-            'resumen' => $resumen,
-            'termino' => $termino,
-            'estadoSeleccionado' => $estado,
+    /*
+    |--------------------------------------------------------------------------
+    | Períodos para filtro
+    |--------------------------------------------------------------------------
+    */
+
+    $periodos = PeriodoAcademico::query()
+        ->orderByDesc('fecha_inicio')
+        ->get([
+            'id',
+            'codigo',
+            'nombre',
+            'estado',
+        ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Resumen
+    |--------------------------------------------------------------------------
+    */
+
+    $resumen = [
+        'total' =>
+            Grupo::query()
+                ->count(),
+
+        'planificados' =>
+            Grupo::query()
+                ->where(
+                    'estado',
+                    'planificado'
+                )
+                ->count(),
+
+        'activos' =>
+            Grupo::query()
+                ->where(
+                    'estado',
+                    'activo'
+                )
+                ->count(),
+
+        'finalizados' =>
+            Grupo::query()
+                ->where(
+                    'estado',
+                    'finalizado'
+                )
+                ->count(),
+
+        'cancelados' =>
+            Grupo::query()
+                ->where(
+                    'estado',
+                    'cancelado'
+                )
+                ->count(),
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Vista
+    |--------------------------------------------------------------------------
+    */
+
+    return view(
+        'portal.grupos.index',
+        [
+            'grupos' =>
+                $grupos,
+
+            'programas' =>
+                $programas,
+
+            'periodos' =>
+                $periodos,
+
+            'resumen' =>
+                $resumen,
+
+            'termino' =>
+                $termino,
+
+            'estadoSeleccionado' =>
+                $estado,
+
             'programaSeleccionado' =>
                 $programaId,
+
             'periodoSeleccionado' =>
                 $periodoId,
-        ]);
-    }
+        ]
+    );
+}
+
+
 
     public function create(
         Request $request
@@ -162,9 +246,16 @@ class GrupoController extends Controller
             ->get();
 
         $periodos = PeriodoAcademico::query()
-            ->activos()
-            ->orderByDesc('fecha_inicio')
-            ->get();
+    ->whereIn(
+        'estado',
+        [
+            'planificado',
+            'matricula_abierta',
+            'en_curso',
+        ]
+    )
+    ->orderByDesc('fecha_inicio')
+    ->get();
 
         return view('portal.grupos.create', [
             'programas' => $programas,

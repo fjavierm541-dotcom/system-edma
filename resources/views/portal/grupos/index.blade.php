@@ -39,69 +39,120 @@
 
 @section('content')
 
-    <section class="portal-summary-grid">
+    {{-- Resumen --}}
+<section class="portal-summary-grid">
 
-        <article class="portal-summary-card">
+    <article class="portal-summary-card">
 
-            <div class="portal-summary-icon">
-                <i class="bi bi-people"></i>
-            </div>
+        <div class="portal-summary-icon">
+            <i class="bi bi-people"></i>
+        </div>
 
-            <div>
-                <span>Total de grupos</span>
+        <div>
+            <span>Total de grupos</span>
 
-                <strong>
-                    {{ number_format($resumen['total']) }}
-                </strong>
+            <strong>
+                {{ number_format(
+                    $resumen['total']
+                ) }}
+            </strong>
 
-                <small>
-                    Grupos registrados
-                </small>
-            </div>
+            <small>
+                Grupos académicos registrados
+            </small>
+        </div>
 
-        </article>
+    </article>
 
-        <article class="portal-summary-card">
+    <article class="portal-summary-card">
 
-            <div class="portal-summary-icon portal-summary-icon-success">
-                <i class="bi bi-people-fill"></i>
-            </div>
+        <div class="portal-summary-icon">
+            <i class="bi bi-calendar-plus"></i>
+        </div>
 
-            <div>
-                <span>Grupos activos</span>
+        <div>
+            <span>Planificados</span>
 
-                <strong>
-                    {{ number_format($resumen['activos']) }}
-                </strong>
+            <strong>
+                {{ number_format(
+                    $resumen['planificados']
+                ) }}
+            </strong>
 
-                <small>
-                    Disponibles para procesos académicos
-                </small>
-            </div>
+            <small>
+                Preparados para iniciar posteriormente
+            </small>
+        </div>
 
-        </article>
+    </article>
 
-        <article class="portal-summary-card">
+    <article class="portal-summary-card">
 
-            <div class="portal-summary-icon portal-summary-icon-muted">
-                <i class="bi bi-person-dash"></i>
-            </div>
+        <div class="portal-summary-icon portal-summary-icon-success">
+            <i class="bi bi-play-circle"></i>
+        </div>
 
-            <div>
-                <span>Grupos inactivos</span>
+        <div>
+            <span>Activos</span>
 
-                <strong>
-                    {{ number_format($resumen['inactivos']) }}
-                </strong>
+            <strong>
+                {{ number_format(
+                    $resumen['activos']
+                ) }}
+            </strong>
 
-                <small>
-                    Conservan su historial
-                </small>
-            </div>
+            <small>
+                Actualmente habilitados
+            </small>
+        </div>
 
-        </article>
+    </article>
 
-    </section>
+    <article class="portal-summary-card">
+
+        <div class="portal-summary-icon portal-summary-icon-muted">
+            <i class="bi bi-check2-circle"></i>
+        </div>
+
+        <div>
+            <span>Finalizados</span>
+
+            <strong>
+                {{ number_format(
+                    $resumen['finalizados']
+                ) }}
+            </strong>
+
+            <small>
+                Grupos que concluyeron su período
+            </small>
+        </div>
+
+    </article>
+
+    <article class="portal-summary-card">
+
+        <div class="portal-summary-icon portal-summary-icon-muted">
+            <i class="bi bi-x-circle"></i>
+        </div>
+
+        <div>
+            <span>Cancelados</span>
+
+            <strong>
+                {{ number_format(
+                    $resumen['cancelados']
+                ) }}
+            </strong>
+
+            <small>
+                Grupos que no continuaron
+            </small>
+        </div>
+
+    </article>
+
+</section>
 
     <section class="portal-card">
 
@@ -219,21 +270,39 @@
                         </option>
 
                         <option
+                            value="planificado"
+                            @selected(
+                                $estadoSeleccionado === 'planificado'
+                            )
+                        >
+                            Planificado
+                        </option>
+
+                        <option
                             value="activo"
                             @selected(
                                 $estadoSeleccionado === 'activo'
                             )
                         >
-                            Activos
+                            Activo
                         </option>
 
                         <option
-                            value="inactivo"
+                            value="finalizado"
                             @selected(
-                                $estadoSeleccionado === 'inactivo'
+                                $estadoSeleccionado === 'finalizado'
                             )
                         >
-                            Inactivos
+                            Finalizado
+                        </option>
+
+                        <option
+                            value="cancelado"
+                            @selected(
+                                $estadoSeleccionado === 'cancelado'
+                            )
+                        >
+                            Cancelado
                         </option>
 
                     </select>
@@ -364,21 +433,45 @@
 
                                 <td>
 
-                                    @if ($grupo->estado === 'activo')
+                                   @switch($grupo->estado)
 
-                                        <span class="portal-status-badge portal-status-active">
-                                            <span></span>
-                                            Activo
-                                        </span>
+    @case('planificado')
 
-                                    @else
+        <span class="portal-status-badge">
+            <span></span>
+            Planificado
+        </span>
 
-                                        <span class="portal-status-badge portal-status-inactive">
-                                            <span></span>
-                                            Inactivo
-                                        </span>
+        @break
 
-                                    @endif
+    @case('activo')
+
+        <span class="portal-status-badge portal-status-active">
+            <span></span>
+            Activo
+        </span>
+
+        @break
+
+    @case('finalizado')
+
+        <span class="portal-status-badge portal-status-inactive">
+            <span></span>
+            Finalizado
+        </span>
+
+        @break
+
+    @case('cancelado')
+
+        <span class="portal-status-badge portal-status-inactive">
+            <span></span>
+            Cancelado
+        </span>
+
+        @break
+
+@endswitch
 
                                 </td>
 

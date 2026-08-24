@@ -39,7 +39,9 @@
 
 @section('content')
 
-    {{-- Resumen --}}
+    {{-- =====================================================
+         Resumen
+         ===================================================== --}}
     <section class="portal-summary-grid">
 
         <article class="portal-summary-card">
@@ -64,19 +66,59 @@
 
         <article class="portal-summary-card">
 
+            <div class="portal-summary-icon">
+                <i class="bi bi-calendar-plus"></i>
+            </div>
+
+            <div>
+                <span>Planificados</span>
+
+                <strong>
+                    {{ number_format($resumen['planificados']) }}
+                </strong>
+
+                <small>
+                    Preparados para próximos procesos
+                </small>
+            </div>
+
+        </article>
+
+        <article class="portal-summary-card">
+
             <div class="portal-summary-icon portal-summary-icon-success">
                 <i class="bi bi-calendar-check"></i>
             </div>
 
             <div>
-                <span>Períodos activos</span>
+                <span>Matrícula abierta</span>
 
                 <strong>
-                    {{ number_format($resumen['activos']) }}
+                    {{ number_format($resumen['matricula_abierta']) }}
                 </strong>
 
                 <small>
-                    Disponibles para la gestión académica
+                    Habilitados para matrícula
+                </small>
+            </div>
+
+        </article>
+
+        <article class="portal-summary-card">
+
+            <div class="portal-summary-icon portal-summary-icon-success">
+                <i class="bi bi-play-circle"></i>
+            </div>
+
+            <div>
+                <span>En curso</span>
+
+                <strong>
+                    {{ number_format($resumen['en_curso']) }}
+                </strong>
+
+                <small>
+                    Actualmente en desarrollo académico
                 </small>
             </div>
 
@@ -85,18 +127,38 @@
         <article class="portal-summary-card">
 
             <div class="portal-summary-icon portal-summary-icon-muted">
-                <i class="bi bi-calendar-x"></i>
+                <i class="bi bi-check2-circle"></i>
             </div>
 
             <div>
-                <span>Períodos inactivos</span>
+                <span>Finalizados</span>
 
                 <strong>
-                    {{ number_format($resumen['inactivos']) }}
+                    {{ number_format($resumen['finalizados']) }}
                 </strong>
 
                 <small>
-                    Conservan sus registros e historial
+                    Períodos académicos concluidos
+                </small>
+            </div>
+
+        </article>
+
+        <article class="portal-summary-card">
+
+            <div class="portal-summary-icon portal-summary-icon-muted">
+                <i class="bi bi-x-circle"></i>
+            </div>
+
+            <div>
+                <span>Cancelados</span>
+
+                <strong>
+                    {{ number_format($resumen['cancelados']) }}
+                </strong>
+
+                <small>
+                    Períodos que no continuaron
                 </small>
             </div>
 
@@ -104,7 +166,9 @@
 
     </section>
 
-    {{-- Listado --}}
+    {{-- =====================================================
+         Listado
+         ===================================================== --}}
     <section class="portal-card">
 
         <div class="portal-card-header portal-card-header-responsive">
@@ -128,7 +192,9 @@
 
         </div>
 
-        {{-- Filtros --}}
+        {{-- =================================================
+             Filtros
+             ================================================= --}}
         <div class="portal-filter-area">
 
             <form
@@ -164,21 +230,48 @@
                         </option>
 
                         <option
-                            value="activo"
+                            value="planificado"
                             @selected(
-                                $estadoSeleccionado === 'activo'
+                                $estadoSeleccionado === 'planificado'
                             )
                         >
-                            Activos
+                            Planificado
                         </option>
 
                         <option
-                            value="inactivo"
+                            value="matricula_abierta"
                             @selected(
-                                $estadoSeleccionado === 'inactivo'
+                                $estadoSeleccionado === 'matricula_abierta'
                             )
                         >
-                            Inactivos
+                            Matrícula abierta
+                        </option>
+
+                        <option
+                            value="en_curso"
+                            @selected(
+                                $estadoSeleccionado === 'en_curso'
+                            )
+                        >
+                            En curso
+                        </option>
+
+                        <option
+                            value="finalizado"
+                            @selected(
+                                $estadoSeleccionado === 'finalizado'
+                            )
+                        >
+                            Finalizado
+                        </option>
+
+                        <option
+                            value="cancelado"
+                            @selected(
+                                $estadoSeleccionado === 'cancelado'
+                            )
+                        >
+                            Cancelado
                         </option>
 
                     </select>
@@ -235,6 +328,7 @@
 
                             <tr>
 
+                                {{-- Período --}}
                                 <td>
 
                                     <div class="portal-table-primary">
@@ -247,6 +341,7 @@
 
                                 </td>
 
+                                {{-- Matrícula --}}
                                 <td>
 
                                     <div class="portal-table-primary">
@@ -258,15 +353,21 @@
 
                                     <small class="portal-table-secondary">
                                         hasta
+
                                         {{ $periodo->fecha_fin_matricula
                                             ? $periodo->fecha_fin_matricula
                                                 ->translatedFormat('d M Y')
                                             : 'No definida' }}
                                     </small>
 
-                                    @if ($periodo->matricula_abierta)
+                                    @if (
+                                        $periodo->estado === 'matricula_abierta'
+                                    )
 
-                                        <span class="portal-status-badge portal-status-active mt-2">
+                                        <span
+                                            class="portal-status-badge
+                                                portal-status-active mt-2"
+                                        >
                                             <span></span>
                                             Matrícula abierta
                                         </span>
@@ -275,6 +376,7 @@
 
                                 </td>
 
+                                {{-- Desarrollo --}}
                                 <td>
 
                                     <div class="portal-table-primary">
@@ -286,15 +388,21 @@
 
                                     <small class="portal-table-secondary">
                                         hasta
+
                                         {{ $periodo->fecha_fin
                                             ? $periodo->fecha_fin
                                                 ->translatedFormat('d M Y')
                                             : 'No definida' }}
                                     </small>
 
-                                    @if ($periodo->en_curso)
+                                    @if (
+                                        $periodo->estado === 'en_curso'
+                                    )
 
-                                        <span class="portal-status-badge portal-status-active mt-2">
+                                        <span
+                                            class="portal-status-badge
+                                                portal-status-active mt-2"
+                                        >
                                             <span></span>
                                             En curso
                                         </span>
@@ -303,6 +411,7 @@
 
                                 </td>
 
+                                {{-- Grupos --}}
                                 <td>
 
                                     <strong>
@@ -317,26 +426,81 @@
 
                                 </td>
 
+                                {{-- Estado --}}
                                 <td>
 
-                                    @if ($periodo->estado === 'activo')
+                                    @switch($periodo->estado)
 
-                                        <span class="portal-status-badge portal-status-active">
-                                            <span></span>
-                                            Activo
-                                        </span>
+                                        @case('planificado')
 
-                                    @else
+                                            <span class="portal-status-badge">
+                                                <span></span>
+                                                Planificado
+                                            </span>
 
-                                        <span class="portal-status-badge portal-status-inactive">
-                                            <span></span>
-                                            Inactivo
-                                        </span>
+                                            @break
 
-                                    @endif
+                                        @case('matricula_abierta')
+
+                                            <span
+                                                class="portal-status-badge
+                                                    portal-status-active"
+                                            >
+                                                <span></span>
+                                                Matrícula abierta
+                                            </span>
+
+                                            @break
+
+                                        @case('en_curso')
+
+                                            <span
+                                                class="portal-status-badge
+                                                    portal-status-active"
+                                            >
+                                                <span></span>
+                                                En curso
+                                            </span>
+
+                                            @break
+
+                                        @case('finalizado')
+
+                                            <span
+                                                class="portal-status-badge
+                                                    portal-status-inactive"
+                                            >
+                                                <span></span>
+                                                Finalizado
+                                            </span>
+
+                                            @break
+
+                                        @case('cancelado')
+
+                                            <span
+                                                class="portal-status-badge
+                                                    portal-status-inactive"
+                                            >
+                                                <span></span>
+                                                Cancelado
+                                            </span>
+
+                                            @break
+
+                                        @default
+
+                                            <span class="portal-status-badge">
+                                                {{ str($periodo->estado)
+                                                    ->replace('_', ' ')
+                                                    ->title() }}
+                                            </span>
+
+                                    @endswitch
 
                                 </td>
 
+                                {{-- Acciones --}}
                                 <td class="text-end">
 
                                     <div class="dropdown">
@@ -351,7 +515,11 @@
                                             <i class="bi bi-three-dots-vertical"></i>
                                         </button>
 
-                                        <ul class="dropdown-menu dropdown-menu-end portal-actions-menu">
+                                        <ul
+                                            class="dropdown-menu
+                                                dropdown-menu-end
+                                                portal-actions-menu"
+                                        >
 
                                             <li>
                                                 <a
@@ -387,28 +555,18 @@
 
                                                 <button
                                                     type="button"
-                                                    class="dropdown-item
-                                                        {{ $periodo->estado === 'activo'
-                                                            ? 'text-warning-emphasis'
-                                                            : 'text-success' }}"
+                                                    class="dropdown-item"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#changePeriodStatusModal"
-                                                    data-name="{{ $periodo->nombre }}"
-                                                    data-status="{{ $periodo->estado }}"
                                                     data-action="{{ route(
                                                         'portal.periodos.cambiar-estado',
                                                         $periodo
                                                     ) }}"
+                                                    data-name="{{ $periodo->nombre }}"
+                                                    data-status="{{ $periodo->estado }}"
                                                 >
-                                                    <i class="bi
-                                                        {{ $periodo->estado === 'activo'
-                                                            ? 'bi-toggle-off'
-                                                            : 'bi-toggle-on' }}">
-                                                    </i>
-
-                                                    {{ $periodo->estado === 'activo'
-                                                        ? 'Desactivar período'
-                                                        : 'Activar período' }}
+                                                    <i class="bi bi-arrow-repeat"></i>
+                                                    Cambiar estado
                                                 </button>
 
                                             </li>
@@ -432,19 +590,27 @@
             <div class="portal-table-footer">
 
                 <div class="portal-pagination-summary">
+
                     Mostrando
 
-                    <strong>{{ $periodos->firstItem() }}</strong>
+                    <strong>
+                        {{ $periodos->firstItem() }}
+                    </strong>
 
                     a
 
-                    <strong>{{ $periodos->lastItem() }}</strong>
+                    <strong>
+                        {{ $periodos->lastItem() }}
+                    </strong>
 
                     de
 
-                    <strong>{{ $periodos->total() }}</strong>
+                    <strong>
+                        {{ $periodos->total() }}
+                    </strong>
 
                     registros
+
                 </div>
 
                 <div>
@@ -482,7 +648,9 @@
 
                 @else
 
-                    <h3>No hay períodos académicos registrados</h3>
+                    <h3>
+                        No hay períodos académicos registrados
+                    </h3>
 
                     <p>
                         Registre un período para comenzar a organizar
@@ -505,7 +673,9 @@
 
     </section>
 
-    {{-- Modal --}}
+    {{-- =====================================================
+         Modal de cambio de estado
+         ===================================================== --}}
     <div
         class="modal fade"
         id="changePeriodStatusModal"
@@ -527,16 +697,18 @@
                     <div class="modal-header">
 
                         <div>
+
                             <span class="portal-modal-eyebrow">
-                                Confirmación
+                                Período académico
                             </span>
 
                             <h2
                                 class="modal-title"
                                 id="changePeriodStatusModalLabel"
                             >
-                                Cambiar estado del período
+                                Cambiar estado
                             </h2>
+
                         </div>
 
                         <button
@@ -556,8 +728,56 @@
 
                         <p
                             id="changePeriodStatusMessage"
-                            class="mb-0"
+                            class="mb-3"
                         ></p>
+
+                        <label
+                            for="changePeriodStatusSelect"
+                            class="form-label portal-form-label"
+                        >
+                            Nuevo estado
+
+                            <span class="portal-required">
+                                *
+                            </span>
+                        </label>
+
+                        <select
+                            name="estado"
+                            id="changePeriodStatusSelect"
+                            class="form-select portal-form-control"
+                            required
+                        >
+                            <option value="">
+                                Seleccione un estado
+                            </option>
+
+                            <option value="planificado">
+                                Planificado
+                            </option>
+
+                            <option value="matricula_abierta">
+                                Matrícula abierta
+                            </option>
+
+                            <option value="en_curso">
+                                En curso
+                            </option>
+
+                            <option value="finalizado">
+                                Finalizado
+                            </option>
+
+                            <option value="cancelado">
+                                Cancelado
+                            </option>
+
+                        </select>
+
+                        <div class="portal-form-help">
+                            Seleccione la etapa que representa
+                            actualmente este período académico.
+                        </div>
 
                     </div>
 
@@ -576,7 +796,8 @@
                             class="btn portal-btn-primary"
                             id="changePeriodStatusSubmit"
                         >
-                            Confirmar
+                            <i class="bi bi-check2-circle"></i>
+                            Guardar estado
                         </button>
 
                     </div>
@@ -594,59 +815,90 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.getElementById(
-            'changePeriodStatusModal'
-        );
 
-        const form = document.getElementById(
-            'changePeriodStatusForm'
-        );
+        const modal =
+            document.getElementById(
+                'changePeriodStatusModal'
+            );
 
-        const message = document.getElementById(
-            'changePeriodStatusMessage'
-        );
+        const form =
+            document.getElementById(
+                'changePeriodStatusForm'
+            );
 
-        const submit = document.getElementById(
-            'changePeriodStatusSubmit'
-        );
+        const message =
+            document.getElementById(
+                'changePeriodStatusMessage'
+            );
 
-        if (!modal || !form || !message || !submit) {
+        const select =
+            document.getElementById(
+                'changePeriodStatusSelect'
+            );
+
+        if (
+            !modal ||
+            !form ||
+            !message ||
+            !select
+        ) {
             return;
         }
 
-        modal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
+        const nombresEstados = {
+            planificado:
+                'Planificado',
 
-            if (!button) {
-                return;
+            matricula_abierta:
+                'Matrícula abierta',
+
+            en_curso:
+                'En curso',
+
+            finalizado:
+                'Finalizado',
+
+            cancelado:
+                'Cancelado',
+        };
+
+        modal.addEventListener(
+            'show.bs.modal',
+            event => {
+
+                const button =
+                    event.relatedTarget;
+
+                if (!button) {
+                    return;
+                }
+
+                const name =
+                    button.dataset.name || '';
+
+                const status =
+                    button.dataset.status || '';
+
+                form.action =
+                    button.dataset.action || '';
+
+                message.textContent =
+                    `${name} se encuentra actualmente en estado "${nombresEstados[status] || status}".`;
+
+                select.value = '';
+
+                Array.from(
+                    select.options
+                ).forEach(option => {
+
+                    option.disabled =
+                        option.value !== ''
+                        &&
+                        option.value === status;
+                });
             }
+        );
 
-            const name = button.dataset.name;
-            const status = button.dataset.status;
-
-            const willDeactivate =
-                status === 'activo';
-
-            form.action = button.dataset.action;
-
-            message.textContent = willDeactivate
-                ? `¿Desea desactivar ${name}? Los grupos y registros asociados se conservarán.`
-                : `¿Desea activar nuevamente ${name}?`;
-
-            submit.textContent = willDeactivate
-                ? 'Desactivar'
-                : 'Activar';
-
-            submit.classList.toggle(
-                'portal-btn-danger',
-                willDeactivate
-            );
-
-            submit.classList.toggle(
-                'portal-btn-primary',
-                !willDeactivate
-            );
-        });
     });
 </script>
 

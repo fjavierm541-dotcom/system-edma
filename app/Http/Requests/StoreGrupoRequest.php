@@ -31,7 +31,7 @@ class StoreGrupoRequest extends FormRequest
             'estado' =>
                 $this->normalizeNullableText(
                     $this->input('estado')
-                ) ?? 'activo',
+                ) ?? 'planificado',
 
             /*
             |--------------------------------------------------------------------------
@@ -40,7 +40,9 @@ class StoreGrupoRequest extends FormRequest
             */
 
             'modalidad' => 'virtual',
+
             'cupo_minimo' => 3,
+
             'cupo_maximo' => 25,
         ]);
     }
@@ -48,23 +50,38 @@ class StoreGrupoRequest extends FormRequest
     public function rules(): array
     {
         return [
+
+            /*
+            |--------------------------------------------------------------------------
+            | Nivel
+            |--------------------------------------------------------------------------
+            */
+
             'nivel_id' => [
                 'required',
                 'integer',
 
-                Rule::exists('niveles', 'id')
-                    ->where(
-                        fn ($query) =>
-                            $query
-                                ->where(
-                                    'estado',
-                                    'activo'
-                                )
-                                ->whereNull(
-                                    'deleted_at'
-                                )
-                    ),
+                Rule::exists(
+                    'niveles',
+                    'id'
+                )->where(
+                    fn ($query) =>
+                        $query
+                            ->where(
+                                'estado',
+                                'activo'
+                            )
+                            ->whereNull(
+                                'deleted_at'
+                            )
+                ),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Período académico
+            |--------------------------------------------------------------------------
+            */
 
             'periodo_academico_id' => [
                 'required',
@@ -73,19 +90,28 @@ class StoreGrupoRequest extends FormRequest
                 Rule::exists(
                     'periodos_academicos',
                     'id'
-                )
-                    ->where(
-                        fn ($query) =>
-                            $query
-                                ->where(
-                                    'estado',
-                                    'activo'
-                                )
-                                ->whereNull(
-                                    'deleted_at'
-                                )
-                    ),
+                )->where(
+                    fn ($query) =>
+                        $query
+                            ->whereIn(
+                                'estado',
+                                [
+                                    'planificado',
+                                    'matricula_abierta',
+                                    'en_curso',
+                                ]
+                            )
+                            ->whereNull(
+                                'deleted_at'
+                            )
+                ),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Información del grupo
+            |--------------------------------------------------------------------------
+            */
 
             'nombre' => [
                 'required',
@@ -95,6 +121,7 @@ class StoreGrupoRequest extends FormRequest
 
             'modalidad' => [
                 'required',
+
                 Rule::in([
                     'virtual',
                 ]),
@@ -103,14 +130,26 @@ class StoreGrupoRequest extends FormRequest
             'cupo_minimo' => [
                 'required',
                 'integer',
-                Rule::in([3]),
+
+                Rule::in([
+                    3,
+                ]),
             ],
 
             'cupo_maximo' => [
                 'required',
                 'integer',
-                Rule::in([25]),
+
+                Rule::in([
+                    25,
+                ]),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Fechas
+            |--------------------------------------------------------------------------
+            */
 
             'fecha_inicio' => [
                 'required',
@@ -123,13 +162,28 @@ class StoreGrupoRequest extends FormRequest
                 'after_or_equal:fecha_inicio',
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | Estado
+            |--------------------------------------------------------------------------
+            */
+
             'estado' => [
                 'required',
+
                 Rule::in([
+                    'planificado',
                     'activo',
-                    'inactivo',
+                    'finalizado',
+                    'cancelado',
                 ]),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Observaciones
+            |--------------------------------------------------------------------------
+            */
 
             'observaciones' => [
                 'nullable',
@@ -142,7 +196,8 @@ class StoreGrupoRequest extends FormRequest
     public function after(): array
     {
         return [
-            function (Validator $validator) {
+            function (Validator $validator): void {
+
                 $this->validarProgramaDelNivel(
                     $validator
                 );
@@ -154,12 +209,22 @@ class StoreGrupoRequest extends FormRequest
         ];
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Validar programa del nivel
+    |--------------------------------------------------------------------------
+    */
+
     private function validarProgramaDelNivel(
         Validator $validator
     ): void {
         $nivel = Nivel::query()
             ->with('programa')
-            ->find($this->input('nivel_id'));
+            ->find(
+                $this->input(
+                    'nivel_id'
+                )
+            );
 
         if (!$nivel) {
             return;
@@ -171,10 +236,16 @@ class StoreGrupoRequest extends FormRequest
         ) {
             $validator->errors()->add(
                 'nivel_id',
-                'El programa correspondiente a este nivel no se encuentra activo.'
+                'El programa correspondiente a este nivel no se encuentra disponible.'
             );
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validar fechas dentro del período
+    |--------------------------------------------------------------------------
+    */
 
     private function validarFechasDelPeriodo(
         Validator $validator
@@ -190,13 +261,15 @@ class StoreGrupoRequest extends FormRequest
             return;
         }
 
-        $inicioGrupo = $this->date(
-            'fecha_inicio'
-        );
+        $inicioGrupo =
+            $this->date(
+                'fecha_inicio'
+            );
 
-        $finGrupo = $this->date(
-            'fecha_fin'
-        );
+        $finGrupo =
+            $this->date(
+                'fecha_fin'
+            );
 
         if (
             $inicioGrupo &&
@@ -225,6 +298,12 @@ class StoreGrupoRequest extends FormRequest
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Mensajes
+    |--------------------------------------------------------------------------
+    */
+
     public function messages(): array
     {
         return [
@@ -232,13 +311,13 @@ class StoreGrupoRequest extends FormRequest
                 'Debe seleccionar el nivel del grupo.',
 
             'nivel_id.exists' =>
-                'El nivel seleccionado no existe o no se encuentra activo.',
+                'El nivel seleccionado no existe o no se encuentra disponible.',
 
             'periodo_academico_id.required' =>
                 'Debe seleccionar el período académico.',
 
             'periodo_academico_id.exists' =>
-                'El período seleccionado no existe o no se encuentra activo.',
+                'El período seleccionado no se encuentra disponible para registrar grupos.',
 
             'nombre.required' =>
                 'El nombre del grupo es obligatorio.',
@@ -265,6 +344,12 @@ class StoreGrupoRequest extends FormRequest
                 'Las observaciones no pueden superar los 2,000 caracteres.',
         ];
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Normalización
+    |--------------------------------------------------------------------------
+    */
 
     private function normalizeNullableText(
         mixed $value

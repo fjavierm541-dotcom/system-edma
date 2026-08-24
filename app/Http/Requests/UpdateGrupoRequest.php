@@ -33,8 +33,16 @@ class UpdateGrupoRequest extends FormRequest
                     $this->input('estado')
                 ),
 
+            /*
+            |--------------------------------------------------------------------------
+            | Valores institucionales
+            |--------------------------------------------------------------------------
+            */
+
             'modalidad' => 'virtual',
+
             'cupo_minimo' => 3,
+
             'cupo_maximo' => 25,
         ]);
     }
@@ -42,6 +50,13 @@ class UpdateGrupoRequest extends FormRequest
     public function rules(): array
     {
         return [
+
+            /*
+            |--------------------------------------------------------------------------
+            | Nivel
+            |--------------------------------------------------------------------------
+            */
+
             'nivel_id' => [
                 'required',
                 'integer',
@@ -49,8 +64,24 @@ class UpdateGrupoRequest extends FormRequest
                 Rule::exists(
                     'niveles',
                     'id'
-                )->whereNull('deleted_at'),
+                )->where(
+                    fn ($query) =>
+                        $query
+                            ->where(
+                                'estado',
+                                'activo'
+                            )
+                            ->whereNull(
+                                'deleted_at'
+                            )
+                ),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Período académico
+            |--------------------------------------------------------------------------
+            */
 
             'periodo_academico_id' => [
                 'required',
@@ -59,8 +90,28 @@ class UpdateGrupoRequest extends FormRequest
                 Rule::exists(
                     'periodos_academicos',
                     'id'
-                )->whereNull('deleted_at'),
+                )->where(
+                    fn ($query) =>
+                        $query
+                            ->whereIn(
+                                'estado',
+                                [
+                                    'planificado',
+                                    'matricula_abierta',
+                                    'en_curso',
+                                ]
+                            )
+                            ->whereNull(
+                                'deleted_at'
+                            )
+                ),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Información del grupo
+            |--------------------------------------------------------------------------
+            */
 
             'nombre' => [
                 'required',
@@ -70,6 +121,7 @@ class UpdateGrupoRequest extends FormRequest
 
             'modalidad' => [
                 'required',
+
                 Rule::in([
                     'virtual',
                 ]),
@@ -78,14 +130,26 @@ class UpdateGrupoRequest extends FormRequest
             'cupo_minimo' => [
                 'required',
                 'integer',
-                Rule::in([3]),
+
+                Rule::in([
+                    3,
+                ]),
             ],
 
             'cupo_maximo' => [
                 'required',
                 'integer',
-                Rule::in([25]),
+
+                Rule::in([
+                    25,
+                ]),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Fechas
+            |--------------------------------------------------------------------------
+            */
 
             'fecha_inicio' => [
                 'required',
@@ -98,13 +162,28 @@ class UpdateGrupoRequest extends FormRequest
                 'after_or_equal:fecha_inicio',
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | Estado
+            |--------------------------------------------------------------------------
+            */
+
             'estado' => [
                 'required',
+
                 Rule::in([
+                    'planificado',
                     'activo',
-                    'inactivo',
+                    'finalizado',
+                    'cancelado',
                 ]),
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Observaciones
+            |--------------------------------------------------------------------------
+            */
 
             'observaciones' => [
                 'nullable',
@@ -117,7 +196,8 @@ class UpdateGrupoRequest extends FormRequest
     public function after(): array
     {
         return [
-            function (Validator $validator) {
+            function (Validator $validator): void {
+
                 $this->validarProgramaDelNivel(
                     $validator
                 );
@@ -129,24 +209,43 @@ class UpdateGrupoRequest extends FormRequest
         ];
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Validar programa del nivel
+    |--------------------------------------------------------------------------
+    */
+
     private function validarProgramaDelNivel(
         Validator $validator
     ): void {
         $nivel = Nivel::query()
             ->with('programa')
-            ->find($this->input('nivel_id'));
+            ->find(
+                $this->input(
+                    'nivel_id'
+                )
+            );
 
         if (!$nivel) {
             return;
         }
 
-        if (!$nivel->programa) {
+        if (
+            !$nivel->programa ||
+            $nivel->programa->estado !== 'activo'
+        ) {
             $validator->errors()->add(
                 'nivel_id',
-                'No fue posible identificar el programa correspondiente al nivel seleccionado.'
+                'El programa correspondiente a este nivel no se encuentra disponible.'
             );
         }
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Validar fechas dentro del período
+    |--------------------------------------------------------------------------
+    */
 
     private function validarFechasDelPeriodo(
         Validator $validator
@@ -162,13 +261,15 @@ class UpdateGrupoRequest extends FormRequest
             return;
         }
 
-        $inicioGrupo = $this->date(
-            'fecha_inicio'
-        );
+        $inicioGrupo =
+            $this->date(
+                'fecha_inicio'
+            );
 
-        $finGrupo = $this->date(
-            'fecha_fin'
-        );
+        $finGrupo =
+            $this->date(
+                'fecha_fin'
+            );
 
         if (
             $inicioGrupo &&
@@ -197,6 +298,12 @@ class UpdateGrupoRequest extends FormRequest
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Mensajes
+    |--------------------------------------------------------------------------
+    */
+
     public function messages(): array
     {
         return [
@@ -204,13 +311,13 @@ class UpdateGrupoRequest extends FormRequest
                 'Debe seleccionar el nivel del grupo.',
 
             'nivel_id.exists' =>
-                'El nivel seleccionado no existe.',
+                'El nivel seleccionado no existe o no se encuentra disponible.',
 
             'periodo_academico_id.required' =>
                 'Debe seleccionar el período académico.',
 
             'periodo_academico_id.exists' =>
-                'El período seleccionado no existe.',
+                'El período seleccionado no se encuentra disponible para gestionar grupos.',
 
             'nombre.required' =>
                 'El nombre del grupo es obligatorio.',
@@ -237,6 +344,12 @@ class UpdateGrupoRequest extends FormRequest
                 'Las observaciones no pueden superar los 2,000 caracteres.',
         ];
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Normalización
+    |--------------------------------------------------------------------------
+    */
 
     private function normalizeNullableText(
         mixed $value

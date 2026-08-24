@@ -62,12 +62,16 @@ class StorePeriodoAcademicoRequest extends FormRequest
             ],
 
             'estado' => [
-                'required',
-                Rule::in([
-                    'activo',
-                    'inactivo',
-                ]),
-            ],
+    'required',
+
+    Rule::in([
+        'planificado',
+        'matricula_abierta',
+        'en_curso',
+        'finalizado',
+        'cancelado',
+    ]),
+],
 
             'observaciones' => [
                 'nullable',

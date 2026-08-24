@@ -21,49 +21,104 @@ class PeriodoAcademicoController extends Controller
     ) {
     }
 
-    public function index(Request $request): View
-    {
-        $termino = trim(
-            (string) $request->query('buscar', '')
-        );
+   public function index(Request $request): View
+{
+    $termino = trim(
+        (string) $request->query('buscar', '')
+    );
 
-        $estado = $request->query('estado');
+    $estado = $request->query('estado');
 
-        $periodos = PeriodoAcademico::query()
-            ->withCount('grupos')
-            ->buscar($termino)
-            ->when(
-                in_array(
-                    $estado,
-                    ['activo', 'inactivo'],
-                    true
-                ),
-                fn (Builder $query) =>
-                    $query->where('estado', $estado)
-            )
-            ->orderByDesc('fecha_inicio')
-            ->paginate(15)
-            ->withQueryString();
+    $estadosValidos = [
+        'planificado',
+        'matricula_abierta',
+        'en_curso',
+        'finalizado',
+        'cancelado',
+    ];
 
-        $resumen = [
-            'total' => PeriodoAcademico::query()->count(),
+    $periodos = PeriodoAcademico::query()
+        ->withCount('grupos')
+        ->buscar($termino)
+        ->when(
+            in_array(
+                $estado,
+                $estadosValidos,
+                true
+            ),
+            fn (Builder $query) =>
+                $query->where(
+                    'estado',
+                    $estado
+                )
+        )
+        ->orderByDesc('fecha_inicio')
+        ->paginate(15)
+        ->withQueryString();
 
-            'activos' => PeriodoAcademico::query()
-                ->activos()
+    $resumen = [
+        'total' =>
+            PeriodoAcademico::query()
                 ->count(),
 
-            'inactivos' => PeriodoAcademico::query()
-                ->inactivos()
+        'planificados' =>
+            PeriodoAcademico::query()
+                ->where(
+                    'estado',
+                    'planificado'
+                )
                 ->count(),
-        ];
 
-        return view('portal.periodos.index', [
-            'periodos' => $periodos,
-            'resumen' => $resumen,
-            'termino' => $termino,
-            'estadoSeleccionado' => $estado,
-        ]);
-    }
+        'matricula_abierta' =>
+            PeriodoAcademico::query()
+                ->where(
+                    'estado',
+                    'matricula_abierta'
+                )
+                ->count(),
+
+        'en_curso' =>
+            PeriodoAcademico::query()
+                ->where(
+                    'estado',
+                    'en_curso'
+                )
+                ->count(),
+
+        'finalizados' =>
+            PeriodoAcademico::query()
+                ->where(
+                    'estado',
+                    'finalizado'
+                )
+                ->count(),
+
+        'cancelados' =>
+            PeriodoAcademico::query()
+                ->where(
+                    'estado',
+                    'cancelado'
+                )
+                ->count(),
+    ];
+
+    return view(
+        'portal.periodos.index',
+        [
+            'periodos' =>
+                $periodos,
+
+            'resumen' =>
+                $resumen,
+
+            'termino' =>
+                $termino,
+
+            'estadoSeleccionado' =>
+                $estado,
+        ]
+    );
+}
 
     public function create(): View
     {
@@ -172,38 +227,67 @@ class PeriodoAcademicoController extends Controller
     }
 
     public function cambiarEstado(
-        PeriodoAcademico $periodo
-    ): RedirectResponse {
-        try {
-            $nuevoEstado =
-                $periodo->estado === 'activo'
-                    ? 'inactivo'
-                    : 'activo';
+    Request $request,
+    PeriodoAcademico $periodo
+): RedirectResponse {
+    $datos = $request->validate(
+        [
+            'estado' => [
+                'required',
+                'in:planificado,matricula_abierta,en_curso,finalizado,cancelado',
+            ],
+        ],
+        [
+            'estado.required' =>
+                'Seleccione el nuevo estado del período.',
 
-            $periodo->update([
-                'estado' => $nuevoEstado,
-            ]);
+            'estado.in' =>
+                'El estado seleccionado no es válido.',
+        ]
+    );
 
-            return back()->with(
-                'success',
-                $nuevoEstado === 'activo'
-                    ? 'El período académico fue activado correctamente.'
-                    : 'El período académico fue desactivado correctamente.'
-            );
-        } catch (Throwable $exception) {
-            Log::error(
-                'Error al cambiar estado del período académico.',
-                [
-                    'periodo_id' => $periodo->id,
-                    'usuario_id' => auth()->id(),
-                    'exception' => $exception,
-                ]
-            );
-
+    try {
+        if (
+            $periodo->estado ===
+            $datos['estado']
+        ) {
             return back()->with(
                 'error',
-                'No fue posible cambiar el estado del período académico.'
+                'El período ya se encuentra en el estado seleccionado.'
             );
         }
+
+        $periodo->update([
+            'estado' =>
+                $datos['estado'],
+        ]);
+
+        return back()->with(
+            'success',
+            'El estado del período académico fue actualizado correctamente.'
+        );
+    } catch (Throwable $exception) {
+        Log::error(
+            'Error al cambiar estado del período académico.',
+            [
+                'periodo_id' =>
+                    $periodo->id,
+
+                'usuario_id' =>
+                    auth()->id(),
+
+                'estado_solicitado' =>
+                    $datos['estado'],
+
+                'exception' =>
+                    $exception,
+            ]
+        );
+
+        return back()->with(
+            'error',
+            'No fue posible cambiar el estado del período académico.'
+        );
     }
+}
 }

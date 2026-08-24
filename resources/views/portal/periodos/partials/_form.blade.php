@@ -22,9 +22,9 @@
     );
 
     $estadoActual = old(
-        'estado',
-        $periodo->estado ?? 'activo'
-    );
+    'estado',
+    $periodo->estado ?? 'planificado'
+);
 @endphp
 
 <div class="row g-4">
@@ -401,27 +401,71 @@
                     </label>
 
                     <select
-                        name="estado"
-                        id="estado"
-                        class="form-select portal-form-control
-                            @error('estado') is-invalid @enderror"
-                        required
-                    >
-                        <option
-                            value="activo"
-                            @selected($estadoActual === 'activo')
-                        >
-                            Activo
-                        </option>
+    name="estado"
+    id="estado"
+    class="form-select portal-form-control
+        @error('estado') is-invalid @enderror"
+    required
+>
 
-                        <option
-                            value="inactivo"
-                            @selected($estadoActual === 'inactivo')
-                        >
-                            Inactivo
-                        </option>
+    <option
+        value="planificado"
+        @selected(
+            $estadoActual === 'planificado'
+        )
+    >
+        Planificado
+    </option>
 
-                    </select>
+    <option
+        value="matricula_abierta"
+        @selected(
+            $estadoActual === 'matricula_abierta'
+        )
+    >
+        Matrícula abierta
+    </option>
+
+    <option
+        value="en_curso"
+        @selected(
+            $estadoActual === 'en_curso'
+        )
+    >
+        En curso
+    </option>
+
+    <option
+        value="finalizado"
+        @selected(
+            $estadoActual === 'finalizado'
+        )
+    >
+        Finalizado
+    </option>
+
+    <option
+        value="cancelado"
+        @selected(
+            $estadoActual === 'cancelado'
+        )
+    >
+        Cancelado
+    </option>
+
+</select>
+
+@error('estado')
+
+    <div class="invalid-feedback">
+        {{ $message }}
+    </div>
+
+@enderror
+
+<div class="portal-form-help">
+    El estado indica la etapa actual del período académico.
+</div>
 
                     @error('estado')
                         <div class="invalid-feedback">

@@ -864,19 +864,23 @@
  * nunca quede por encima del modal de autenticación.
  */
 
-body .modal-backdrop {
+/* ==========================================================================
+   Modal de autenticación - Solo Login EDMA
+   ========================================================================== */
+
+body.edma-auth-page .modal-backdrop {
     z-index: 3000 !important;
 
     background-color: #020b1c !important;
 }
 
 
-body .modal-backdrop.show {
+body.edma-auth-page .modal-backdrop.show {
     opacity: 0.48 !important;
 }
 
 
-body .edma-auth-modal {
+body.edma-auth-page .edma-auth-modal {
     z-index: 3010 !important;
 }
 
