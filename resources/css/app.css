@@ -22,6 +22,7 @@
 @import "./website/about.css";
 @import "./website/jobs.css";
 @import "./website/contact.css";
+@import './portal/estado-cuenta.css';
 
 @import "./website/stats.css";
 

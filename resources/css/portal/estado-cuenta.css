@@ -1,0 +1,252 @@
+/*
+|--------------------------------------------------------------------------
+| Estado de cuenta
+|--------------------------------------------------------------------------
+*/
+
+.estado-cuenta-print-only {
+    display: none;
+}
+
+.estado-cuenta-resumen-card {
+    overflow: hidden;
+}
+
+.estado-cuenta-resumen-icon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--portal-primary-soft);
+    color: var(--portal-primary);
+    font-size: 1.1rem;
+}
+
+.estado-cuenta-resumen-valor {
+    display: block;
+    margin-top: 2px;
+    color: var(--portal-primary-dark);
+    font-size: 1.45rem;
+    font-weight: 750;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Impresión
+|--------------------------------------------------------------------------
+*/
+
+@media print {
+
+    @page {
+        size: A4 portrait;
+        margin: 12mm;
+    }
+
+    html,
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+    }
+
+    .portal-sidebar,
+    .portal-navbar,
+    .portal-footer,
+    .portal-page-heading,
+    .edma-no-print,
+    nav,
+    aside,
+    button,
+    .btn,
+    .alert {
+        display: none !important;
+    }
+
+    .portal-main,
+    .portal-content,
+    main,
+    .container,
+    .container-fluid {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .estado-cuenta-print-only {
+        display: block !important;
+    }
+
+    .estado-cuenta-print-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #123d6a;
+    }
+
+    .estado-cuenta-print-header > div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .estado-cuenta-print-header strong {
+        color: #123d6a;
+        font-size: 13px;
+    }
+
+    .estado-cuenta-print-header span {
+        margin-top: 2px;
+        color: #657585;
+        font-size: 9px;
+    }
+
+    .estado-cuenta-print-periodo {
+        display: grid;
+        grid-template-columns:
+            1.2fr .7fr 1.5fr;
+        gap: 14px;
+        margin: 14px 0;
+        padding: 11px 12px;
+        background: #f3f6f9;
+    }
+
+    .estado-cuenta-print-periodo > div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .estado-cuenta-print-periodo span {
+        color: #758391;
+        font-size: 8px;
+    }
+
+    .estado-cuenta-print-periodo strong {
+        margin-top: 2px;
+        color: #183957;
+        font-size: 9px;
+    }
+
+    /*
+    | En impresión no necesitamos
+    | las tarjetas grandes del Portal.
+    */
+    .estado-cuenta-resumen {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .estado-cuenta-resumen > div {
+        width: 100% !important;
+        max-width: none !important;
+        padding: 0 !important;
+    }
+
+    .estado-cuenta-resumen-card {
+        border: 1px solid #d8e0e7 !important;
+        border-radius: 5px !important;
+        box-shadow: none !important;
+    }
+
+    .estado-cuenta-resumen-card .p-4 {
+        padding: 11px 13px !important;
+    }
+
+    .estado-cuenta-resumen-icon {
+        display: none !important;
+    }
+
+    .estado-cuenta-resumen-card span {
+        color: #71808e !important;
+        font-size: 8px !important;
+    }
+
+    .estado-cuenta-resumen-valor {
+        color: #183957 !important;
+        font-size: 17px !important;
+    }
+
+    .portal-card {
+        border: 1px solid #d8e0e7 !important;
+        border-radius: 5px !important;
+        box-shadow: none !important;
+
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .portal-card-header {
+        padding: 10px 12px !important;
+    }
+
+    .portal-card-header h2 {
+        margin: 0 0 2px !important;
+        color: #183957 !important;
+        font-size: 12px !important;
+    }
+
+    .portal-card-header p {
+        margin: 0 !important;
+        color: #6d7b88 !important;
+        font-size: 8px !important;
+    }
+
+    /*
+    | Ocultamos el bloque visual de
+    | "Estado de cuenta seleccionado"
+    | porque el encabezado de impresión
+    | ya contiene esos datos.
+    */
+    .estado-cuenta-print-only
+        + .portal-card {
+        display: none !important;
+    }
+
+    .table {
+        width: 100% !important;
+        margin: 0 !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .table th {
+        padding: 7px 8px !important;
+        border-bottom: 1px solid #123d6a !important;
+        background: #edf2f7 !important;
+        color: #183957 !important;
+        font-size: 8px !important;
+        font-weight: 700 !important;
+
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .table td {
+        padding: 8px !important;
+        border-color: #e1e6eb !important;
+        color: #304556 !important;
+        font-size: 8.5px !important;
+    }
+
+    .table strong {
+        color: #183957 !important;
+    }
+
+    .badge {
+        padding: 3px 6px !important;
+        border: 1px solid #aab5be !important;
+        background: #ffffff !important;
+        color: #344958 !important;
+        font-size: 7px !important;
+
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+}

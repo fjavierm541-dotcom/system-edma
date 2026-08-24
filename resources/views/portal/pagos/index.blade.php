@@ -180,7 +180,6 @@
                         @csrf
 
 
-                        {{-- Monto --}}
                         <div class="mb-3">
 
                             <label
@@ -223,7 +222,6 @@
                         </div>
 
 
-                        {{-- Método --}}
                         <div class="mb-3">
 
                             <label
@@ -244,57 +242,41 @@
                                     Selecciona una opción
                                 </option>
 
-
                                 <option
                                     value="transferencia"
                                     @selected(
-                                        old(
-                                            'metodo_pago'
-                                        )
-                                        ===
-                                        'transferencia'
+                                        old('metodo_pago')
+                                        === 'transferencia'
                                     )
                                 >
                                     Transferencia bancaria
                                 </option>
 
-
                                 <option
                                     value="deposito"
                                     @selected(
-                                        old(
-                                            'metodo_pago'
-                                        )
-                                        ===
-                                        'deposito'
+                                        old('metodo_pago')
+                                        === 'deposito'
                                     )
                                 >
                                     Depósito bancario
                                 </option>
 
-
                                 <option
                                     value="tigo_money"
                                     @selected(
-                                        old(
-                                            'metodo_pago'
-                                        )
-                                        ===
-                                        'tigo_money'
+                                        old('metodo_pago')
+                                        === 'tigo_money'
                                     )
                                 >
                                     Tigo Money
                                 </option>
 
-
                                 <option
                                     value="otro"
                                     @selected(
-                                        old(
-                                            'metodo_pago'
-                                        )
-                                        ===
-                                        'otro'
+                                        old('metodo_pago')
+                                        === 'otro'
                                     )
                                 >
                                     Otro
@@ -305,7 +287,6 @@
                         </div>
 
 
-                        {{-- Fecha --}}
                         <div class="mb-3">
 
                             <label
@@ -323,13 +304,11 @@
                                 value="{{
                                     old(
                                         'fecha_pago',
-                                        now()
-                                            ->toDateString()
+                                        now()->toDateString()
                                     )
                                 }}"
                                 max="{{
-                                    now()
-                                        ->toDateString()
+                                    now()->toDateString()
                                 }}"
                                 required
                             >
@@ -337,7 +316,6 @@
                         </div>
 
 
-                        {{-- Referencia --}}
                         <div class="mb-3">
 
                             <label
@@ -372,7 +350,6 @@
                         </div>
 
 
-                        {{-- Comprobante --}}
                         <div class="mb-4">
 
                             <label
@@ -387,12 +364,7 @@
                                 class="form-control"
                                 id="comprobante"
                                 name="comprobante"
-                                accept="
-                                    .jpg,
-                                    .jpeg,
-                                    .png,
-                                    .pdf
-                                "
+                                accept=".jpg,.jpeg,.png,.pdf"
                                 required
                             >
 
@@ -434,7 +406,7 @@
 
 
         {{-- ========================================================
-            HISTORIAL DE PAGOS
+            HISTORIAL
         ======================================================== --}}
 
         <div class="col-12 col-xl-8">
@@ -450,8 +422,8 @@
                         </h2>
 
                         <p>
-                            Consulta los pagos registrados
-                            y su estado de revisión.
+                            Los pagos pendientes aparecen
+                            primero para facilitar su seguimiento.
                         </p>
 
                     </div>
@@ -463,20 +435,16 @@
 
                     <div class="text-center py-5 px-4">
 
-                        <div class="mb-3">
+                        <i
+                            class="
+                                bi
+                                bi-receipt
+                                fs-2
+                                text-muted
+                            "
+                        ></i>
 
-                            <i
-                                class="
-                                    bi
-                                    bi-receipt
-                                    fs-2
-                                    text-muted
-                                "
-                            ></i>
-
-                        </div>
-
-                        <h5>
+                        <h5 class="mt-3">
                             Aún no hay pagos registrados
                         </h5>
 
@@ -538,21 +506,12 @@
 
                             <tbody>
 
-                                @foreach (
-                                    $pagos
-                                    as $pago
-                                )
+                                @foreach ($pagos as $pago)
 
                                     @php
 
-                                        /*
-                                         * Estado visible.
-                                         */
                                         $estadoTexto =
-                                            match (
-                                                $pago
-                                                    ->estado
-                                            ) {
+                                            match ($pago->estado) {
                                                 'pendiente_revision' =>
                                                     'Pendiente de revisión',
 
@@ -567,8 +526,7 @@
 
                                                 default =>
                                                     str(
-                                                        $pago
-                                                            ->estado
+                                                        $pago->estado
                                                     )
                                                     ->replace(
                                                         '_',
@@ -579,10 +537,7 @@
 
 
                                         $estadoClase =
-                                            match (
-                                                $pago
-                                                    ->estado
-                                            ) {
+                                            match ($pago->estado) {
                                                 'aprobado' =>
                                                     'success',
 
@@ -597,22 +552,13 @@
                                             };
 
 
-                                        /*
-                                         * Año del período.
-                                         */
                                         $anioPeriodo =
                                             $pago
                                                 ->periodoAcademico
                                                 ?->fecha_inicio
-                                                ?->format(
-                                                    'Y'
-                                                );
+                                                ?->format('Y');
 
 
-                                        /*
-                                         * Cuotas a las que fue
-                                         * aplicado el pago.
-                                         */
                                         $cuotas =
                                             $pago
                                                 ->aplicacionesCuotas
@@ -625,17 +571,13 @@
                                                 ->values();
 
 
-                                        /*
-                                         * Texto comprensible
-                                         * del concepto.
-                                         */
                                         if (
                                             $pago->estado
                                             !== 'aprobado'
                                         ) {
 
                                             $concepto =
-                                                'Mensualidad pendiente de revisión';
+                                                'Mensualidad';
 
                                         } elseif (
                                             $cuotas->count()
@@ -643,13 +585,11 @@
                                         ) {
 
                                             $numero =
-                                                $cuotas
-                                                    ->first();
+                                                (int)
+                                                $cuotas->first();
 
                                             $concepto =
-                                                match (
-                                                    (int) $numero
-                                                ) {
+                                                match ($numero) {
                                                     1 =>
                                                         'Primera mensualidad',
 
@@ -660,8 +600,7 @@
                                                         'Tercera mensualidad',
 
                                                     default =>
-                                                        'Mensualidad '
-                                                        . $numero,
+                                                        "Mensualidad {$numero}",
                                                 };
 
                                         } elseif (
@@ -669,77 +608,28 @@
                                             > 1
                                         ) {
 
-                                            $nombresCuotas =
-                                                $cuotas
-                                                    ->map(
-                                                        function (
-                                                            $numero
-                                                        ) {
-
-                                                            return match (
-                                                                (int) $numero
-                                                            ) {
-                                                                1 =>
-                                                                    'primera',
-
-                                                                2 =>
-                                                                    'segunda',
-
-                                                                3 =>
-                                                                    'tercera',
-
-                                                                default =>
-                                                                    'cuota '
-                                                                    . $numero,
-                                                            };
-                                                        }
+                                            $concepto =
+                                                'Cuotas '
+                                                . $cuotas
+                                                    ->implode(
+                                                        ', '
                                                     );
 
-                                            if (
-                                                $nombresCuotas
-                                                    ->count()
-                                                === 2
-                                            ) {
+                                        } elseif (
+                                            $pago
+                                                ->solicitud_inscripcion_id
+                                        ) {
 
-                                                $concepto =
-                                                    ucfirst(
-                                                        $nombresCuotas[0]
-                                                    )
-                                                    . ' y '
-                                                    . $nombresCuotas[1]
-                                                    . ' mensualidad';
-
-                                            } else {
-
-                                                $concepto =
-                                                    'Pago de '
-                                                    . $nombresCuotas
-                                                        ->implode(
-                                                            ', '
-                                                        )
-                                                    . ' mensualidad';
-
-                                            }
+                                            $concepto =
+                                                'Primer pago del período';
 
                                         } else {
 
-                                            /*
-                                             * Casos como el pago
-                                             * inicial ya aprobado
-                                             * que todavía no
-                                             * tuviera aplicaciones.
-                                             */
                                             $concepto =
-                                                $pago
-                                                    ->solicitud_inscripcion_id
-                                                ? 'Primer pago del período'
-                                                : 'Mensualidad';
+                                                'Mensualidad';
                                         }
 
 
-                                        /*
-                                         * Método visible.
-                                         */
                                         $metodoTexto =
                                             match (
                                                 $pago
@@ -774,20 +664,16 @@
 
                                     <tr>
 
-                                        {{-- Código --}}
                                         <td>
 
                                             <strong
-                                                class="
-                                                    text-nowrap
-                                                "
+                                                class="text-nowrap"
                                             >
                                                 {{
                                                     $pago
                                                         ->codigo_pago
                                                 }}
                                             </strong>
-
 
                                             @if (
                                                 $pago
@@ -813,7 +699,6 @@
                                         </td>
 
 
-                                        {{-- Período --}}
                                         <td>
 
                                             <div>
@@ -825,19 +710,12 @@
                                                 }}
                                             </div>
 
-
-                                            @if (
-                                                $anioPeriodo
-                                            )
+                                            @if ($anioPeriodo)
 
                                                 <small
-                                                    class="
-                                                        text-muted
-                                                    "
+                                                    class="text-muted"
                                                 >
-                                                    {{
-                                                        $anioPeriodo
-                                                    }}
+                                                    {{ $anioPeriodo }}
                                                 </small>
 
                                             @endif
@@ -845,13 +723,11 @@
                                         </td>
 
 
-                                        {{-- Concepto --}}
                                         <td>
                                             {{ $concepto }}
                                         </td>
 
 
-                                        {{-- Fecha --}}
                                         <td class="text-nowrap">
 
                                             {{
@@ -866,13 +742,11 @@
                                         </td>
 
 
-                                        {{-- Método --}}
                                         <td>
                                             {{ $metodoTexto }}
                                         </td>
 
 
-                                        {{-- Monto --}}
                                         <td
                                             class="
                                                 text-end
@@ -895,7 +769,6 @@
                                         </td>
 
 
-                                        {{-- Estado --}}
                                         <td>
 
                                             <span
@@ -906,32 +779,32 @@
                                                     }}
                                                 "
                                             >
-                                                {{
-                                                    $estadoTexto
-                                                }}
+                                                {{ $estadoTexto }}
                                             </span>
 
 
                                             @if (
                                                 $pago->estado
                                                 === 'rechazado'
-                                                &&
-                                                $pago
-                                                    ->motivo_rechazo
                                             )
 
-                                                <div
-                                                    class="
-                                                        small
-                                                        text-danger
-                                                        mt-1
-                                                    "
-                                                    title="{{
-                                                        $pago
-                                                            ->motivo_rechazo
-                                                    }}"
-                                                >
-                                                    Ver motivo
+                                                <div class="mt-2">
+
+                                                    <button
+                                                        type="button"
+                                                        class="
+                                                            btn
+                                                            btn-link
+                                                            btn-sm
+                                                            p-0
+                                                            text-danger
+                                                        "
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#motivoPagoModal{{ $pago->id }}"
+                                                    >
+                                                        Ver motivo
+                                                    </button>
+
                                                 </div>
 
                                             @endif
@@ -939,6 +812,227 @@
                                         </td>
 
                                     </tr>
+
+
+                                    {{-- =====================================
+                                        MODAL RECHAZO
+                                    ====================================== --}}
+
+                                    @if (
+                                        $pago->estado
+                                        === 'rechazado'
+                                    )
+
+                                        <div
+                                            class="modal fade"
+                                            id="motivoPagoModal{{ $pago->id }}"
+                                            tabindex="-1"
+                                            aria-hidden="true"
+                                        >
+
+                                            <div
+                                                class="
+                                                    modal-dialog
+                                                    modal-dialog-centered
+                                                "
+                                            >
+
+                                                <div class="modal-content">
+
+                                                    <div class="modal-header">
+
+                                                        <div>
+
+                                                            <small
+                                                                class="
+                                                                    text-muted
+                                                                    d-block
+                                                                "
+                                                            >
+                                                                Pago rechazado
+                                                            </small>
+
+                                                            <h5
+                                                                class="
+                                                                    modal-title
+                                                                    mb-0
+                                                                "
+                                                            >
+                                                                {{
+                                                                    $pago
+                                                                        ->codigo_pago
+                                                                }}
+                                                            </h5>
+
+                                                        </div>
+
+
+                                                        <button
+                                                            type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal"
+                                                            aria-label="Cerrar"
+                                                        ></button>
+
+                                                    </div>
+
+
+                                                    <div class="modal-body">
+
+                                                        <div
+                                                            class="
+                                                                alert
+                                                                alert-warning
+                                                            "
+                                                        >
+
+                                                            <div
+                                                                class="
+                                                                    d-flex
+                                                                    gap-2
+                                                                "
+                                                            >
+
+                                                                <i
+                                                                    class="
+                                                                        bi
+                                                                        bi-exclamation-circle
+                                                                        mt-1
+                                                                    "
+                                                                ></i>
+
+                                                                <div>
+
+                                                                    <strong
+                                                                        class="
+                                                                            d-block
+                                                                            mb-1
+                                                                        "
+                                                                    >
+                                                                        Este pago no fue aprobado
+                                                                    </strong>
+
+                                                                    <span>
+                                                                        Revisa el motivo indicado
+                                                                        por Administración.
+                                                                        Si necesitas ayuda,
+                                                                        puedes comunicarte con
+                                                                        Edumerican Academy.
+                                                                    </span>
+
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <div class="mb-4">
+
+                                                            <small
+                                                                class="
+                                                                    text-muted
+                                                                    d-block
+                                                                    mb-1
+                                                                "
+                                                            >
+                                                                Motivo del rechazo
+                                                            </small>
+
+                                                            <div
+                                                                class="
+                                                                    border
+                                                                    rounded-3
+                                                                    p-3
+                                                                    bg-light
+                                                                "
+                                                            >
+                                                                {{
+                                                                    $pago
+                                                                        ->motivo_rechazo
+                                                                    ?:
+                                                                    'Administración no registró información adicional.'
+                                                                }}
+                                                            </div>
+
+                                                        </div>
+
+
+                                                        <div>
+
+                                                            <small
+                                                                class="
+                                                                    text-muted
+                                                                    d-block
+                                                                    mb-2
+                                                                "
+                                                            >
+                                                                Contactar a Administración
+                                                            </small>
+
+
+                                                            <div
+                                                                class="
+                                                                    d-flex
+                                                                    align-items-center
+                                                                    gap-2
+                                                                    flex-wrap
+                                                                "
+                                                            >
+
+                                                                <a
+                                                                    href="https://wa.me/50496734171"
+                                                                    target="_blank"
+                                                                    rel="noopener"
+                                                                    class="
+                                                                        btn
+                                                                        portal-btn-secondary
+                                                                    "
+                                                                    title="Contactar por WhatsApp"
+                                                                    aria-label="Contactar a Administración por WhatsApp"
+                                                                >
+                                                                    <i class="bi bi-whatsapp"></i>
+                                                                </a>
+
+
+                                                                <a
+                                                                    href="mailto:edumerican@gmail.com"
+                                                                    class="
+                                                                        btn
+                                                                        portal-btn-secondary
+                                                                    "
+                                                                >
+                                                                    <i class="bi bi-envelope me-2"></i>
+                                                                    edumerican@gmail.com
+                                                                </a>
+
+                                                            </div>
+
+                                                        </div>
+
+
+                                                    <div class="modal-footer">
+
+                                                        <button
+                                                            type="button"
+                                                            class="
+                                                                btn
+                                                                portal-btn-secondary
+                                                            "
+                                                            data-bs-dismiss="modal"
+                                                        >
+                                                            Cerrar
+                                                        </button>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    @endif
 
                                 @endforeach
 

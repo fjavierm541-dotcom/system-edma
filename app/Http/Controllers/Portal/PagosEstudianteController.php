@@ -37,6 +37,18 @@ class PagosEstudianteController extends Controller
             'No se encontró un expediente de estudiante asociado a tu cuenta.'
         );
 
+        /*
+        |--------------------------------------------------------------------------
+        | Orden del historial
+        |--------------------------------------------------------------------------
+        |
+        | 1. Pendientes primero.
+        | 2. Dentro de pendientes: más antiguos primero.
+        | 3. Después aprobados/rechazados/anulados.
+        | 4. Los ya procesados: más recientes primero.
+        |
+        */
+
         $pagos = Pago::query()
             ->where(
                 'estudiante_id',
@@ -48,15 +60,44 @@ class PagosEstudianteController extends Controller
                 'comprobantes',
                 'aplicacionesCuotas.cuota',
             ])
-            ->orderByDesc('fecha_pago')
+            ->orderByRaw(
+                "
+                CASE
+                    WHEN estado = 'pendiente_revision'
+                    THEN 0
+                    ELSE 1
+                END
+                "
+            )
+            ->orderByRaw(
+                "
+                CASE
+                    WHEN estado = 'pendiente_revision'
+                    THEN created_at
+                    ELSE NULL
+                END ASC
+                "
+            )
+            ->orderByRaw(
+                "
+                CASE
+                    WHEN estado <> 'pendiente_revision'
+                    THEN revisado_at
+                    ELSE NULL
+                END DESC
+                "
+            )
             ->orderByDesc('id')
             ->get();
 
         return view(
             'portal.pagos.index',
             [
-                'estudiante' => $estudiante,
-                'pagos' => $pagos,
+                'estudiante' =>
+                    $estudiante,
+
+                'pagos' =>
+                    $pagos,
             ]
         );
     }

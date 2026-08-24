@@ -38,7 +38,7 @@ use App\Http\Controllers\Portal\SolicitudInscripcionController;
 use App\Http\Controllers\Portal\ComprobanteMatriculaController;
 use App\Http\Controllers\Portal\PagosEstudianteController;
 use App\Http\Controllers\Portal\PagoAdminController;
-
+use App\Http\Controllers\Portal\EstadoCuentaController;
 
 use App\Http\Controllers\SolicitudInscripcionPublicaController;
 use App\Http\Controllers\WebsiteController;
@@ -669,6 +669,19 @@ Route::middleware([
                 'pagos',
                 [PagosEstudianteController::class, 'store']
             )->name('pagos.store');
+
+
+//estado de cuenta de estudiante 
+
+            Route::get(
+                'estado-cuenta',
+                [
+                    EstadoCuentaController::class,
+                    'index',
+                ]
+            )->name(
+                'estado-cuenta.index'
+            );
         /*
         |--------------------------------------------------------------------------
         | PORTAL - DOCENTE
