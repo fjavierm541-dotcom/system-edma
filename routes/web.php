@@ -37,11 +37,8 @@ use App\Http\Controllers\Portal\ProgramaController;
 use App\Http\Controllers\Portal\SolicitudInscripcionController;
 use App\Http\Controllers\Portal\ComprobanteMatriculaController;
 use App\Http\Controllers\Portal\PagosEstudianteController;
-/*
-|--------------------------------------------------------------------------
-| Controllers - Sitio web público
-|--------------------------------------------------------------------------
-*/
+use App\Http\Controllers\Portal\PagoAdminController;
+
 
 use App\Http\Controllers\SolicitudInscripcionPublicaController;
 use App\Http\Controllers\WebsiteController;
@@ -589,6 +586,33 @@ Route::middleware([
                     'index',
                     'show',
                 ]);
+
+//pagos desde admin de estudiantes
+        Route::prefix('admin/pagos')
+            ->name('admin.pagos.')
+            ->group(function () {
+
+                Route::get(
+                    '/',
+                    [PagoAdminController::class, 'index']
+                )->name('index');
+
+                Route::get(
+                    '{pago}',
+                    [PagoAdminController::class, 'show']
+                )->name('show');
+
+                Route::post(
+                    '{pago}/aprobar',
+                    [PagoAdminController::class, 'aprobar']
+                )->name('aprobar');
+
+                Route::post(
+                    '{pago}/rechazar',
+                    [PagoAdminController::class, 'rechazar']
+                )->name('rechazar');
+            });
+                
         });
 
 
