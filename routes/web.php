@@ -35,6 +35,7 @@ use App\Http\Controllers\Portal\PeriodoAcademicoController;
 use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\Portal\ProgramaController;
 use App\Http\Controllers\Portal\SolicitudInscripcionController;
+use App\Http\Controllers\Portal\ComprobanteMatriculaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -615,12 +616,22 @@ Route::middleware([
                 'mi-matricula',
                 [MiMatriculaController::class, 'store']
             )->name('mi-matricula.store');
-
+//Cambio de grupo de matricula
             Route::post(
                 'mi-matricula/cambiar-grupo',
                 [MiMatriculaController::class, 'cambiarGrupo']
             )->name(
                 'mi-matricula.cambiar-grupo'
+            );
+//comprobante de matricula 
+            Route::get(
+                'comprobante-matricula',
+                [
+                    ComprobanteMatriculaController::class,
+                    'index',
+                ]
+            )->name(
+                'comprobante-matricula.index'
             );
         /*
         |--------------------------------------------------------------------------
