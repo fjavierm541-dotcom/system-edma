@@ -1,0 +1,250 @@
+/*
+|--------------------------------------------------------------------------
+| Pagos - Portal EDMA
+|--------------------------------------------------------------------------
+|
+| Ajustes específicos del módulo de Pagos.
+| Mantiene la jerarquía tipográfica y visual del Portal.
+|
+*/
+
+
+/*
+|--------------------------------------------------------------------------
+| Tarjetas
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .portal-card-header {
+    padding: 20px 26px;
+}
+
+.edma-payments-page .portal-card-header h2 {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    font-weight: 750;
+    line-height: 1.25;
+}
+
+.edma-payments-page .portal-card-header p {
+    margin: 0;
+    color: var(--portal-text-muted);
+    font-size: .86rem;
+    line-height: 1.45;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Formulario
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .form-label {
+    margin-bottom: 7px;
+    font-size: .9rem;
+    font-weight: 650;
+}
+
+.edma-payments-page .form-control,
+.edma-payments-page .form-select,
+.edma-payments-page .input-group-text {
+    min-height: 42px;
+    font-size: .9rem;
+}
+
+.edma-payments-page .form-text {
+    margin-top: 6px;
+    color: var(--portal-text-muted);
+    font-size: .78rem;
+    line-height: 1.45;
+}
+
+.edma-payments-page textarea.form-control {
+    min-height: auto;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Avisos
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .alert {
+    font-size: .87rem;
+    line-height: 1.5;
+}
+
+.edma-payments-page .alert strong {
+    font-size: .91rem;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Historial de pagos
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .table {
+    margin: 0;
+}
+
+.edma-payments-page .table thead th {
+    padding: 13px 12px;
+    border-bottom-width: 1px;
+    color: var(--portal-primary-dark);
+    font-size: .82rem;
+    font-weight: 750;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.edma-payments-page .table tbody td {
+    padding: 15px 12px;
+    color: var(--portal-text);
+    font-size: .87rem;
+    line-height: 1.45;
+    vertical-align: middle;
+}
+
+.edma-payments-page .table tbody td strong {
+    font-size: .88rem;
+    font-weight: 700;
+}
+
+.edma-payments-page .table .small,
+.edma-payments-page .table small {
+    font-size: .75rem;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Código de pago
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .edma-payment-code {
+    display: block;
+    color: var(--portal-primary-dark);
+    font-size: .86rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.edma-payments-page .edma-payment-reference {
+    display: block;
+    margin-top: 3px;
+    color: var(--portal-text-muted);
+    font-size: .74rem;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Monto
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .edma-payment-amount {
+    font-size: .9rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Estado
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .badge {
+    padding: .43em .68em;
+    font-size: .71rem;
+    font-weight: 700;
+}
+
+.edma-payments-page .edma-payment-rejection-link {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 0;
+    font-size: .76rem;
+    font-weight: 600;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Botones
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .btn {
+    font-size: .86rem;
+}
+
+.edma-payments-page .portal-btn-primary {
+    min-height: 42px;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Modal de rechazo
+|--------------------------------------------------------------------------
+*/
+
+.edma-payments-page .modal-title {
+    font-size: 1.05rem;
+}
+
+.edma-payments-page .modal-body {
+    font-size: .88rem;
+}
+
+.edma-payments-page .modal-body small {
+    font-size: .77rem;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Responsive
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 1199.98px) {
+
+    .edma-payments-page .portal-card-header {
+        padding: 18px 20px;
+    }
+
+    .edma-payments-page .table thead th,
+    .edma-payments-page .table tbody td {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .edma-payments-page .portal-card-header {
+        padding: 17px 18px;
+    }
+
+    .edma-payments-page .portal-card-header h2 {
+        font-size: 1rem;
+    }
+
+    .edma-payments-page .table thead th {
+        font-size: .78rem;
+    }
+
+    .edma-payments-page .table tbody td {
+        font-size: .83rem;
+    }
+}

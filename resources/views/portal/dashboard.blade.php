@@ -1,8 +1,8 @@
 @extends('layouts.portal')
 
-@section('title', 'Dashboard | Portal EDMA')
+@section('title', 'Inicio | Portal EDMA')
 
-@section('page-title', 'Dashboard')
+@section('page-title', 'Inicio')
 
 @section('page-header')
 

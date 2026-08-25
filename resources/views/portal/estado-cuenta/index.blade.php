@@ -51,6 +51,8 @@
 
 @section('content')
 
+<div class="edma-account-page">
+
     @if (!$matriculaSeleccionada)
 
         <section class="portal-card">
@@ -1217,5 +1219,5 @@
         @endif
 
     @endif
-
+</div>
 @endsection

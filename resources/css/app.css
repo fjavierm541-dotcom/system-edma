@@ -8,7 +8,8 @@
 
 /* Capa visual y ambiente de color */
 @import "./website/vibrance.css";
-
+@import './portal/pagos.css';
+@import './portal/historial-academico.css';
 @import "./website/about-home.css";
 @import "./website/programs-home.css";
 @import "./website/methodology-home.css";

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Matricula extends Model
 {
@@ -115,6 +116,14 @@ public function historialCambiosGrupo(): HasMany
 {
     return $this->hasMany(
         HistorialCambioGrupoMatricula::class,
+        'matricula_id'
+    );
+}
+
+public function calificacionFinal(): HasOne
+{
+    return $this->hasOne(
+        CalificacionFinal::class,
         'matricula_id'
     );
 }

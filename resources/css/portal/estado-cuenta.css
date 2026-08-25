@@ -32,6 +32,64 @@
     font-weight: 750;
 }
 
+/*
+|--------------------------------------------------------------------------
+| Jerarquía tipográfica - Estado de cuenta
+|--------------------------------------------------------------------------
+*/
+
+.estado-cuenta-resumen-card .text-muted,
+.portal-card .text-muted {
+    font-size: .82rem;
+}
+
+.estado-cuenta-resumen-valor {
+    font-size: 1.35rem;
+    line-height: 1.15;
+}
+
+.portal-card-header h2 {
+    font-size: 1.05rem;
+    line-height: 1.25;
+}
+
+.portal-card-header p {
+    font-size: .86rem;
+    line-height: 1.45;
+}
+
+.table thead th {
+    font-size: .82rem;
+    font-weight: 750;
+}
+
+.table tbody td {
+    font-size: .87rem;
+    line-height: 1.45;
+}
+
+.table tbody td strong {
+    font-size: .88rem;
+}
+
+.badge {
+    font-size: .72rem;
+}
+
+.form-label {
+    font-size: .9rem;
+    font-weight: 650;
+}
+
+.form-select,
+.form-control {
+    font-size: .9rem;
+}
+
+.form-text {
+    font-size: .78rem;
+}
+
 
 /*
 |--------------------------------------------------------------------------

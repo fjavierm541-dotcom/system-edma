@@ -31,6 +31,8 @@
 
 @section('content')
 
+<div class="edma-payments-page">
+
     {{-- ============================================================
         MENSAJES
     ============================================================ --}}
@@ -180,6 +182,7 @@
                         @csrf
 
 
+                        {{-- Monto --}}
                         <div class="mb-3">
 
                             <label
@@ -222,6 +225,7 @@
                         </div>
 
 
+                        {{-- Método --}}
                         <div class="mb-3">
 
                             <label
@@ -242,41 +246,53 @@
                                     Selecciona una opción
                                 </option>
 
+
                                 <option
                                     value="transferencia"
                                     @selected(
-                                        old('metodo_pago')
-                                        === 'transferencia'
+                                        old(
+                                            'metodo_pago'
+                                        ) ===
+                                        'transferencia'
                                     )
                                 >
                                     Transferencia bancaria
                                 </option>
 
+
                                 <option
                                     value="deposito"
                                     @selected(
-                                        old('metodo_pago')
-                                        === 'deposito'
+                                        old(
+                                            'metodo_pago'
+                                        ) ===
+                                        'deposito'
                                     )
                                 >
                                     Depósito bancario
                                 </option>
 
+
                                 <option
                                     value="tigo_money"
                                     @selected(
-                                        old('metodo_pago')
-                                        === 'tigo_money'
+                                        old(
+                                            'metodo_pago'
+                                        ) ===
+                                        'tigo_money'
                                     )
                                 >
                                     Tigo Money
                                 </option>
 
+
                                 <option
                                     value="otro"
                                     @selected(
-                                        old('metodo_pago')
-                                        === 'otro'
+                                        old(
+                                            'metodo_pago'
+                                        ) ===
+                                        'otro'
                                     )
                                 >
                                     Otro
@@ -287,6 +303,7 @@
                         </div>
 
 
+                        {{-- Fecha --}}
                         <div class="mb-3">
 
                             <label
@@ -316,6 +333,7 @@
                         </div>
 
 
+                        {{-- Referencia --}}
                         <div class="mb-3">
 
                             <label
@@ -350,6 +368,7 @@
                         </div>
 
 
+                        {{-- Comprobante --}}
                         <div class="mb-4">
 
                             <label
@@ -385,6 +404,7 @@
                                 w-100
                             "
                         >
+
                             <i
                                 class="
                                     bi
@@ -611,9 +631,7 @@
                                             $concepto =
                                                 'Cuotas '
                                                 . $cuotas
-                                                    ->implode(
-                                                        ', '
-                                                    );
+                                                    ->implode(', ');
 
                                         } elseif (
                                             $pago
@@ -632,8 +650,7 @@
 
                                         $metodoTexto =
                                             match (
-                                                $pago
-                                                    ->metodo_pago
+                                                $pago->metodo_pago
                                             ) {
                                                 'transferencia' =>
                                                     'Transferencia',
@@ -664,27 +681,29 @@
 
                                     <tr>
 
+                                        {{-- Código --}}
                                         <td>
 
-                                            <strong
-                                                class="text-nowrap"
+                                            <span
+                                                class="
+                                                    edma-payment-code
+                                                "
                                             >
                                                 {{
                                                     $pago
                                                         ->codigo_pago
                                                 }}
-                                            </strong>
+                                            </span>
+
 
                                             @if (
                                                 $pago
                                                     ->numero_referencia
                                             )
 
-                                                <div
+                                                <span
                                                     class="
-                                                        small
-                                                        text-muted
-                                                        mt-1
+                                                        edma-payment-reference
                                                     "
                                                 >
                                                     Ref.
@@ -692,28 +711,34 @@
                                                         $pago
                                                             ->numero_referencia
                                                     }}
-                                                </div>
+                                                </span>
 
                                             @endif
 
                                         </td>
 
 
+                                        {{-- Período --}}
                                         <td>
 
                                             <div>
+
                                                 {{
                                                     $pago
                                                         ->periodoAcademico
                                                         ?->nombre
                                                     ?? '—'
                                                 }}
+
                                             </div>
+
 
                                             @if ($anioPeriodo)
 
                                                 <small
-                                                    class="text-muted"
+                                                    class="
+                                                        text-muted
+                                                    "
                                                 >
                                                     {{ $anioPeriodo }}
                                                 </small>
@@ -723,11 +748,13 @@
                                         </td>
 
 
+                                        {{-- Concepto --}}
                                         <td>
                                             {{ $concepto }}
                                         </td>
 
 
+                                        {{-- Fecha --}}
                                         <td class="text-nowrap">
 
                                             {{
@@ -742,11 +769,13 @@
                                         </td>
 
 
+                                        {{-- Método --}}
                                         <td>
                                             {{ $metodoTexto }}
                                         </td>
 
 
+                                        {{-- Monto --}}
                                         <td
                                             class="
                                                 text-end
@@ -754,7 +783,11 @@
                                             "
                                         >
 
-                                            <strong>
+                                            <span
+                                                class="
+                                                    edma-payment-amount
+                                                "
+                                            >
                                                 L
                                                 {{
                                                     number_format(
@@ -764,11 +797,12 @@
                                                         2
                                                     )
                                                 }}
-                                            </strong>
+                                            </span>
 
                                         </td>
 
 
+                                        {{-- Estado --}}
                                         <td>
 
                                             <span
@@ -795,9 +829,8 @@
                                                         class="
                                                             btn
                                                             btn-link
-                                                            btn-sm
-                                                            p-0
                                                             text-danger
+                                                            edma-payment-rejection-link
                                                         "
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#motivoPagoModal{{ $pago->id }}"
@@ -947,12 +980,14 @@
                                                                     bg-light
                                                                 "
                                                             >
+
                                                                 {{
                                                                     $pago
                                                                         ->motivo_rechazo
                                                                     ?:
                                                                     'Administración no registró información adicional.'
                                                                 }}
+
                                                             </div>
 
                                                         </div>
@@ -991,7 +1026,12 @@
                                                                     title="Contactar por WhatsApp"
                                                                     aria-label="Contactar a Administración por WhatsApp"
                                                                 >
-                                                                    <i class="bi bi-whatsapp"></i>
+                                                                    <i
+                                                                        class="
+                                                                            bi
+                                                                            bi-whatsapp
+                                                                        "
+                                                                    ></i>
                                                                 </a>
 
 
@@ -1002,13 +1042,22 @@
                                                                         portal-btn-secondary
                                                                     "
                                                                 >
-                                                                    <i class="bi bi-envelope me-2"></i>
+                                                                    <i
+                                                                        class="
+                                                                            bi
+                                                                            bi-envelope
+                                                                            me-2
+                                                                        "
+                                                                    ></i>
+
                                                                     edumerican@gmail.com
                                                                 </a>
 
                                                             </div>
 
                                                         </div>
+
+                                                    </div>
 
 
                                                     <div class="modal-footer">
@@ -1049,5 +1098,7 @@
         </div>
 
     </div>
+
+</div>
 
 @endsection
