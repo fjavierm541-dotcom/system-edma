@@ -32,6 +32,13 @@
                 'portal.estudiante.inicio'
             );
 
+    } elseif ($esDocente) {
+
+        $rutaInicio =
+            route(
+                'portal.docente.inicio'
+            );
+
     } else {
 
         $rutaInicio =
@@ -618,18 +625,6 @@
                         </span>
                     </a>
 
-                @else
-
-                    <div class="portal-menu-link">
-
-                        <i class="bi bi-journal-text"></i>
-
-                        <span>
-                            Historial académico
-                        </span>
-
-                    </div>
-
                 @endif
 
             </div>
@@ -735,18 +730,6 @@
                         </span>
                     </a>
 
-                @else
-
-                    <div class="portal-menu-link">
-
-                        <i class="bi bi-person-circle"></i>
-
-                        <span>
-                            Mi perfil
-                        </span>
-
-                    </div>
-
                 @endif
 
 
@@ -756,7 +739,16 @@
                             'password.change.edit'
                         )
                     }}"
-                    class="portal-menu-link"
+                    class="
+                        portal-menu-link
+                        {{
+                            request()->routeIs(
+                                'password.change.*'
+                            )
+                                ? 'active'
+                                : ''
+                        }}
+                    "
                 >
                     <i class="bi bi-shield-lock"></i>
 
@@ -776,6 +768,8 @@
 
         @if ($esDocente)
 
+            {{-- Principal --}}
+
             <div class="portal-menu-section">
 
                 <span class="portal-menu-label">
@@ -783,40 +777,130 @@
                 </span>
 
 
-                @if (
-                    Route::has(
-                        'portal.docente.inicio'
-                    )
-                )
-
-                    <a
-                        href="{{
-                            route(
+                <a
+                    href="{{
+                        route(
+                            'portal.docente.inicio'
+                        )
+                    }}"
+                    class="
+                        portal-menu-link
+                        {{
+                            request()->routeIs(
                                 'portal.docente.inicio'
                             )
-                        }}"
-                        class="portal-menu-link"
-                    >
-                        <i class="bi bi-house-door"></i>
+                                ? 'active'
+                                : ''
+                        }}
+                    "
+                >
+                    <i class="bi bi-house-door"></i>
 
-                        <span>
-                            Inicio
-                        </span>
-                    </a>
+                    <span>
+                        Inicio
+                    </span>
+                </a>
 
-                @else
+            </div>
 
-                    <div class="portal-menu-link">
 
-                        <i class="bi bi-house-door"></i>
+            {{-- Gestión académica --}}
 
-                        <span>
-                            Inicio
-                        </span>
+            <div class="portal-menu-section">
 
-                    </div>
+                <span class="portal-menu-label">
+                    Gestión académica
+                </span>
 
-                @endif
+
+                <a
+                    href="{{
+                        route(
+                            'portal.docente.mis-grupos.index'
+                        )
+                    }}"
+                    class="
+                        portal-menu-link
+                        {{
+                            request()->routeIs(
+                                'portal.docente.mis-grupos.*'
+                            )
+                            ||
+                            request()->routeIs(
+                                'portal.docente.calificaciones.*'
+                            )
+                                ? 'active'
+                                : ''
+                        }}
+                    "
+                >
+                    <i class="bi bi-people"></i>
+
+                    <span>
+                        Mis grupos
+                    </span>
+                </a>
+
+            </div>
+
+
+            {{-- Mi cuenta --}}
+
+            <div class="portal-menu-section">
+
+                <span class="portal-menu-label">
+                    Mi cuenta
+                </span>
+
+
+                <a
+                    href="{{
+                        route(
+                            'portal.docente.mi-perfil.index'
+                        )
+                    }}"
+                    class="
+                        portal-menu-link
+                        {{
+                            request()->routeIs(
+                                'portal.docente.mi-perfil.*'
+                            )
+                                ? 'active'
+                                : ''
+                        }}
+                    "
+                >
+                    <i class="bi bi-person-circle"></i>
+
+                    <span>
+                        Mi perfil
+                    </span>
+                </a>
+
+
+                <a
+                    href="{{
+                        route(
+                            'password.change.edit'
+                        )
+                    }}"
+                    class="
+                        portal-menu-link
+                        {{
+                            request()->routeIs(
+                                'password.change.*'
+                            )
+                                ? 'active'
+                                : ''
+                        }}
+                    "
+                >
+                    <i class="bi bi-shield-lock"></i>
+
+                    <span>
+                        Cambiar contraseña
+                    </span>
+                </a>
 
             </div>
 

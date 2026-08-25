@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\LoginController;
 | Controllers - Portal
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\Portal\MiPerfilDocenteController;
 use App\Http\Controllers\Portal\CalificacionesAdminController;
 use App\Http\Controllers\Portal\CalificacionesDocenteController;
 use App\Http\Controllers\Portal\MisGruposDocenteController;
@@ -1209,6 +1210,22 @@ Route::middleware('rol:Docente')
                 ]
             )->name(
                 'docente.calificaciones.confirmar'
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | Mi perfil
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                'docente/mi-perfil',
+                [
+                    MiPerfilDocenteController::class,
+                    'index',
+                ]
+            )->name(
+                'docente.mi-perfil.index'
             );
 
 
