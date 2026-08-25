@@ -15,17 +15,20 @@ class StorePeriodoAcademicoRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'nombre' => $this->normalizeNullableText(
-                $this->input('nombre')
-            ),
+            'nombre' =>
+                $this->normalizeNullableText(
+                    $this->input('nombre')
+                ),
 
-            'estado' => $this->normalizeNullableText(
-                $this->input('estado')
-            ),
+            'estado' =>
+                $this->normalizeNullableText(
+                    $this->input('estado')
+                ),
 
-            'observaciones' => $this->normalizeNullableText(
-                $this->input('observaciones')
-            ),
+            'observaciones' =>
+                $this->normalizeNullableText(
+                    $this->input('observaciones')
+                ),
         ]);
     }
 
@@ -61,17 +64,36 @@ class StorePeriodoAcademicoRequest extends FormRequest
                 'before_or_equal:fecha_fin',
             ],
 
-            'estado' => [
-    'required',
+            /*
+            |--------------------------------------------------------------------------
+            | Ventana de carga de calificaciones
+            |--------------------------------------------------------------------------
+            */
 
-    Rule::in([
-        'planificado',
-        'matricula_abierta',
-        'en_curso',
-        'finalizado',
-        'cancelado',
-    ]),
-],
+            'calificaciones_desde' => [
+                'nullable',
+                'date',
+                'required_with:calificaciones_hasta',
+            ],
+
+            'calificaciones_hasta' => [
+                'nullable',
+                'date',
+                'required_with:calificaciones_desde',
+                'after_or_equal:calificaciones_desde',
+            ],
+
+            'estado' => [
+                'required',
+
+                Rule::in([
+                    'planificado',
+                    'matricula_abierta',
+                    'en_curso',
+                    'finalizado',
+                    'cancelado',
+                ]),
+            ],
 
             'observaciones' => [
                 'nullable',
@@ -111,6 +133,21 @@ class StorePeriodoAcademicoRequest extends FormRequest
             'fecha_fin_matricula.before_or_equal' =>
                 'La matrícula no puede cerrar después de finalizar el período académico.',
 
+            'calificaciones_desde.required_with' =>
+                'Debe indicar la fecha y hora de inicio de la carga de calificaciones.',
+
+            'calificaciones_desde.date' =>
+                'La fecha y hora de inicio de la carga de calificaciones no es válida.',
+
+            'calificaciones_hasta.required_with' =>
+                'Debe indicar la fecha y hora límite de la carga de calificaciones.',
+
+            'calificaciones_hasta.date' =>
+                'La fecha y hora límite de la carga de calificaciones no es válida.',
+
+            'calificaciones_hasta.after_or_equal' =>
+                'La fecha y hora límite de carga de calificaciones no puede ser anterior a la fecha y hora de inicio.',
+
             'estado.required' =>
                 'Debe seleccionar el estado del período.',
 
@@ -135,6 +172,8 @@ class StorePeriodoAcademicoRequest extends FormRequest
             trim($value)
         );
 
-        return $value === '' ? null : $value;
+        return $value === ''
+            ? null
+            : $value;
     }
 }

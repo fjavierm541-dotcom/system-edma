@@ -48,17 +48,20 @@ class InicioPortalController extends Controller
         |--------------------------------------------------------------------------
         | Docente
         |--------------------------------------------------------------------------
-        |
-        | El Portal Docente todavía no está habilitado.
-        |
         */
 
         if ($user->tieneRol('Docente')) {
-            abort(
-                403,
-                'El acceso para docentes aún no se encuentra habilitado.'
-            );
+            return redirect()
+                ->route(
+                    'portal.docente.inicio'
+                );
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sin rol habilitado
+        |--------------------------------------------------------------------------
+        */
 
         abort(
             403,

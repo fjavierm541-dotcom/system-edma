@@ -22,6 +22,8 @@ class PeriodoAcademico extends Model
         'fecha_fin',
         'fecha_inicio_matricula',
         'fecha_fin_matricula',
+        'calificaciones_desde',
+        'calificaciones_hasta',
         'estado',
         'observaciones',
     ];
@@ -31,6 +33,8 @@ class PeriodoAcademico extends Model
         'fecha_fin' => 'date',
         'fecha_inicio_matricula' => 'date',
         'fecha_fin_matricula' => 'date',
+        'calificaciones_desde' => 'datetime',
+        'calificaciones_hasta' => 'datetime',
     ];
 
     /*
@@ -54,31 +58,31 @@ class PeriodoAcademico extends Model
     */
 
     public function scopeMatriculaAbierta(
-    Builder $query
-): Builder {
-    return $query->where(
-        'estado',
-        'matricula_abierta'
-    );
-}
+        Builder $query
+    ): Builder {
+        return $query->where(
+            'estado',
+            'matricula_abierta'
+        );
+    }
 
-public function scopeEnCurso(
-    Builder $query
-): Builder {
-    return $query->where(
-        'estado',
-        'en_curso'
-    );
-}
+    public function scopeEnCurso(
+        Builder $query
+    ): Builder {
+        return $query->where(
+            'estado',
+            'en_curso'
+        );
+    }
 
-public function scopeFinalizados(
-    Builder $query
-): Builder {
-    return $query->where(
-        'estado',
-        'finalizado'
-    );
-}
+    public function scopeFinalizados(
+        Builder $query
+    ): Builder {
+        return $query->where(
+            'estado',
+            'finalizado'
+        );
+    }
 
     public function scopeBuscar(
         Builder $query,
@@ -93,9 +97,21 @@ public function scopeFinalizados(
         return $query->where(
             function (Builder $subquery) use ($termino) {
                 $subquery
-                    ->where('codigo', 'like', "%{$termino}%")
-                    ->orWhere('nombre', 'like', "%{$termino}%")
-                    ->orWhere('observaciones', 'like', "%{$termino}%");
+                    ->where(
+                        'codigo',
+                        'like',
+                        "%{$termino}%"
+                    )
+                    ->orWhere(
+                        'nombre',
+                        'like',
+                        "%{$termino}%"
+                    )
+                    ->orWhere(
+                        'observaciones',
+                        'like',
+                        "%{$termino}%"
+                    );
             }
         );
     }
@@ -137,6 +153,23 @@ public function scopeFinalizados(
         return $hoy->between(
             $this->fecha_inicio,
             $this->fecha_fin
+        );
+    }
+
+    public function getCargaCalificacionesAbiertaAttribute(): bool
+    {
+        $ahora = now();
+
+        if (
+            !$this->calificaciones_desde ||
+            !$this->calificaciones_hasta
+        ) {
+            return false;
+        }
+
+        return $ahora->between(
+            $this->calificaciones_desde,
+            $this->calificaciones_hasta
         );
     }
 }

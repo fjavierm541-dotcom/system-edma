@@ -16,8 +16,8 @@
             <h1>Registrar período académico</h1>
 
             <p>
-                Defina las fechas de matrícula y el desarrollo
-                académico del nuevo período.
+                Defina la planificación académica, las fechas de matrícula
+                y la ventana de carga de calificaciones del nuevo período.
             </p>
         </div>
 

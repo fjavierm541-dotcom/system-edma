@@ -16,6 +16,9 @@ use App\Http\Controllers\Auth\LoginController;
 | Controllers - Portal
 |--------------------------------------------------------------------------
 */
+
+use App\Http\Controllers\Portal\MisGruposDocenteController;
+use App\Http\Controllers\Portal\InicioDocenteController;
 use App\Http\Controllers\Portal\HistorialAcademicoController;
 use App\Http\Controllers\Portal\MiPerfilController;
 use App\Http\Controllers\Portal\ComprobanteMatriculaController;
@@ -1055,53 +1058,91 @@ Route::middleware([
             });
 
 
+/*
+|--------------------------------------------------------------------------
+|--------------------------------------------------------------------------
+| RUTAS DEL DOCENTE
+|--------------------------------------------------------------------------
+|--------------------------------------------------------------------------
+|
+| TODAS las funcionalidades exclusivas del docente
+| deberán agregarse únicamente dentro de este bloque.
+|
+*/
+
+Route::middleware('rol:Docente')
+    ->group(function () {
+
         /*
         |--------------------------------------------------------------------------
+        | Inicio
         |--------------------------------------------------------------------------
-        | RUTAS DEL DOCENTE
+        */
+
+        Route::get(
+            'docente/inicio',
+            [
+                InicioDocenteController::class,
+                'index',
+            ]
+        )->name(
+            'docente.inicio'
+        );
+
+
+        /*
         |--------------------------------------------------------------------------
+        | Mis grupos
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            'docente/mis-grupos',
+            [
+                MisGruposDocenteController::class,
+                'index',
+            ]
+        )->name(
+            'docente.mis-grupos.index'
+        );
+        
+        /*
+        |--------------------------------------------------------------------------
+        | Detalle de grupo
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get(
+            'docente/mis-grupos/{grupo}',
+            [
+                MisGruposDocenteController::class,
+                'show',
+            ]
+        )->name(
+            'docente.mis-grupos.show'
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | AQUÍ IRÁN LAS PRÓXIMAS RUTAS DEL DOCENTE
         |--------------------------------------------------------------------------
         |
-        | TODAS las funcionalidades exclusivas del docente
-        | deberán agregarse dentro de este bloque.
+        | Próximamente:
         |
-        | El nombre visible de su página principal también será:
-        |
-        | "Inicio"
-        |
-        | Cuando iniciemos el Portal Docente crearemos:
-        |
-        | portal.docente.inicio
+        | - Detalle de grupo
+        | - Estudiantes matriculados
+        | - Carga de calificaciones
+        | - Borradores
+        | - Confirmación de calificaciones
+        | - Documento de respaldo
+        | - Mi perfil
         |
         */
 
-        Route::middleware('rol:Docente')
-            ->group(function () {
-
-                /*
-                |--------------------------------------------------------------------------
-                | AQUÍ IRÁN LAS RUTAS DEL DOCENTE
-                |--------------------------------------------------------------------------
-                |
-                | Próximamente:
-                |
-                | Route::get(
-                |     'docente/inicio',
-                |     [...]
-                | )->name('docente.inicio');
-                |
-                | - Inicio
-                | - Mis grupos
-                | - Estudiantes
-                | - Calificaciones
-                | - EDMA Campus
-                | - Perfil
-                |
-                */
-
-            });
-
     });
+
+});
 
 
 /*

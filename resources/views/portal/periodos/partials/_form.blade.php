@@ -21,10 +21,20 @@
         $periodo?->fecha_fin_matricula?->format('Y-m-d')
     );
 
+    $calificacionesDesde = old(
+        'calificaciones_desde',
+        $periodo?->calificaciones_desde?->format('Y-m-d\TH:i')
+    );
+
+    $calificacionesHasta = old(
+        'calificaciones_hasta',
+        $periodo?->calificaciones_hasta?->format('Y-m-d\TH:i')
+    );
+
     $estadoActual = old(
-    'estado',
-    $periodo->estado ?? 'planificado'
-);
+        'estado',
+        $periodo->estado ?? 'planificado'
+    );
 @endphp
 
 <div class="row g-4">
@@ -309,6 +319,119 @@
 
         </section>
 
+        {{-- Ventana de carga de calificaciones --}}
+        <section class="portal-card portal-form-card">
+
+            <div class="portal-form-section-header">
+
+                <div class="portal-form-section-icon">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+
+                <div>
+                    <h2>Carga de calificaciones</h2>
+
+                    <p>
+                        Defina la fecha y hora durante las cuales los docentes
+                        podrán registrar y modificar las calificaciones finales.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="portal-form-section-body">
+
+                <div class="row g-3">
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="calificaciones_desde"
+                            class="form-label portal-form-label"
+                        >
+                            Inicio de carga
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            name="calificaciones_desde"
+                            id="calificaciones_desde"
+                            value="{{ $calificacionesDesde }}"
+                            class="form-control portal-form-control
+                                @error('calificaciones_desde') is-invalid @enderror"
+                        >
+
+                        @error('calificaciones_desde')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                        <div class="portal-form-help">
+                            Fecha y hora a partir de la cual los docentes
+                            podrán comenzar a registrar calificaciones.
+                        </div>
+
+                    </div>
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="calificaciones_hasta"
+                            class="form-label portal-form-label"
+                        >
+                            Fecha y hora límite
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            name="calificaciones_hasta"
+                            id="calificaciones_hasta"
+                            value="{{ $calificacionesHasta }}"
+                            class="form-control portal-form-control
+                                @error('calificaciones_hasta') is-invalid @enderror"
+                        >
+
+                        @error('calificaciones_hasta')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+
+                        <div class="portal-form-help">
+                            Después de esta fecha y hora finalizará la ventana
+                            ordinaria de carga de calificaciones.
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <div class="portal-inline-notice">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            <div>
+                                <strong>Configuración opcional</strong>
+
+                                <span>
+                                    Puede crear el período sin definir todavía
+                                    esta ventana y configurarla posteriormente.
+                                    Si establece una fecha, deberá completar
+                                    también la otra.
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
         {{-- Observaciones --}}
         <section class="portal-card portal-form-card mb-0">
 
@@ -385,7 +508,7 @@
                         <h2>Estado</h2>
 
                         <p>
-                            Disponibilidad del período académico.
+                            Etapa actual del período académico.
                         </p>
                     </div>
 
@@ -401,71 +524,59 @@
                     </label>
 
                     <select
-    name="estado"
-    id="estado"
-    class="form-select portal-form-control
-        @error('estado') is-invalid @enderror"
-    required
->
+                        name="estado"
+                        id="estado"
+                        class="form-select portal-form-control
+                            @error('estado') is-invalid @enderror"
+                        required
+                    >
 
-    <option
-        value="planificado"
-        @selected(
-            $estadoActual === 'planificado'
-        )
-    >
-        Planificado
-    </option>
+                        <option
+                            value="planificado"
+                            @selected(
+                                $estadoActual === 'planificado'
+                            )
+                        >
+                            Planificado
+                        </option>
 
-    <option
-        value="matricula_abierta"
-        @selected(
-            $estadoActual === 'matricula_abierta'
-        )
-    >
-        Matrícula abierta
-    </option>
+                        <option
+                            value="matricula_abierta"
+                            @selected(
+                                $estadoActual === 'matricula_abierta'
+                            )
+                        >
+                            Matrícula abierta
+                        </option>
 
-    <option
-        value="en_curso"
-        @selected(
-            $estadoActual === 'en_curso'
-        )
-    >
-        En curso
-    </option>
+                        <option
+                            value="en_curso"
+                            @selected(
+                                $estadoActual === 'en_curso'
+                            )
+                        >
+                            En curso
+                        </option>
 
-    <option
-        value="finalizado"
-        @selected(
-            $estadoActual === 'finalizado'
-        )
-    >
-        Finalizado
-    </option>
+                        <option
+                            value="finalizado"
+                            @selected(
+                                $estadoActual === 'finalizado'
+                            )
+                        >
+                            Finalizado
+                        </option>
 
-    <option
-        value="cancelado"
-        @selected(
-            $estadoActual === 'cancelado'
-        )
-    >
-        Cancelado
-    </option>
+                        <option
+                            value="cancelado"
+                            @selected(
+                                $estadoActual === 'cancelado'
+                            )
+                        >
+                            Cancelado
+                        </option>
 
-</select>
-
-@error('estado')
-
-    <div class="invalid-feedback">
-        {{ $message }}
-    </div>
-
-@enderror
-
-<div class="portal-form-help">
-    El estado indica la etapa actual del período académico.
-</div>
+                    </select>
 
                     @error('estado')
                         <div class="invalid-feedback">
@@ -474,8 +585,8 @@
                     @enderror
 
                     <div class="portal-form-help mt-2">
-                        Un período inactivo conservará todos los
-                        grupos y registros asociados.
+                        El estado indica la etapa actual del
+                        período académico.
                     </div>
 
                 </div>
@@ -519,6 +630,16 @@
                             <span>
                                 Confirme que las fechas académicas coincidan
                                 con la planificación establecida.
+                            </span>
+                        </li>
+
+                        <li>
+                            <i class="bi bi-check-circle"></i>
+
+                            <span>
+                                Si configura la carga de calificaciones,
+                                revise cuidadosamente su fecha y hora
+                                de apertura y cierre.
                             </span>
                         </li>
 
@@ -578,7 +699,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-    
+
         const enrollmentStart = document.getElementById(
             'fecha_inicio_matricula'
         );
@@ -595,6 +716,14 @@
             'fecha_fin'
         );
 
+        const gradesStart = document.getElementById(
+            'calificaciones_desde'
+        );
+
+        const gradesEnd = document.getElementById(
+            'calificaciones_hasta'
+        );
+
         const observations = document.getElementById(
             'observaciones'
         );
@@ -603,9 +732,8 @@
             'observacionesCounter'
         );
 
-       
-
         const updateDates = () => {
+
             if (enrollmentStart && enrollmentEnd) {
                 enrollmentEnd.min =
                     enrollmentStart.value || '';
@@ -619,6 +747,11 @@
             if (academicEnd && enrollmentEnd) {
                 enrollmentEnd.max =
                     academicEnd.value || '';
+            }
+
+            if (gradesStart && gradesEnd) {
+                gradesEnd.min =
+                    gradesStart.value || '';
             }
         };
 
@@ -637,8 +770,17 @@
             updateDates
         );
 
+        gradesStart?.addEventListener(
+            'change',
+            updateDates
+        );
+
         const updateObservationsCounter = () => {
-            if (!observations || !observationsCounter) {
+
+            if (
+                !observations ||
+                !observationsCounter
+            ) {
                 return;
             }
 

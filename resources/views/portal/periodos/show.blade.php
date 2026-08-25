@@ -16,8 +16,8 @@
             <h1>{{ $periodo->nombre }}</h1>
 
             <p>
-                Consulte las fechas de matrícula, desarrollo académico
-                y los grupos asociados al período.
+                Consulte la planificación académica, matrícula,
+                carga de calificaciones y grupos asociados al período.
             </p>
         </div>
 
@@ -50,6 +50,26 @@
 
 @section('content')
 
+    @php
+        $estadoEtiqueta = match ($periodo->estado) {
+            'planificado' => 'Planificado',
+            'matricula_abierta' => 'Matrícula abierta',
+            'en_curso' => 'En curso',
+            'finalizado' => 'Finalizado',
+            'cancelado' => 'Cancelado',
+            default => 'Estado no definido',
+        };
+
+        $estadoActivo = in_array(
+            $periodo->estado,
+            [
+                'matricula_abierta',
+                'en_curso',
+            ],
+            true
+        );
+    @endphp
+
     <div class="row g-4">
 
         {{-- Lateral --}}
@@ -77,21 +97,16 @@
 
                     <div class="mt-3">
 
-                        @if ($periodo->estado === 'activo')
+                        <span
+                            class="portal-status-badge
+                                {{ $estadoActivo
+                                    ? 'portal-status-active'
+                                    : 'portal-status-inactive' }}"
+                        >
+                            <span></span>
 
-                            <span class="portal-status-badge portal-status-active">
-                                <span></span>
-                                Período activo
-                            </span>
-
-                        @else
-
-                            <span class="portal-status-badge portal-status-inactive">
-                                <span></span>
-                                Período inactivo
-                            </span>
-
-                        @endif
+                            {{ $estadoEtiqueta }}
+                        </span>
 
                     </div>
 
@@ -108,21 +123,10 @@
                     </div>
 
                     <div>
-                        <span>Situación</span>
+                        <span>Estado</span>
 
                         <strong>
-                            @if ($periodo->matricula_abierta)
-                                Matrícula abierta
-                            @elseif ($periodo->en_curso)
-                                En curso
-                            @elseif (
-                                $periodo->fecha_inicio &&
-                                now()->lt($periodo->fecha_inicio)
-                            )
-                                Próximo
-                            @else
-                                Finalizado
-                            @endif
+                            {{ $estadoEtiqueta }}
                         </strong>
                     </div>
 
@@ -136,7 +140,10 @@
 
                     <div>
                         <h2>Acciones</h2>
-                        <p>Operaciones disponibles.</p>
+
+                        <p>
+                            Operaciones disponibles.
+                        </p>
                     </div>
 
                 </div>
@@ -156,36 +163,14 @@
 
                         <div>
                             <strong>Editar período</strong>
-                            <small>Actualizar fechas y configuración</small>
-                        </div>
-
-                        <i class="bi bi-chevron-right"></i>
-                    </a>
-
-                    <button
-                        type="button"
-                        class="portal-profile-action portal-profile-action-button"
-                        data-bs-toggle="modal"
-                        data-bs-target="#changePeriodStatusModal"
-                    >
-                        <span>
-                            <i class="bi bi-toggle-on"></i>
-                        </span>
-
-                        <div>
-                            <strong>
-                                {{ $periodo->estado === 'activo'
-                                    ? 'Desactivar período'
-                                    : 'Activar período' }}
-                            </strong>
 
                             <small>
-                                Los registros asociados se conservarán.
+                                Actualizar fechas, estado y configuración
                             </small>
                         </div>
 
                         <i class="bi bi-chevron-right"></i>
-                    </button>
+                    </a>
 
                 </div>
 
@@ -196,6 +181,7 @@
         {{-- Principal --}}
         <div class="col-12 col-xl-8">
 
+            {{-- Información general --}}
             <section class="portal-card portal-detail-card">
 
                 <div class="portal-form-section-header">
@@ -231,7 +217,7 @@
                         <span>Estado</span>
 
                         <strong>
-                            {{ str($periodo->estado)->title() }}
+                            {{ $estadoEtiqueta }}
                         </strong>
 
                     </div>
@@ -311,6 +297,158 @@
 
             </section>
 
+            {{-- Carga de calificaciones --}}
+            <section class="portal-card portal-detail-card">
+
+                <div class="portal-form-section-header">
+
+                    <div class="portal-form-section-icon">
+                        <i class="bi bi-journal-check"></i>
+                    </div>
+
+                    <div>
+                        <h2>Carga de calificaciones</h2>
+
+                        <p>
+                            Ventana establecida para el registro y
+                            modificación de calificaciones finales.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="portal-detail-grid">
+
+                    <div class="portal-detail-item">
+
+                        <span>Inicio de carga</span>
+
+                        <strong>
+                            @if ($periodo->calificaciones_desde)
+
+                                {{ $periodo->calificaciones_desde
+                                    ->translatedFormat(
+                                        'd \d\e F \d\e Y, h:i A'
+                                    ) }}
+
+                            @else
+
+                                No definida
+
+                            @endif
+                        </strong>
+
+                    </div>
+
+                    <div class="portal-detail-item">
+
+                        <span>Fecha y hora límite</span>
+
+                        <strong>
+                            @if ($periodo->calificaciones_hasta)
+
+                                {{ $periodo->calificaciones_hasta
+                                    ->translatedFormat(
+                                        'd \d\e F \d\e Y, h:i A'
+                                    ) }}
+
+                            @else
+
+                                No definida
+
+                            @endif
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                <div class="mt-3">
+
+                    <div class="portal-inline-notice">
+
+                        <i
+                            class="bi
+                                {{ $periodo->carga_calificaciones_abierta
+                                    ? 'bi-unlock'
+                                    : 'bi-lock' }}"
+                        ></i>
+
+                        <div>
+
+                            <strong>
+                                @if (
+                                    !$periodo->calificaciones_desde ||
+                                    !$periodo->calificaciones_hasta
+                                )
+
+                                    Ventana no configurada
+
+                                @elseif (
+                                    $periodo->carga_calificaciones_abierta
+                                )
+
+                                    Carga de calificaciones habilitada
+
+                                @elseif (
+                                    now()->lt(
+                                        $periodo->calificaciones_desde
+                                    )
+                                )
+
+                                    Carga de calificaciones pendiente
+
+                                @else
+
+                                    Carga de calificaciones finalizada
+
+                                @endif
+                            </strong>
+
+                            <span>
+                                @if (
+                                    !$periodo->calificaciones_desde ||
+                                    !$periodo->calificaciones_hasta
+                                )
+
+                                    Administración todavía no ha definido
+                                    la ventana de carga de calificaciones
+                                    para este período.
+
+                                @elseif (
+                                    $periodo->carga_calificaciones_abierta
+                                )
+
+                                    Los docentes se encuentran actualmente
+                                    dentro de la ventana autorizada para
+                                    registrar y modificar calificaciones.
+
+                                @elseif (
+                                    now()->lt(
+                                        $periodo->calificaciones_desde
+                                    )
+                                )
+
+                                    La ventana de carga se encuentra
+                                    configurada, pero todavía no ha iniciado.
+
+                                @else
+
+                                    La fecha y hora límite establecida
+                                    para la carga de calificaciones
+                                    ya finalizó.
+
+                                @endif
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
             {{-- Estado actual --}}
             <section class="portal-card portal-detail-card">
 
@@ -346,20 +484,28 @@
                             </strong>
 
                             <small>
+
                                 @if ($periodo->matricula_abierta)
+
                                     Actualmente se encuentra dentro
                                     de las fechas de matrícula.
+
                                 @elseif (
                                     $periodo->fecha_inicio_matricula &&
                                     now()->lt(
                                         $periodo->fecha_inicio_matricula
                                     )
                                 )
+
                                     La matrícula todavía no ha iniciado.
+
                                 @else
+
                                     La fecha de matrícula ya finalizó
                                     o no está disponible.
+
                                 @endif
+
                             </small>
 
                         </div>
@@ -373,21 +519,31 @@
                             <span>Desarrollo académico</span>
 
                             <strong>
+
                                 @if ($periodo->en_curso)
+
                                     En curso
+
                                 @elseif (
                                     $periodo->fecha_inicio &&
-                                    now()->lt($periodo->fecha_inicio)
+                                    now()->lt(
+                                        $periodo->fecha_inicio
+                                    )
                                 )
+
                                     Próximo
+
                                 @else
+
                                     Finalizado
+
                                 @endif
+
                             </strong>
 
                             <small>
                                 La situación se determina según
-                                las fechas configuradas.
+                                las fechas académicas configuradas.
                             </small>
 
                         </div>
@@ -448,21 +604,52 @@
 
                                 </div>
 
-                                @if ($grupo->estado === 'activo')
+                                @switch($grupo->estado)
 
-                                    <span class="portal-status-badge portal-status-active">
-                                        <span></span>
-                                        Activo
-                                    </span>
+                                    @case('activo')
 
-                                @else
+                                        <span class="portal-status-badge portal-status-active">
+                                            <span></span>
+                                            Activo
+                                        </span>
 
-                                    <span class="portal-status-badge portal-status-inactive">
-                                        <span></span>
-                                        {{ str($grupo->estado)->title() }}
-                                    </span>
+                                        @break
 
-                                @endif
+                                    @case('planificado')
+
+                                        <span class="portal-status-badge portal-status-inactive">
+                                            <span></span>
+                                            Planificado
+                                        </span>
+
+                                        @break
+
+                                    @case('finalizado')
+
+                                        <span class="portal-status-badge portal-status-inactive">
+                                            <span></span>
+                                            Finalizado
+                                        </span>
+
+                                        @break
+
+                                    @case('cancelado')
+
+                                        <span class="portal-status-badge portal-status-inactive">
+                                            <span></span>
+                                            Cancelado
+                                        </span>
+
+                                        @break
+
+                                    @default
+
+                                        <span class="portal-status-badge portal-status-inactive">
+                                            <span></span>
+                                            Estado no definido
+                                        </span>
+
+                                @endswitch
 
                             </article>
 
@@ -493,110 +680,6 @@
 
         </div>
 
-    </div>
-
-    {{-- Modal --}}
-    <div
-        class="modal fade"
-        id="changePeriodStatusModal"
-        tabindex="-1"
-        aria-labelledby="changePeriodStatusModalLabel"
-        aria-hidden="true"
-    >
-        <div class="modal-dialog modal-dialog-centered">
-
-            <div class="modal-content portal-modal">
-
-                <form
-                    action="{{ route(
-                        'portal.periodos.cambiar-estado',
-                        $periodo
-                    ) }}"
-                    method="POST"
-                >
-                    @csrf
-                    @method('PATCH')
-
-                    <div class="modal-header">
-
-                        <div>
-                            <span class="portal-modal-eyebrow">
-                                Confirmación
-                            </span>
-
-                            <h2
-                                class="modal-title"
-                                id="changePeriodStatusModalLabel"
-                            >
-                                {{ $periodo->estado === 'activo'
-                                    ? 'Desactivar período'
-                                    : 'Activar período' }}
-                            </h2>
-                        </div>
-
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Cerrar"
-                        ></button>
-
-                    </div>
-
-                    <div class="modal-body">
-
-                        <div class="portal-modal-warning-icon">
-                            <i class="bi bi-calendar3"></i>
-                        </div>
-
-                        <p class="mb-0">
-
-                            @if ($periodo->estado === 'activo')
-
-                                ¿Desea desactivar
-                                <strong>{{ $periodo->nombre }}</strong>?
-                                Los grupos y registros asociados se conservarán.
-
-                            @else
-
-                                ¿Desea activar nuevamente
-                                <strong>{{ $periodo->nombre }}</strong>?
-
-                            @endif
-
-                        </p>
-
-                    </div>
-
-                    <div class="modal-footer">
-
-                        <button
-                            type="button"
-                            class="btn portal-btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Cancelar
-                        </button>
-
-                        <button
-                            type="submit"
-                            class="btn
-                                {{ $periodo->estado === 'activo'
-                                    ? 'portal-btn-danger'
-                                    : 'portal-btn-primary' }}"
-                        >
-                            {{ $periodo->estado === 'activo'
-                                ? 'Desactivar'
-                                : 'Activar' }}
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-
-        </div>
     </div>
 
 @endsection

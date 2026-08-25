@@ -16,7 +16,8 @@
             <h1>Editar período académico</h1>
 
             <p>
-                Actualice la planificación de
+                Actualice la planificación académica, matrícula
+                y configuración de calificaciones de
                 {{ $periodo->nombre }}.
             </p>
         </div>
