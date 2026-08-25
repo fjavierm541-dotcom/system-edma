@@ -16,7 +16,8 @@ use App\Http\Controllers\Auth\LoginController;
 | Controllers - Portal
 |--------------------------------------------------------------------------
 */
-
+use App\Http\Controllers\Portal\CalificacionesAdminController;
+use App\Http\Controllers\Portal\CalificacionesDocenteController;
 use App\Http\Controllers\Portal\MisGruposDocenteController;
 use App\Http\Controllers\Portal\InicioDocenteController;
 use App\Http\Controllers\Portal\HistorialAcademicoController;
@@ -860,6 +861,52 @@ Route::middleware([
                     });
 
 
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Calificaciones
+                    |--------------------------------------------------------------------------
+                    */
+
+                    Route::get(
+                        'admin/calificaciones',
+                        [
+                            CalificacionesAdminController::class,
+                            'index',
+                        ]
+                    )->name(
+                        'admin.calificaciones.index'
+                    );
+
+                    Route::get(
+                        'admin/calificaciones/periodos/{periodo}',
+                        [
+                            CalificacionesAdminController::class,
+                            'grupos',
+                        ]
+                    )->name(
+                        'admin.calificaciones.grupos'
+                    );
+
+                    Route::get(
+                        'admin/calificaciones/grupos/{grupo}',
+                        [
+                            CalificacionesAdminController::class,
+                            'grupo',
+                        ]
+                    )->name(
+                        'admin.calificaciones.grupo'
+                    );
+
+                    Route::patch(
+                        'admin/calificaciones/{calificacion}/rectificar',
+                        [
+                            CalificacionesAdminController::class,
+                            'rectificar',
+                        ]
+                    )->name(
+                        'admin.calificaciones.rectificar'
+                    );
+
                 /*
                 |--------------------------------------------------------------------------
                 | AQUÍ IRÁN LAS PRÓXIMAS RUTAS DE ADMINISTRACIÓN
@@ -1121,6 +1168,48 @@ Route::middleware('rol:Docente')
         )->name(
             'docente.mis-grupos.show'
         );
+
+        /*
+            |--------------------------------------------------------------------------
+            | Calificaciones
+            |--------------------------------------------------------------------------
+            */
+
+            Route::get(
+                'docente/mis-grupos/{grupo}/calificaciones',
+                [
+                    CalificacionesDocenteController::class,
+                    'edit',
+                ]
+            )->name(
+                'docente.calificaciones.edit'
+            );
+
+            Route::put(
+                'docente/mis-grupos/{grupo}/calificaciones',
+                [
+                    CalificacionesDocenteController::class,
+                    'update',
+                ]
+            )->name(
+                'docente.calificaciones.update'
+            );
+
+            /*
+            |--------------------------------------------------------------------------
+            | Confirmar calificaciones
+            |--------------------------------------------------------------------------
+            */
+
+            Route::post(
+                'docente/mis-grupos/{grupo}/calificaciones/confirmar',
+                [
+                    CalificacionesDocenteController::class,
+                    'confirmar',
+                ]
+            )->name(
+                'docente.calificaciones.confirmar'
+            );
 
 
         /*

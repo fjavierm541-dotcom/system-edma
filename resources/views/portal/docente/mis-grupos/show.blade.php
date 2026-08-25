@@ -402,6 +402,7 @@
     </section>
 
 
+
     {{-- ============================================================
     CARGA DE CALIFICACIONES
 ============================================================ --}}
@@ -480,6 +481,10 @@
 
 
     <div class="p-4">
+
+        {{-- ========================================================
+            FECHAS Y ESTADO
+        ======================================================== --}}
 
         <div class="row g-4">
 
@@ -571,6 +576,10 @@
 
         </div>
 
+
+        {{-- ========================================================
+            MENSAJE SEGÚN ESTADO
+        ======================================================== --}}
 
         <div class="border-top mt-4 pt-3">
 
@@ -676,6 +685,50 @@
 
         </div>
 
+
+        {{-- ========================================================
+            ACCIÓN
+        ======================================================== --}}
+
+        @if ($puedeCargarCalificaciones)
+
+            <div
+                class="
+                    border-top
+                    mt-4
+                    pt-3
+                    d-flex
+                    justify-content-end
+                "
+            >
+
+                <a
+                    href="{{
+                        route(
+                            'portal.docente.calificaciones.edit',
+                            $grupo
+                        )
+                    }}"
+                    class="
+                        btn
+                        portal-btn-primary
+                    "
+                >
+                    <i
+                        class="
+                            bi
+                            bi-pencil-square
+                            me-2
+                        "
+                    ></i>
+
+                    Registrar calificaciones
+                </a>
+
+            </div>
+
+        @endif
+
     </div>
 
 </section>
@@ -769,288 +822,373 @@
 
     </div>
 
+{{-- ============================================================
+    ESTUDIANTES
+============================================================ --}}
 
-    {{-- ============================================================
-        ESTUDIANTES
-    ============================================================ --}}
+<section class="portal-card">
 
-    <section class="portal-card">
+    <div class="portal-card-header">
 
-        <div class="portal-card-header">
+        <div>
 
-            <div>
+            <h2>
+                Estudiantes matriculados
+            </h2>
 
-                <h2>
-                    Estudiantes matriculados
-                </h2>
-
-                <p>
-                    Lista de estudiantes que
-                    pertenecen actualmente a este grupo.
-                </p>
-
-            </div>
+            <p>
+                Lista de estudiantes que
+                pertenecen actualmente a este grupo.
+            </p>
 
         </div>
 
+    </div>
 
-        @if ($grupo->matriculas->isEmpty())
 
-            <div class="text-center py-5 px-4">
+    @if ($grupo->matriculas->isEmpty())
 
-                <i
-                    class="
-                        bi
-                        bi-people
-                        fs-2
-                        text-muted
-                    "
-                ></i>
+        <div class="text-center py-5 px-4">
 
-                <h5 class="mt-3">
-                    No hay estudiantes matriculados
-                </h5>
+            <i
+                class="
+                    bi
+                    bi-people
+                    fs-2
+                    text-muted
+                "
+            ></i>
 
-                <p class="text-muted mb-0">
-                    Cuando existan matrículas activas,
-                    aparecerán en este listado.
-                </p>
+            <h5 class="mt-3">
+                No hay estudiantes matriculados
+            </h5>
 
-            </div>
+            <p class="text-muted mb-0">
+                Cuando existan matrículas activas,
+                aparecerán en este listado.
+            </p>
 
-        @else
+        </div>
 
-            <div class="table-responsive">
+    @else
 
-                <table
-                    class="
-                        table
-                        align-middle
-                        mb-0
-                    "
-                >
+        <div class="table-responsive">
 
-                    <thead>
+            <table
+                class="
+                    table
+                    align-middle
+                    mb-0
+                "
+            >
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Código EDMA
+                        </th>
+
+                        <th>
+                            Estudiante
+                        </th>
+
+                        <th>
+                            Matrícula
+                        </th>
+
+                        <th>
+                            Estado
+                        </th>
+
+                        <th>
+                            Resultado
+                        </th>
+
+                        <th class="text-end">
+                            Nota final
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    @foreach (
+                        $grupo->matriculas
+                        as $matricula
+                    )
+
+                        @php
+
+                            $estudiante =
+                                $matricula
+                                    ->estudiante;
+
+                            $persona =
+                                $estudiante
+                                    ->persona;
+
+                            $calificacion =
+                                $matricula
+                                    ->calificacionFinal;
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | Estado de la calificación
+                            |--------------------------------------------------------------------------
+                            */
+
+                            if (!$calificacion) {
+
+                                $estadoCalificacion =
+                                    'Sin calificación';
+
+                                $estadoCalificacionClase =
+                                    'secondary';
+
+                            } else {
+
+                                $estadoCalificacion =
+                                    match (
+                                        $calificacion
+                                            ->estado
+                                    ) {
+                                        'borrador' =>
+                                            'Borrador',
+
+                                        'confirmada' =>
+                                            'Confirmada',
+
+                                        'bloqueada' =>
+                                            'Bloqueada',
+
+                                        default =>
+                                            str(
+                                                $calificacion
+                                                    ->estado
+                                            )
+                                            ->replace(
+                                                '_',
+                                                ' '
+                                            )
+                                            ->title(),
+                                    };
+
+
+                                $estadoCalificacionClase =
+                                    match (
+                                        $calificacion
+                                            ->estado
+                                    ) {
+                                        'borrador' =>
+                                            'warning',
+
+                                        'confirmada' =>
+                                            'info',
+
+                                        'bloqueada' =>
+                                            'success',
+
+                                        default =>
+                                            'secondary',
+                                    };
+                            }
+
+
+                            /*
+                            |--------------------------------------------------------------------------
+                            | Resultado académico
+                            |--------------------------------------------------------------------------
+                            */
+
+                            $resultadoAcademico =
+                                match (
+                                    $calificacion
+                                        ?->resultado
+                                ) {
+                                    'aprobado' =>
+                                        'APR',
+
+                                    'reprobado' =>
+                                        'REP',
+
+                                    'incompleto' =>
+                                        'NSP',
+
+                                    'retirado' =>
+                                        'ABD',
+
+                                    default =>
+                                        '—',
+                                };
+
+
+                            $resultadoClase =
+                                match (
+                                    $calificacion
+                                        ?->resultado
+                                ) {
+                                    'aprobado' =>
+                                        'success',
+
+                                    'reprobado' =>
+                                        'danger',
+
+                                    'incompleto' =>
+                                        'secondary',
+
+                                    'retirado' =>
+                                        'secondary',
+
+                                    default =>
+                                        'secondary',
+                                };
+
+                        @endphp
+
 
                         <tr>
 
-                            <th>
-                                Código EDMA
-                            </th>
+                            {{-- Código EDMA --}}
+                            <td>
 
-                            <th>
-                                Estudiante
-                            </th>
+                                <strong>
+                                    {{
+                                        $estudiante
+                                            ->codigo_estudiante
+                                    }}
+                                </strong>
 
-                            <th>
-                                Matrícula
-                            </th>
-
-                            <th>
-                                Estado académico
-                            </th>
-
-                            <th class="text-end">
-                                Nota final
-                            </th>
-
-                        </tr>
-
-                    </thead>
+                            </td>
 
 
-                    <tbody>
+                            {{-- Estudiante --}}
+                            <td>
 
-                        @foreach (
-                            $grupo->matriculas
-                            as $matricula
-                        )
+                                {{
+                                    $persona
+                                        ->nombre_completo
+                                }}
 
-                            @php
+                            </td>
 
-                                $estudiante =
+
+                            {{-- Matrícula --}}
+                            <td>
+
+                                {{
                                     $matricula
-                                        ->estudiante;
+                                        ->codigo_matricula
+                                }}
 
-                                $persona =
-                                    $estudiante
-                                        ->persona;
-
-                                $calificacion =
-                                    $matricula
-                                        ->calificacionFinal;
+                            </td>
 
 
-                                /*
-                                |--------------------------------------------------------------------------
-                                | Estado de la calificación
-                                |--------------------------------------------------------------------------
-                                */
+                            {{-- Estado de la calificación --}}
+                            <td>
 
-                                if (!$calificacion) {
-
-                                    $estadoCalificacion =
-                                        'Sin calificación';
-
-                                    $estadoCalificacionClase =
-                                        'secondary';
-
-                                } else {
-
-                                    $estadoCalificacion =
-                                        match (
-                                            $calificacion
-                                                ->estado
-                                        ) {
-                                            'borrador' =>
-                                                'Borrador',
-
-                                            'confirmada' =>
-                                                'Confirmada',
-
-                                            'bloqueada' =>
-                                                'Bloqueada',
-
-                                            default =>
-                                                str(
-                                                    $calificacion
-                                                        ->estado
-                                                )
-                                                ->replace(
-                                                    '_',
-                                                    ' '
-                                                )
-                                                ->title(),
-                                        };
-
-
-                                    $estadoCalificacionClase =
-                                        match (
-                                            $calificacion
-                                                ->estado
-                                        ) {
-                                            'borrador' =>
-                                                'warning',
-
-                                            'confirmada' =>
-                                                'info',
-
-                                            'bloqueada' =>
-                                                'success',
-
-                                            default =>
-                                                'secondary',
-                                        };
-                                }
-
-                            @endphp
-
-
-                            <tr>
-
-                                <td>
-
-                                    <strong>
-
-                                        {{
-                                            $estudiante
-                                                ->codigo_estudiante
+                                <span
+                                    class="
+                                        badge
+                                        text-bg-{{
+                                            $estadoCalificacionClase
                                         }}
-
-                                    </strong>
-
-                                </td>
-
-
-                                <td>
-
+                                    "
+                                >
                                     {{
-                                        $persona
-                                            ->nombre_completo
+                                        $estadoCalificacion
                                     }}
+                                </span>
 
-                                </td>
-
-
-                                <td>
-
-                                    {{
-                                        $matricula
-                                            ->codigo_matricula
-                                    }}
-
-                                </td>
+                            </td>
 
 
-                                <td>
+                            {{-- Resultado académico --}}
+                            <td>
+
+                                @if ($calificacion)
 
                                     <span
                                         class="
                                             badge
                                             text-bg-{{
-                                                $estadoCalificacionClase
+                                                $resultadoClase
                                             }}
                                         "
                                     >
                                         {{
-                                            $estadoCalificacion
+                                            $resultadoAcademico
                                         }}
                                     </span>
 
-                                </td>
+                                @else
+
+                                    <span class="text-muted">
+                                        —
+                                    </span>
+
+                                @endif
+
+                            </td>
 
 
-                                <td
-                                    class="
-                                        text-end
-                                        text-nowrap
-                                    "
-                                >
+                            {{-- Nota final --}}
+                            <td
+                                class="
+                                    text-end
+                                    text-nowrap
+                                "
+                            >
 
-                                    @if (
+                                @if (
+                                    $calificacion
+                                    &&
+                                    !is_null(
                                         $calificacion
-                                        &&
-                                        !is_null(
-                                            $calificacion
-                                                ->nota_final
-                                        )
+                                            ->nota_final
                                     )
+                                )
 
-                                        <strong>
+                                    <strong>
 
-                                            {{
-                                                number_format(
-                                                    (float)
-                                                    $calificacion
-                                                        ->nota_final,
-                                                    2
-                                                )
-                                            }}
+                                        {{
+                                            number_format(
+                                                (float)
+                                                $calificacion
+                                                    ->nota_final,
+                                                2
+                                            )
+                                        }}
 
-                                        </strong>
+                                    </strong>
 
-                                    @else
+                                @else
 
-                                        <span class="text-muted">
-                                            —
-                                        </span>
+                                    <span class="text-muted">
+                                        —
+                                    </span>
 
-                                    @endif
+                                @endif
 
-                                </td>
+                            </td>
 
-                            </tr>
+                        </tr>
 
-                        @endforeach
+                    @endforeach
 
-                    </tbody>
+                </tbody>
 
-                </table>
+            </table>
 
-            </div>
+        </div>
 
-        @endif
+    @endif
 
-    </section>
+</section>
 
 @endsection
