@@ -12,7 +12,7 @@ class CrearEstudianteService
 {
     private const PREFIJO = 'EDMA';
 
-    private const LONGITUD_CORRELATIVO = 5;
+    private const LONGITUD_CORRELATIVO = 4;
 
     private const TIEMPO_ESPERA_BLOQUEO = 10;
 

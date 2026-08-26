@@ -145,52 +145,60 @@
 
                     @csrf
 
+                   {{-- Código EDMA --}}
+<div class="edma-auth-field">
 
-                    {{-- Código EDMA --}}
-                    <div class="edma-auth-field">
+    <label
+        for="username"
+        class="edma-auth-field__label"
+    >
+        Código EDMA
+    </label>
 
-                        <label
-                            for="username"
-                            class="edma-auth-field__label"
-                        >
-                            Código EDMA
-                        </label>
+    <div
+        class="edma-auth-field__control edma-auth-code-control
+            @error('username')
+                edma-auth-field__control--error
+            @enderror"
+    >
 
-                        <div
-                            class="edma-auth-field__control
-                                @error('username')
-                                    edma-auth-field__control--error
-                                @enderror"
-                        >
+        <span class="edma-auth-code-prefix">
+            EDMA-
+        </span>
 
-                            <i class="bi bi-person-badge"></i>
+        <input
+            type="text"
+            name="username"
+            id="username"
+            value="{{ old('username') }}"
+            placeholder="Ingrese su código EDMA"
+            autocomplete="username"
+            maxlength="13"
+            spellcheck="false"
+            autocapitalize="characters"
+            required
+            autofocus
+        >
 
-                            <input
-                                type="text"
-                                name="username"
-                                id="username"
-                                value="{{ old('username') }}"
-                                placeholder="Ej. EDMA-2026-00005"
-                                autocomplete="username"
-                                required
-                                autofocus
-                            >
+    </div>
 
-                        </div>
+    @error('username')
 
-                        @error('username')
+        <div class="edma-auth-field__error">
 
-                            <div class="edma-auth-field__error">
+            <i class="bi bi-exclamation-circle"></i>
 
-                                <i class="bi bi-exclamation-circle"></i>
+            {{ $message }}
 
-                                {{ $message }}
+        </div>
 
-                            </div>
+    @enderror
 
-                        @enderror
+    <div class="edma-auth-field__help">
+        Escriba su código sin “EDMA” ni guiones.
+    </div>
 
-                    </div>
+</div>
 
 
                     {{-- Contraseña --}}
@@ -523,6 +531,244 @@
                         }
                     );
                 }
+
+
+
+               /*
+|--------------------------------------------------------------------------
+| Código EDMA dinámico
+|--------------------------------------------------------------------------
+*/
+
+const usernameInput =
+    document.getElementById('username');
+
+
+if (usernameInput) {
+
+    function limpiarEntrada(valor) {
+
+        let limpio = valor
+            .toUpperCase()
+            .replace(/\s+/g, '')
+            .replace(/-/g, '');
+
+        /*
+         * Por compatibilidad, si alguien pega el código completo:
+         *
+         * EDMA-DOC-2026-0002
+         *
+         * quitamos EDMA automáticamente.
+         */
+        if (limpio.startsWith('EDMA')) {
+            limpio = limpio.substring(4);
+        }
+
+        return limpio;
+    }
+
+
+    function formatearCodigoEdma(valor) {
+
+        const limpio =
+            limpiarEntrada(valor);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Campo vacío
+        |--------------------------------------------------------------------------
+        */
+
+        if (! limpio) {
+            return '';
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ¿Comienza con una letra?
+        |--------------------------------------------------------------------------
+        |
+        | Esto significa que probablemente sea:
+        |
+        | DOC...
+        | EMP...
+        |
+        */
+
+        if (/^[A-Z]/.test(limpio)) {
+
+            /*
+             * Capturar solamente las primeras 3 letras.
+             */
+            const letras =
+                limpio
+                    .replace(/[^A-Z]/g, '')
+                    .substring(0, 3);
+
+
+            /*
+             * Mientras el usuario escribe:
+             *
+             * D
+             * DO
+             * DOC
+             *
+             * dejamos que continúe.
+             */
+            if (letras.length < 3) {
+                return letras;
+            }
+
+
+            /*
+             * Solo permitimos estos prefijos.
+             */
+            if (
+                letras !== 'DOC'
+                && letras !== 'EMP'
+            ) {
+                return letras;
+            }
+
+
+            /*
+             * Extraer números después de las tres letras.
+             */
+            const numeros =
+                limpio
+                    .substring(3)
+                    .replace(/\D/g, '')
+                    .substring(0, 8);
+
+
+            /*
+             * Todavía no escribe año.
+             */
+            if (numeros.length === 0) {
+                return `${letras}-`;
+            }
+
+
+            /*
+             * Escribiendo año:
+             *
+             * DOC-2
+             * DOC-20
+             * DOC-202
+             * DOC-2026
+             */
+            if (numeros.length <= 4) {
+                return `${letras}-${numeros}`;
+            }
+
+
+            /*
+             * Después de año:
+             *
+             * DOC-2026-0
+             * DOC-2026-00
+             * DOC-2026-000
+             * DOC-2026-0002
+             */
+            return `${letras}-${numeros.substring(0, 4)}-${numeros.substring(4, 8)}`;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ¿Comienza con número?
+        |--------------------------------------------------------------------------
+        |
+        | Entonces lo tratamos como Estudiante.
+        |
+        */
+
+        if (/^\d/.test(limpio)) {
+
+            const numeros =
+                limpio
+                    .replace(/\D/g, '')
+                    .substring(0, 8);
+
+
+            /*
+             * Escribiendo año:
+             *
+             * 2
+             * 20
+             * 202
+             * 2026
+             */
+            if (numeros.length <= 4) {
+                return numeros;
+            }
+
+
+            /*
+             * Después:
+             *
+             * 2026-0
+             * 2026-00
+             * 2026-000
+             * 2026-0005
+             */
+            return `${numeros.substring(0, 4)}-${numeros.substring(4, 8)}`;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cualquier otro inicio no se acepta
+        |--------------------------------------------------------------------------
+        */
+
+        return '';
+    }
+
+
+    usernameInput.addEventListener(
+        'input',
+        function () {
+
+            const valorFormateado =
+                formatearCodigoEdma(
+                    this.value
+                );
+
+            this.value =
+                valorFormateado;
+
+            /*
+             * Mantener cursor al final.
+             */
+            this.setSelectionRange(
+                this.value.length,
+                this.value.length
+            );
+
+        }
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Formatear old('username')
+    |--------------------------------------------------------------------------
+    */
+
+    if (usernameInput.value) {
+
+        usernameInput.value =
+            formatearCodigoEdma(
+                usernameInput.value
+            );
+    }
+
+}
+
+
 
 
                 /*

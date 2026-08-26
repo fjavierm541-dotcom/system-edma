@@ -771,6 +771,53 @@
     transform: translateX(4px);
 }
 
+.edma-auth-field__help {
+    margin-top: 7px;
+
+    color:
+        rgba(255, 255, 255, 0.42);
+
+    font-size: 0.74rem;
+}
+/* ==========================================================================
+   Código EDMA dinámico
+   ========================================================================== */
+
+.edma-auth-code-control {
+    padding-left: 0;
+}
+
+.edma-auth-code-prefix {
+    display: flex;
+    align-items: center;
+
+    align-self: stretch;
+
+    padding:
+        0
+        13px
+        0
+        18px;
+
+    border-right:
+        1px solid
+        rgba(180, 209, 242, 0.14);
+
+    color:
+        rgba(255, 255, 255, 0.68);
+
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    letter-spacing: 0.035em;
+
+    user-select: none;
+}
+
+.edma-auth-code-control input {
+    padding-left: 13px;
+}
+
 
 /* ==========================================================================
    Acerca de

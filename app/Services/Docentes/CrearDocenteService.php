@@ -13,7 +13,7 @@ class CrearDocenteService
 {
     private const PREFIJO = 'EDMA-DOC';
 
-    private const LONGITUD_CORRELATIVO = 5;
+    private const LONGITUD_CORRELATIVO = 4;
 
     private const TIEMPO_ESPERA_BLOQUEO = 10;
 
