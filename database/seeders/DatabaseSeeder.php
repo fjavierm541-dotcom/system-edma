@@ -12,7 +12,16 @@ class DatabaseSeeder extends Seeder
             PaisSeeder::class,
             NivelEscolaridadSeeder::class,
             InstitucionFinancieraSeeder::class,
+            FuenteReferenciaSeeder::class,
             RolSeeder::class,
+
+            /*
+            |--------------------------------------------------------------------------
+            | Acceso inicial al sistema
+            |--------------------------------------------------------------------------
+            */
+
+            PrimerAdministradorSeeder::class,
         ]);
     }
 }

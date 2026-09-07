@@ -47,6 +47,7 @@ use App\Http\Controllers\Portal\PersonaController;
 use App\Http\Controllers\Portal\ProgramaController;
 use App\Http\Controllers\Portal\SolicitudInscripcionController;
 use App\Http\Controllers\Portal\UsuarioController;
+use App\Http\Controllers\Portal\DocumentoPersonaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -401,6 +402,42 @@ Route::middleware([
                     'estudiantes',
                     EstudianteController::class
                 )->except('destroy');
+
+                /*
+                |--------------------------------------------------------------------------
+                | Documentos de personas
+                |--------------------------------------------------------------------------
+                */
+
+                Route::get(
+                    'personas/{persona}/documentos/{documento}/ver',
+                    [
+                        DocumentoPersonaController::class,
+                        'ver',
+                    ]
+                )->name(
+                    'personas.documentos.ver'
+                );
+
+                Route::get(
+                    'personas/{persona}/documentos/{documento}/descargar',
+                    [
+                        DocumentoPersonaController::class,
+                        'descargar',
+                    ]
+                )->name(
+                    'personas.documentos.descargar'
+                );
+
+                Route::patch(
+                    'personas/{persona}/documentos/{documento}/verificacion',
+                    [
+                        DocumentoPersonaController::class,
+                        'cambiarVerificacion',
+                    ]
+                )->name(
+                    'personas.documentos.cambiar-verificacion'
+                );
 
 
                 /*

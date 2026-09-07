@@ -615,113 +615,111 @@
 
             </section>
 
-           {{-- Formación académica --}}
-            <section class="portal-card portal-detail-card">
+{{-- Formación académica --}}
+<section class="portal-card portal-detail-card">
 
-                <div class="portal-form-section-header portal-section-header-actions">
+    <div class="portal-form-section-header portal-section-header-actions">
 
-                    <div class="d-flex align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
 
-                        <div class="portal-form-section-icon">
-                            <i class="bi bi-mortarboard"></i>
-                        </div>
+            <div class="portal-form-section-icon">
+                <i class="bi bi-mortarboard"></i>
+            </div>
 
-                        <div>
-                            <h2>Formación académica</h2>
+            <div>
+                <h2>Formación académica</h2>
 
-                            <p>
-                                Estudios, títulos y certificaciones registrados
-                                para esta persona.
-                            </p>
-                        </div>
+                <p>
+                    Estudios, títulos y certificaciones registrados
+                    para esta persona.
+                </p>
+            </div>
 
+        </div>
+
+        <button
+            type="button"
+            class="btn portal-btn-secondary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#addAcademicTrainingModal"
+        >
+            <i class="bi bi-plus-circle"></i>
+            Agregar formación
+        </button>
+
+    </div>
+
+    @if ($persona->formacionesAcademicas->isNotEmpty())
+
+        <div class="portal-academic-list">
+
+            @foreach (
+                $persona->formacionesAcademicas
+                as $formacion
+            )
+
+                <article
+                    class="portal-academic-item
+                        {{ $formacion->estado !== 'activo'
+                            ? 'portal-academic-item-inactive'
+                            : '' }}"
+                >
+
+                    <div class="portal-academic-icon">
+                        <i class="bi bi-mortarboard"></i>
                     </div>
 
-                    <button
-                        type="button"
-                        class="btn portal-btn-secondary btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addAcademicTrainingModal"
-                    >
-                        <i class="bi bi-plus-circle"></i>
-                        Agregar formación
-                    </button>
+                    <div class="portal-academic-info">
 
-                </div>
+                        <div class="d-flex align-items-center flex-wrap gap-2">
 
-                @if ($persona->formacionesAcademicas->isNotEmpty())
+                            <strong>
+                                {{ $formacion->titulo_obtenido
+                                    ?: $formacion->nivel_academico }}
+                            </strong>
 
-                    <div class="portal-academic-list">
+                            @if ($formacion->es_principal)
 
-                        @foreach (
-                            $persona->formacionesAcademicas
-                            as $formacion
-                        )
+                                <span class="portal-small-badge">
+                                    Principal
+                                </span>
 
-                            <article
-                                class="portal-academic-item
-                                    {{ $formacion->estado !== 'activo'
-                                        ? 'portal-academic-item-inactive'
-                                        : '' }}"
-                            >
+                            @endif
 
-                                <div class="portal-academic-icon">
-                                    <i class="bi bi-mortarboard"></i>
-                                </div>
+                            @if ($formacion->estado !== 'activo')
 
-                                <div class="portal-academic-info">
+                                <span class="portal-status-badge portal-status-inactive">
+                                    Inactiva
+                                </span>
 
-                                    <div class="d-flex align-items-center flex-wrap gap-2">
+                            @endif
 
-                                        <strong>
-                                            {{ $formacion->titulo_obtenido
-                                                ?: $formacion->nivel_academico }}
-                                        </strong>
+                        </div>
 
-                                        @if ($formacion->es_principal)
+                        <span>
+                            {{ $formacion->nivel_academico
+                                ?: 'Nivel no especificado' }}
+                        </span>
 
-                                            <span class="portal-small-badge">
-                                                Principal
-                                            </span>
+                        <small>
+                            {{ collect([
+                                $formacion->institucion_educativa,
+                                $formacion->pais?->nombre,
+                                $formacion->anio_graduacion,
+                            ])->filter()->implode(' · ') }}
+                        </small>
 
-                                        @endif
+                        @if ($formacion->documentoPersona)
 
-                                        @if ($formacion->estado !== 'activo')
+                            <div class="d-flex align-items-center gap-2 mt-1">
 
-                                            <span class="portal-status-badge portal-status-inactive">
-                                                Inactiva
-                                            </span>
+                                <small>
+                                    <i class="bi bi-paperclip"></i>
 
-                                        @endif
-
-                                    </div>
-
-                                    <span>
-                                        {{ $formacion->nivel_academico
-                                            ?: 'Nivel no especificado' }}
-                                    </span>
-
-                                    <small>
-                                        {{ collect([
-                                            $formacion->institucion_educativa,
-                                            $formacion->pais?->nombre,
-                                            $formacion->anio_graduacion,
-                                        ])->filter()->implode(' · ') }}
-                                    </small>
-
-                                    @if ($formacion->documentoPersona)
-
-                                        <small>
-                                            <i class="bi bi-paperclip"></i>
-
-                                            Documento relacionado:
-                                            {{ $formacion->documentoPersona->nombre_original
-                                                ?? 'Documento adjunto' }}
-                                        </small>
-
-                                    @endif
-
-                                </div>
+                                    Documento relacionado:
+                                    {{ $formacion->documentoPersona->nombre_original
+                                        ?? 'Documento adjunto' }}
+                                </small>
 
                                 <div class="dropdown">
 
@@ -730,122 +728,183 @@
                                         class="portal-table-action"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
-                                        aria-label="Opciones de formación académica"
+                                        aria-label="Opciones del documento"
                                     >
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
 
-                                    <ul class="dropdown-menu dropdown-menu-end portal-actions-menu">
+                                    <ul
+                                        class="dropdown-menu dropdown-menu-end portal-actions-menu"
+                                    >
 
                                         <li>
-                                            <button
-                                                type="button"
+                                            <a
+                                                href="{{ route(
+                                                    'portal.personas.documentos.ver',
+                                                    [
+                                                        'persona' => $persona,
+                                                        'documento' => $formacion->documentoPersona,
+                                                    ]
+                                                ) }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                                 class="dropdown-item"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editAcademicTrainingModal"
-                                                data-action="{{ route(
-                                                    'portal.empleados.formaciones-academicas.update',
-                                                    [
-                                                        $empleado,
-                                                        $formacion
-                                                    ]
-                                                ) }}"
-                                                data-nivel="{{ $formacion->nivel_academico }}"
-                                                data-titulo="{{ $formacion->titulo_obtenido }}"
-                                                data-institucion="{{ $formacion->institucion_educativa }}"
-                                                data-pais="{{ $formacion->pais_id }}"
-                                                data-anio="{{ $formacion->anio_graduacion }}"
-                                                data-documento="{{ $formacion->documento_persona_id }}"
-                                                data-principal="{{ $formacion->es_principal ? '1' : '0' }}"
-                                                data-estado="{{ $formacion->estado }}"
-                                                data-observaciones="{{ $formacion->observaciones }}"
                                             >
-                                                <i class="bi bi-pencil-square"></i>
-                                                Editar formación
-                                            </button>
+                                                <i class="bi bi-eye"></i>
+                                                Ver documento
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <hr class="dropdown-divider">
-                                        </li>
-
-                                        <li>
-
-                                            <form
-                                                action="{{ route(
-                                                    'portal.empleados.formaciones-academicas.cambiar-estado',
+                                            <a
+                                                href="{{ route(
+                                                    'portal.personas.documentos.descargar',
                                                     [
-                                                        $empleado,
-                                                        $formacion
+                                                        'persona' => $persona,
+                                                        'documento' => $formacion->documentoPersona,
                                                     ]
                                                 ) }}"
-                                                method="POST"
+                                                class="dropdown-item"
                                             >
-                                                @csrf
-                                                @method('PATCH')
-
-                                                <button
-                                                    type="submit"
-                                                    class="dropdown-item
-                                                        {{ $formacion->estado === 'activo'
-                                                            ? 'text-warning-emphasis'
-                                                            : 'text-success' }}"
-                                                >
-                                                    <i class="bi
-                                                        {{ $formacion->estado === 'activo'
-                                                            ? 'bi-toggle-off'
-                                                            : 'bi-toggle-on' }}">
-                                                    </i>
-
-                                                    {{ $formacion->estado === 'activo'
-                                                        ? 'Desactivar formación'
-                                                        : 'Activar formación' }}
-                                                </button>
-
-                                            </form>
-
+                                                <i class="bi bi-download"></i>
+                                                Descargar
+                                            </a>
                                         </li>
 
                                     </ul>
 
                                 </div>
 
-                            </article>
+                            </div>
 
-                        @endforeach
+                        @endif
 
                     </div>
 
-                @else
-
-                    <div class="portal-empty-state portal-empty-state-documents">
-
-                        <div class="portal-empty-icon">
-                            <i class="bi bi-mortarboard"></i>
-                        </div>
-
-                        <h3>No hay formación académica registrada</h3>
-
-                        <p>
-                            Agregue estudios, títulos, certificaciones
-                            o formación relevante de la persona.
-                        </p>
+                    <div class="dropdown">
 
                         <button
                             type="button"
-                            class="btn portal-btn-secondary mt-3"
-                            data-bs-toggle="modal"
-                            data-bs-target="#addAcademicTrainingModal"
+                            class="portal-table-action"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-label="Opciones de formación académica"
                         >
-                            <i class="bi bi-plus-circle"></i>
-                            Agregar formación
+                            <i class="bi bi-three-dots-vertical"></i>
                         </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end portal-actions-menu">
+
+                            <li>
+                                <button
+                                    type="button"
+                                    class="dropdown-item"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editAcademicTrainingModal"
+                                    data-action="{{ route(
+                                        'portal.empleados.formaciones-academicas.update',
+                                        [
+                                            $empleado,
+                                            $formacion
+                                        ]
+                                    ) }}"
+                                    data-nivel="{{ $formacion->nivel_academico }}"
+                                    data-titulo="{{ $formacion->titulo_obtenido }}"
+                                    data-institucion="{{ $formacion->institucion_educativa }}"
+                                    data-pais="{{ $formacion->pais_id }}"
+                                    data-anio="{{ $formacion->anio_graduacion }}"
+                                    data-documento="{{ $formacion->documento_persona_id }}"
+                                    data-principal="{{ $formacion->es_principal ? '1' : '0' }}"
+                                    data-estado="{{ $formacion->estado }}"
+                                    data-observaciones="{{ $formacion->observaciones }}"
+                                >
+                                    <i class="bi bi-pencil-square"></i>
+                                    Editar formación
+                                </button>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+
+                                <form
+                                    action="{{ route(
+                                        'portal.empleados.formaciones-academicas.cambiar-estado',
+                                        [
+                                            $empleado,
+                                            $formacion
+                                        ]
+                                    ) }}"
+                                    method="POST"
+                                >
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button
+                                        type="submit"
+                                        class="dropdown-item
+                                            {{ $formacion->estado === 'activo'
+                                                ? 'text-warning-emphasis'
+                                                : 'text-success' }}"
+                                    >
+                                        <i class="bi
+                                            {{ $formacion->estado === 'activo'
+                                                ? 'bi-toggle-off'
+                                                : 'bi-toggle-on' }}">
+                                        </i>
+
+                                        {{ $formacion->estado === 'activo'
+                                            ? 'Desactivar formación'
+                                            : 'Activar formación' }}
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+                        </ul>
 
                     </div>
 
-                @endif
+                </article>
 
-            </section>
+            @endforeach
+
+        </div>
+
+    @else
+
+        <div class="portal-empty-state portal-empty-state-documents">
+
+            <div class="portal-empty-icon">
+                <i class="bi bi-mortarboard"></i>
+            </div>
+
+            <h3>No hay formación académica registrada</h3>
+
+            <p>
+                Agregue estudios, títulos, certificaciones
+                o formación relevante de la persona.
+            </p>
+
+            <button
+                type="button"
+                class="btn portal-btn-secondary mt-3"
+                data-bs-toggle="modal"
+                data-bs-target="#addAcademicTrainingModal"
+            >
+                <i class="bi bi-plus-circle"></i>
+                Agregar formación
+            </button>
+
+        </div>
+
+    @endif
+
+</section>
+
 
             {{-- Cuentas bancarias --}}
 <section class="portal-card portal-detail-card">
@@ -1205,6 +1264,7 @@
 
 
     {{-- Modal para agregar formación académica --}}
+
 <div
     class="modal fade"
     id="addAcademicTrainingModal"
@@ -1212,9 +1272,9 @@
     aria-labelledby="addAcademicTrainingModalLabel"
     aria-hidden="true"
 >
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
 
-        <div class="modal-content portal-modal">
+        <div class="modal-content portal-modal-content">
 
             <form
                 action="{{ route(
@@ -1222,13 +1282,14 @@
                     $empleado
                 ) }}"
                 method="POST"
+                enctype="multipart/form-data"
             >
                 @csrf
 
-                <div class="modal-header">
+                <div class="modal-header portal-modal-header">
 
                     <div>
-                        <span class="portal-modal-eyebrow">
+                        <span class="portal-page-eyebrow">
                             Formación académica
                         </span>
 
@@ -1253,108 +1314,95 @@
 
                     <div class="row g-3">
 
+                        {{-- Nivel académico --}}
+
                         <div class="col-12 col-md-6">
 
                             <label
-                                for="nivel_academico"
-                                class="form-label portal-form-label"
+                                for="academic_nivel"
+                                class="form-label"
                             >
                                 Nivel académico
-                                <span class="portal-required">*</span>
+                                <span class="text-danger">*</span>
                             </label>
 
                             <input
                                 type="text"
+                                class="form-control"
+                                id="academic_nivel"
                                 name="nivel_academico"
-                                id="nivel_academico"
                                 value="{{ old('nivel_academico') }}"
-                                class="form-control portal-form-control
-                                    @error('nivel_academico') is-invalid @enderror"
-                                maxlength="100"
-                                placeholder="Ej. Licenciatura, Bachillerato, Certificación"
+                                maxlength="50"
+                                placeholder="Ej. Licenciatura"
                                 required
                             >
 
-                            @error('nivel_academico')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
                         </div>
+
+                        {{-- Título obtenido --}}
 
                         <div class="col-12 col-md-6">
 
                             <label
-                                for="titulo_obtenido"
-                                class="form-label portal-form-label"
+                                for="academic_titulo"
+                                class="form-label"
                             >
                                 Título obtenido
                             </label>
 
                             <input
                                 type="text"
+                                class="form-control"
+                                id="academic_titulo"
                                 name="titulo_obtenido"
-                                id="titulo_obtenido"
                                 value="{{ old('titulo_obtenido') }}"
-                                class="form-control portal-form-control
-                                    @error('titulo_obtenido') is-invalid @enderror"
                                 maxlength="180"
-                                placeholder="Ej. Licenciado en Lenguas Extranjeras"
+                                placeholder="Ej. Licenciatura en Informática"
                             >
-
-                            @error('titulo_obtenido')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
 
                         </div>
 
-                        <div class="col-12">
+                        {{-- Institución educativa --}}
+
+                        <div class="col-12 col-md-6">
 
                             <label
-                                for="institucion_educativa"
-                                class="form-label portal-form-label"
+                                for="academic_institucion"
+                                class="form-label"
                             >
                                 Institución educativa
                             </label>
 
                             <input
                                 type="text"
+                                class="form-control"
+                                id="academic_institucion"
                                 name="institucion_educativa"
-                                id="institucion_educativa"
                                 value="{{ old('institucion_educativa') }}"
-                                class="form-control portal-form-control
-                                    @error('institucion_educativa') is-invalid @enderror"
                                 maxlength="180"
+                                placeholder="Ej. Universidad Nacional Autónoma de Honduras"
                             >
-
-                            @error('institucion_educativa')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
 
                         </div>
 
-                        <div class="col-12 col-md-6">
+                        {{-- País --}}
+
+                        <div class="col-12 col-md-3">
 
                             <label
-                                for="pais_id"
-                                class="form-label portal-form-label"
+                                for="academic_pais"
+                                class="form-label"
                             >
                                 País
                             </label>
 
                             <select
+                                class="form-select"
+                                id="academic_pais"
                                 name="pais_id"
-                                id="pais_id"
-                                class="form-select portal-form-control
-                                    @error('pais_id') is-invalid @enderror"
                             >
                                 <option value="">
-                                    No especificado
+                                    Seleccione
                                 </option>
 
                                 @foreach ($paises as $pais)
@@ -1373,58 +1421,67 @@
 
                             </select>
 
-                            @error('pais_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                        </div>
+
+                        {{-- Año de graduación --}}
+
+                        <div class="col-12 col-md-3">
+
+                            <label
+                                for="academic_anio"
+                                class="form-label"
+                            >
+                                Año
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                id="academic_anio"
+                                name="anio_graduacion"
+                                value="{{ old('anio_graduacion') }}"
+                                min="1900"
+                                max="{{ now()->year }}"
+                                placeholder="{{ now()->year }}"
+                            >
 
                         </div>
+
+                        {{-- Documento de respaldo --}}
+
+                        <div class="col-12">
+
+                            <hr class="my-2">
+
+                            <div class="mb-1">
+                                <strong>
+                                    Documento de respaldo
+                                </strong>
+                            </div>
+
+                            <p class="text-muted small mb-3">
+                                Puede relacionar un documento que ya se
+                                encuentre en el expediente de la persona
+                                o subir uno nuevo.
+                            </p>
+
+                        </div>
+
+                        {{-- Documento existente --}}
 
                         <div class="col-12 col-md-6">
 
                             <label
-                                for="anio_graduacion"
-                                class="form-label portal-form-label"
+                                for="academic_documento"
+                                class="form-label"
                             >
-                                Año de graduación
-                            </label>
-
-                            <input
-                                type="text"
-                                name="anio_graduacion"
-                                id="anio_graduacion"
-                                value="{{ old('anio_graduacion') }}"
-                                class="form-control portal-form-control
-                                    @error('anio_graduacion') is-invalid @enderror"
-                                maxlength="4"
-                                inputmode="numeric"
-                                pattern="[0-9]{4}"
-                                placeholder="{{ now()->year }}"
-                            >
-
-                            @error('anio_graduacion')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-
-                        </div>
-
-                        <div class="col-12">
-
-                            <label
-                                for="documento_persona_id"
-                                class="form-label portal-form-label"
-                            >
-                                Documento relacionado
+                                Utilizar documento existente
                             </label>
 
                             <select
+                                class="form-select"
+                                id="academic_documento"
                                 name="documento_persona_id"
-                                id="documento_persona_id"
-                                class="form-select portal-form-control
-                                    @error('documento_persona_id') is-invalid @enderror"
                             >
                                 <option value="">
                                     Sin documento relacionado
@@ -1442,51 +1499,62 @@
                                         )
                                     >
                                         {{ $documento->nombre_original
-                                            ?? 'Documento #' . $documento->id }}
+                                            ?: 'Documento adjunto' }}
                                     </option>
 
                                 @endforeach
 
                             </select>
 
-                            @error('documento_persona_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                            <div class="form-text">
+                                Seleccione esta opción únicamente si el
+                                documento ya fue agregado anteriormente
+                                al expediente de la persona.
+                            </div>
 
-                            <div class="portal-form-help">
-                                Solo puede relacionarse con documentos
-                                previamente agregados a la persona.
+                        </div>
+
+                        {{-- Nuevo documento --}}
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="academic_documento_nuevo"
+                                class="form-label"
+                            >
+                                Subir nuevo documento
+                            </label>
+
+                            <input
+                                type="file"
+                                class="form-control"
+                                id="academic_documento_nuevo"
+                                name="documento_nuevo"
+                                accept=".pdf,.jpg,.jpeg,.png"
+                            >
+
+                            <div class="form-text">
+                                PDF, JPG, JPEG o PNG. Tamaño máximo:
+                                5 MB. El archivo también quedará
+                                guardado en los documentos de la persona.
                             </div>
 
                         </div>
 
                         <div class="col-12">
 
-                            <div class="portal-responsible-options">
+                            <div class="alert alert-light border mb-0">
 
-                                <div class="form-check form-switch">
+                                <div class="d-flex gap-2">
 
-                                    <input
-                                        type="checkbox"
-                                        name="es_principal"
-                                        value="1"
-                                        id="academic_es_principal"
-                                        class="form-check-input"
-                                        @checked(old('es_principal'))
-                                    >
-
-                                    <label
-                                        for="academic_es_principal"
-                                        class="form-check-label"
-                                    >
-                                        Formación principal
-                                    </label>
+                                    <i class="bi bi-info-circle"></i>
 
                                     <small>
-                                        Identifica el nivel o título más relevante
-                                        para el expediente.
+                                        Utilice solamente una opción:
+                                        seleccione un documento existente
+                                        <strong>o</strong> suba uno nuevo.
+                                        No es necesario adjuntar un documento
+                                        para registrar la formación académica.
                                     </small>
 
                                 </div>
@@ -1495,43 +1563,101 @@
 
                         </div>
 
+                        {{-- Formación principal --}}
+
+                        <div class="col-12 col-md-6">
+
+                            <div class="form-check mt-2">
+
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value="1"
+                                    id="academic_principal"
+                                    name="es_principal"
+                                    @checked(old('es_principal'))
+                                >
+
+                                <label
+                                    class="form-check-label"
+                                    for="academic_principal"
+                                >
+                                    Marcar como formación principal
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        {{-- Estado --}}
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="academic_estado"
+                                class="form-label"
+                            >
+                                Estado
+                            </label>
+
+                            <select
+                                class="form-select"
+                                id="academic_estado"
+                                name="estado"
+                                required
+                            >
+                                <option
+                                    value="activo"
+                                    @selected(
+                                        old(
+                                            'estado',
+                                            'activo'
+                                        ) === 'activo'
+                                    )
+                                >
+                                    Activo
+                                </option>
+
+                                <option
+                                    value="inactivo"
+                                    @selected(
+                                        old('estado')
+                                        === 'inactivo'
+                                    )
+                                >
+                                    Inactivo
+                                </option>
+                            </select>
+
+                        </div>
+
+                        {{-- Observaciones --}}
+
                         <div class="col-12">
 
                             <label
                                 for="academic_observaciones"
-                                class="form-label portal-form-label"
+                                class="form-label"
                             >
                                 Observaciones
                             </label>
 
                             <textarea
-                                name="observaciones"
+                                class="form-control"
                                 id="academic_observaciones"
+                                name="observaciones"
                                 rows="3"
                                 maxlength="1000"
-                                class="form-control portal-form-control
-                                    @error('observaciones') is-invalid @enderror"
+                                placeholder="Información adicional sobre esta formación..."
                             >{{ old('observaciones') }}</textarea>
-
-                            @error('observaciones')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
 
                         </div>
 
                     </div>
 
-                    <input
-                        type="hidden"
-                        name="estado"
-                        value="activo"
-                    >
-
                 </div>
 
-                <div class="modal-footer">
+                <div class="modal-footer portal-modal-footer">
 
                     <button
                         type="button"
@@ -1545,7 +1671,7 @@
                         type="submit"
                         class="btn portal-btn-primary"
                     >
-                        <i class="bi bi-check2-circle"></i>
+                        <i class="bi bi-check-circle"></i>
                         Guardar formación
                     </button>
 
@@ -1559,6 +1685,7 @@
 </div>
 
 {{-- Modal para editar formación académica --}}
+
 <div
     class="modal fade"
     id="editAcademicTrainingModal"
@@ -1573,6 +1700,7 @@
             <form
                 method="POST"
                 id="editAcademicTrainingForm"
+                enctype="multipart/form-data"
             >
                 @csrf
                 @method('PUT')
@@ -1605,6 +1733,8 @@
 
                     <div class="row g-3">
 
+                        {{-- Nivel académico --}}
+
                         <div class="col-12 col-md-6">
 
                             <label
@@ -1612,18 +1742,21 @@
                                 class="form-label portal-form-label"
                             >
                                 Nivel académico
+                                <span class="text-danger">*</span>
                             </label>
 
                             <input
                                 type="text"
                                 name="nivel_academico"
                                 id="edit_nivel_academico"
-                                maxlength="100"
+                                maxlength="50"
                                 class="form-control portal-form-control"
                                 required
                             >
 
                         </div>
+
+                        {{-- Título obtenido --}}
 
                         <div class="col-12 col-md-6">
 
@@ -1644,6 +1777,8 @@
 
                         </div>
 
+                        {{-- Institución educativa --}}
+
                         <div class="col-12">
 
                             <label
@@ -1662,6 +1797,8 @@
                             >
 
                         </div>
+
+                        {{-- País --}}
 
                         <div class="col-12 col-md-6">
 
@@ -1682,14 +1819,18 @@
                                 </option>
 
                                 @foreach ($paises as $pais)
+
                                     <option value="{{ $pais->id }}">
                                         {{ $pais->nombre }}
                                     </option>
+
                                 @endforeach
 
                             </select>
 
                         </div>
+
+                        {{-- Año de graduación --}}
 
                         <div class="col-12 col-md-6">
 
@@ -1701,24 +1842,45 @@
                             </label>
 
                             <input
-                                type="text"
+                                type="number"
                                 name="anio_graduacion"
                                 id="edit_anio_graduacion"
-                                maxlength="4"
-                                inputmode="numeric"
-                                pattern="[0-9]{4}"
+                                min="1900"
+                                max="{{ now()->year }}"
                                 class="form-control portal-form-control"
                             >
 
                         </div>
 
+                        {{-- Separador documentos --}}
+
                         <div class="col-12">
+
+                            <hr class="my-2">
+
+                            <div class="mb-1">
+                                <strong>
+                                    Documento de respaldo
+                                </strong>
+                            </div>
+
+                            <p class="text-muted small mb-3">
+                                Puede conservar o seleccionar un documento
+                                existente del expediente de la persona, o
+                                subir un documento nuevo para esta formación.
+                            </p>
+
+                        </div>
+
+                        {{-- Documento existente --}}
+
+                        <div class="col-12 col-md-6">
 
                             <label
                                 for="edit_documento_persona_id"
                                 class="form-label portal-form-label"
                             >
-                                Documento relacionado
+                                Utilizar documento existente
                             </label>
 
                             <select
@@ -1741,7 +1903,66 @@
 
                             </select>
 
+                            <div class="form-text">
+                                El documento seleccionado debe pertenecer
+                                al expediente de esta persona.
+                            </div>
+
                         </div>
+
+                        {{-- Nuevo documento --}}
+
+                        <div class="col-12 col-md-6">
+
+                            <label
+                                for="edit_documento_nuevo"
+                                class="form-label portal-form-label"
+                            >
+                                Subir nuevo documento
+                            </label>
+
+                            <input
+                                type="file"
+                                name="documento_nuevo"
+                                id="edit_documento_nuevo"
+                                class="form-control portal-form-control"
+                                accept=".pdf,.jpg,.jpeg,.png"
+                            >
+
+                            <div class="form-text">
+                                PDF, JPG, JPEG o PNG. Máximo 5 MB.
+                                Si sube un archivo nuevo, también quedará
+                                almacenado en los documentos de la persona.
+                            </div>
+
+                        </div>
+
+                        {{-- Advertencia --}}
+
+                        <div class="col-12">
+
+                            <div class="alert alert-light border mb-0">
+
+                                <div class="d-flex gap-2">
+
+                                    <i class="bi bi-info-circle"></i>
+
+                                    <small>
+                                        Utilice solamente una opción:
+                                        seleccione un documento existente
+                                        <strong>o</strong> suba uno nuevo.
+                                        Si la formación ya tiene un documento
+                                        relacionado y no desea cambiarlo,
+                                        simplemente déjelo seleccionado.
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {{-- Formación principal --}}
 
                         <div class="col-12">
 
@@ -1770,6 +1991,8 @@
 
                         </div>
 
+                        {{-- Estado --}}
+
                         <div class="col-12 col-md-6">
 
                             <label
@@ -1794,6 +2017,8 @@
                             </select>
 
                         </div>
+
+                        {{-- Observaciones --}}
 
                         <div class="col-12">
 
@@ -2744,9 +2969,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const editModal = document.getElementById(
-            'editBankAccountModal'
-        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cuentas bancarias
+        |--------------------------------------------------------------------------
+        */
 
         const createStartDate = document.getElementById(
             'fecha_inicio_cuenta'
@@ -2757,6 +2985,7 @@
         );
 
         const updateCreateEndDateMinimum = () => {
+
             if (
                 !createStartDate ||
                 !createEndDate
@@ -2775,98 +3004,376 @@
 
         updateCreateEndDateMinimum();
 
-        if (!editModal) {
-            return;
-        }
 
-        editModal.addEventListener('show.bs.modal', event => {
-            const button = event.relatedTarget;
+        const editBankModal = document.getElementById(
+            'editBankAccountModal'
+        );
 
-            if (!button) {
-                return;
-            }
+        editBankModal?.addEventListener(
+            'show.bs.modal',
+            event => {
 
-            const form = document.getElementById(
-                'editBankAccountForm'
-            );
+                const button = event.relatedTarget;
 
-            const institution = document.getElementById(
-                'edit_institucion_financiera_id'
-            );
+                if (!button) {
+                    return;
+                }
 
-            const accountNumber = document.getElementById(
-                'edit_numero_cuenta'
-            );
+                const form = document.getElementById(
+                    'editBankAccountForm'
+                );
 
-            const accountType = document.getElementById(
-                'edit_tipo_cuenta'
-            );
+                const institution = document.getElementById(
+                    'edit_institucion_financiera_id'
+                );
 
-            const currency = document.getElementById(
-                'edit_moneda'
-            );
+                const accountNumber = document.getElementById(
+                    'edit_numero_cuenta'
+                );
 
-            const holder = document.getElementById(
-                'edit_nombre_titular'
-            );
+                const accountType = document.getElementById(
+                    'edit_tipo_cuenta'
+                );
 
-            const principal = document.getElementById(
-                'edit_bank_es_principal'
-            );
+                const currency = document.getElementById(
+                    'edit_moneda'
+                );
 
-            const active = document.getElementById(
-                'edit_bank_activo'
-            );
+                const holder = document.getElementById(
+                    'edit_nombre_titular'
+                );
 
-            const startDate = document.getElementById(
-                'edit_fecha_inicio_cuenta'
-            );
+                const principal = document.getElementById(
+                    'edit_bank_es_principal'
+                );
 
-            const endDate = document.getElementById(
-                'edit_fecha_fin_cuenta'
-            );
+                const active = document.getElementById(
+                    'edit_bank_activo'
+                );
 
-            form.action = button.dataset.action;
+                const startDate = document.getElementById(
+                    'edit_fecha_inicio_cuenta'
+                );
 
-            institution.value =
-                button.dataset.institucion || '';
+                const endDate = document.getElementById(
+                    'edit_fecha_fin_cuenta'
+                );
 
-            accountNumber.value =
-                button.dataset.numero || '';
+                if (
+                    !form ||
+                    !institution ||
+                    !accountNumber ||
+                    !accountType ||
+                    !currency ||
+                    !holder ||
+                    !principal ||
+                    !active ||
+                    !startDate ||
+                    !endDate
+                ) {
+                    return;
+                }
 
-            accountType.value =
-                button.dataset.tipo || '';
+                form.action =
+                    button.dataset.action || '';
 
-            currency.value =
-                button.dataset.moneda || 'HNL';
+                institution.value =
+                    button.dataset.institucion || '';
 
-            holder.value =
-                button.dataset.titular || '';
+                accountNumber.value =
+                    button.dataset.numero || '';
 
-            principal.checked =
-                button.dataset.principal === '1';
+                accountType.value =
+                    button.dataset.tipo || '';
 
-            active.checked =
-                button.dataset.activo === '1';
+                currency.value =
+                    button.dataset.moneda || 'HNL';
 
-            startDate.value =
-                button.dataset.inicio || '';
+                holder.value =
+                    button.dataset.titular || '';
 
-            endDate.value =
-                button.dataset.fin || '';
+                principal.checked =
+                    button.dataset.principal === '1';
 
-            endDate.min =
-                startDate.value || '';
+                active.checked =
+                    button.dataset.activo === '1';
 
-            startDate.onchange = () => {
+                startDate.value =
+                    button.dataset.inicio || '';
+
+                endDate.value =
+                    button.dataset.fin || '';
+
                 endDate.min =
                     startDate.value || '';
-            };
-        });
+
+                startDate.onchange = () => {
+
+                    endDate.min =
+                        startDate.value || '';
+                };
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Agregar formación académica
+        |--------------------------------------------------------------------------
+        */
+
+        const createAcademicExistingDocument =
+            document.getElementById(
+                'academic_documento'
+            );
+
+        const createAcademicNewDocument =
+            document.getElementById(
+                'academic_documento_nuevo'
+            );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Evitar documento existente + archivo nuevo simultáneamente
+        |--------------------------------------------------------------------------
+        */
+
+        createAcademicExistingDocument?.addEventListener(
+            'change',
+            () => {
+
+                if (
+                    createAcademicExistingDocument.value &&
+                    createAcademicNewDocument
+                ) {
+                    createAcademicNewDocument.value = '';
+                }
+            }
+        );
+
+        createAcademicNewDocument?.addEventListener(
+            'change',
+            () => {
+
+                if (
+                    createAcademicNewDocument.files.length > 0 &&
+                    createAcademicExistingDocument
+                ) {
+                    createAcademicExistingDocument.value = '';
+                }
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Editar formación académica
+        |--------------------------------------------------------------------------
+        */
+
+        const editAcademicModal =
+            document.getElementById(
+                'editAcademicTrainingModal'
+            );
+
+        const editAcademicForm =
+            document.getElementById(
+                'editAcademicTrainingForm'
+            );
+
+        const editAcademicLevel =
+            document.getElementById(
+                'edit_nivel_academico'
+            );
+
+        const editAcademicTitle =
+            document.getElementById(
+                'edit_titulo_obtenido'
+            );
+
+        const editAcademicInstitution =
+            document.getElementById(
+                'edit_institucion_educativa'
+            );
+
+        const editAcademicCountry =
+            document.getElementById(
+                'edit_pais_id'
+            );
+
+        const editAcademicYear =
+            document.getElementById(
+                'edit_anio_graduacion'
+            );
+
+        const editAcademicExistingDocument =
+            document.getElementById(
+                'edit_documento_persona_id'
+            );
+
+        const editAcademicNewDocument =
+            document.getElementById(
+                'edit_documento_nuevo'
+            );
+
+        const editAcademicPrincipal =
+            document.getElementById(
+                'edit_academic_es_principal'
+            );
+
+        const editAcademicStatus =
+            document.getElementById(
+                'edit_academic_estado'
+            );
+
+        const editAcademicObservations =
+            document.getElementById(
+                'edit_academic_observaciones'
+            );
+
+
+        editAcademicModal?.addEventListener(
+            'show.bs.modal',
+            event => {
+
+                const button = event.relatedTarget;
+
+                if (!button) {
+                    return;
+                }
+
+                if (
+                    !editAcademicForm ||
+                    !editAcademicLevel ||
+                    !editAcademicTitle ||
+                    !editAcademicInstitution ||
+                    !editAcademicCountry ||
+                    !editAcademicYear ||
+                    !editAcademicExistingDocument ||
+                    !editAcademicNewDocument ||
+                    !editAcademicPrincipal ||
+                    !editAcademicStatus ||
+                    !editAcademicObservations
+                ) {
+                    return;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Ruta del formulario
+                |--------------------------------------------------------------------------
+                */
+
+                editAcademicForm.action =
+                    button.dataset.action || '';
+
+                /*
+                |--------------------------------------------------------------------------
+                | Datos académicos
+                |--------------------------------------------------------------------------
+                */
+
+                editAcademicLevel.value =
+                    button.dataset.nivel || '';
+
+                editAcademicTitle.value =
+                    button.dataset.titulo || '';
+
+                editAcademicInstitution.value =
+                    button.dataset.institucion || '';
+
+                editAcademicCountry.value =
+                    button.dataset.pais || '';
+
+                editAcademicYear.value =
+                    button.dataset.anio || '';
+
+                /*
+                |--------------------------------------------------------------------------
+                | Documento existente
+                |--------------------------------------------------------------------------
+                */
+
+                editAcademicExistingDocument.value =
+                    button.dataset.documento || '';
+
+                /*
+                |--------------------------------------------------------------------------
+                | Archivo nuevo siempre vacío
+                |--------------------------------------------------------------------------
+                |
+                | Los campos file no deben precargarse.
+                |
+                */
+
+                editAcademicNewDocument.value = '';
+
+                /*
+                |--------------------------------------------------------------------------
+                | Formación principal
+                |--------------------------------------------------------------------------
+                */
+
+                editAcademicPrincipal.checked =
+                    button.dataset.principal === '1';
+
+                /*
+                |--------------------------------------------------------------------------
+                | Estado
+                |--------------------------------------------------------------------------
+                */
+
+                editAcademicStatus.value =
+                    button.dataset.estado || 'activo';
+
+                /*
+                |--------------------------------------------------------------------------
+                | Observaciones
+                |--------------------------------------------------------------------------
+                */
+
+                editAcademicObservations.value =
+                    button.dataset.observaciones || '';
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Editar formación:
+        | impedir documento existente + archivo nuevo simultáneamente
+        |--------------------------------------------------------------------------
+        */
+
+        editAcademicExistingDocument?.addEventListener(
+            'change',
+            () => {
+
+                if (
+                    editAcademicExistingDocument.value &&
+                    editAcademicNewDocument
+                ) {
+                    editAcademicNewDocument.value = '';
+                }
+            }
+        );
+
+        editAcademicNewDocument?.addEventListener(
+            'change',
+            () => {
+
+                if (
+                    editAcademicNewDocument.files.length > 0 &&
+                    editAcademicExistingDocument
+                ) {
+                    editAcademicExistingDocument.value = '';
+                }
+            }
+        );
+
     });
 </script>
 
 @endpush
-
 
 @endsection

@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Empleado;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class StoreFormacionAcademicaRequest extends FormRequest
 {
@@ -15,39 +17,50 @@ class StoreFormacionAcademicaRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'nivel_academico' => $this->normalizeNullableText(
-                $this->input('nivel_academico')
-            ),
+            'nivel_academico' =>
+                $this->normalizeNullableText(
+                    $this->input('nivel_academico')
+                ),
 
-            'titulo_obtenido' => $this->normalizeNullableText(
-                $this->input('titulo_obtenido')
-            ),
+            'titulo_obtenido' =>
+                $this->normalizeNullableText(
+                    $this->input('titulo_obtenido')
+                ),
 
-            'institucion_educativa' => $this->normalizeNullableText(
-                $this->input('institucion_educativa')
-            ),
+            'institucion_educativa' =>
+                $this->normalizeNullableText(
+                    $this->input('institucion_educativa')
+                ),
 
-            'observaciones' => $this->normalizeNullableText(
-                $this->input('observaciones')
-            ),
+            'observaciones' =>
+                $this->normalizeNullableText(
+                    $this->input('observaciones')
+                ),
 
-            'es_principal' => $this->boolean(
-                'es_principal'
-            ),
+            'es_principal' =>
+                $this->boolean('es_principal'),
 
-            'estado' => $this->normalizeNullableText(
-                $this->input('estado')
-            ),
+            'estado' =>
+                $this->normalizeNullableText(
+                    $this->input('estado')
+                ) ?? 'activo',
         ]);
     }
 
     public function rules(): array
     {
+        $empleado = $this->route('empleado');
+
+        $personaId =
+            $empleado instanceof Empleado
+                ? $empleado->persona_id
+                : null;
+
         return [
             'nivel_academico' => [
                 'required',
                 'string',
-                'max:100',
+                'max:50',
             ],
 
             'titulo_obtenido' => [
@@ -66,13 +79,16 @@ class StoreFormacionAcademicaRequest extends FormRequest
                 'nullable',
                 'integer',
 
-                Rule::exists('paises', 'id')
-                    ->where(
-                        fn ($query) => $query->where(
+                Rule::exists(
+                    'paises',
+                    'id'
+                )->where(
+                    fn ($query) =>
+                        $query->where(
                             'activo',
                             true
                         )
-                    ),
+                ),
             ],
 
             'anio_graduacion' => [
@@ -82,10 +98,46 @@ class StoreFormacionAcademicaRequest extends FormRequest
                 'max:' . now()->year,
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | Documento ya existente
+            |--------------------------------------------------------------------------
+            */
+
             'documento_persona_id' => [
                 'nullable',
                 'integer',
-                'exists:documentos_persona,id',
+                
+
+                Rule::exists(
+                    'documentos_persona',
+                    'id'
+                )->where(
+                    function ($query) use ($personaId) {
+                        $query
+                            ->where(
+                                'persona_id',
+                                $personaId
+                            )
+                            ->whereNull(
+                                'deleted_at'
+                            );
+                    }
+                ),
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Nuevo documento
+            |--------------------------------------------------------------------------
+            */
+
+            'documento_nuevo' => [
+                'nullable',
+                'file',
+                'mimes:pdf,jpg,jpeg,png',
+                'max:5120',
+                
             ],
 
             'es_principal' => [
@@ -94,6 +146,7 @@ class StoreFormacionAcademicaRequest extends FormRequest
 
             'estado' => [
                 'required',
+
                 Rule::in([
                     'activo',
                     'inactivo',
@@ -108,6 +161,29 @@ class StoreFormacionAcademicaRequest extends FormRequest
         ];
     }
 
+    public function after(): array
+{
+    return [
+        function (Validator $validator): void {
+
+            if (
+                $this->filled('documento_persona_id') &&
+                $this->hasFile('documento_nuevo')
+            ) {
+                $validator->errors()->add(
+                    'documento_persona_id',
+                    'Seleccione un documento existente o suba uno nuevo, pero no ambas opciones.'
+                );
+
+                $validator->errors()->add(
+                    'documento_nuevo',
+                    'Seleccione un documento existente o suba uno nuevo, pero no ambas opciones.'
+                );
+            }
+        },
+    ];
+}
+
     public function messages(): array
     {
         return [
@@ -115,7 +191,7 @@ class StoreFormacionAcademicaRequest extends FormRequest
                 'Debe indicar el nivel académico.',
 
             'nivel_academico.max' =>
-                'El nivel académico no puede superar los 100 caracteres.',
+                'El nivel académico no puede superar los 50 caracteres.',
 
             'titulo_obtenido.max' =>
                 'El título obtenido no puede superar los 180 caracteres.',
@@ -136,7 +212,19 @@ class StoreFormacionAcademicaRequest extends FormRequest
                 'El año de graduación no puede ser posterior al año actual.',
 
             'documento_persona_id.exists' =>
-                'El documento seleccionado no existe.',
+                'El documento seleccionado no pertenece a esta persona o ya no está disponible.',
+
+            'documento_nuevo.file' =>
+                'El documento adjunto no es un archivo válido.',
+
+            'documento_nuevo.mimes' =>
+                'El documento debe ser un archivo PDF, JPG, JPEG o PNG.',
+
+            'documento_nuevo.max' =>
+                'El documento no puede superar los 5 MB.',
+
+            'documento_nuevo.prohibited_with' =>
+                'Seleccione un documento existente o suba uno nuevo, pero no ambas opciones.',
 
             'estado.required' =>
                 'Debe seleccionar el estado de la formación académica.',
@@ -145,7 +233,7 @@ class StoreFormacionAcademicaRequest extends FormRequest
                 'El estado seleccionado no es válido.',
 
             'observaciones.max' =>
-                'Las observaciones no pueden superar los 1000 caracteres.',
+                'Las observaciones no pueden superar los 1,000 caracteres.',
         ];
     }
 
@@ -162,6 +250,8 @@ class StoreFormacionAcademicaRequest extends FormRequest
             trim($value)
         );
 
-        return $value === '' ? null : $value;
+        return $value === ''
+            ? null
+            : $value;
     }
 }

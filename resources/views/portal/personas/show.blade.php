@@ -574,40 +574,141 @@
 
                             <article class="portal-document-item">
 
-                                <span class="portal-document-icon">
-                                    <i class="bi bi-file-earmark-text"></i>
-                                </span>
+    <span class="portal-document-icon">
+        <i class="bi bi-file-earmark-text"></i>
+    </span>
 
-                                <div>
-                                    <strong>
-                                        {{ $documento->nombre_original }}
-                                    </strong>
+    <div class="flex-grow-1">
 
-                                    <small>
-                                        {{ str($documento->tipo_documento)
-                                            ->replace('_', ' ')
-                                            ->title() }}
-                                        ·
-                                        {{ $documento->tamano_legible }}
-                                    </small>
-                                </div>
+        <strong>
+            {{ $documento->nombre_original }}
+        </strong>
 
-                                @if ($documento->verificado)
+        <small class="d-block">
+            {{ str($documento->tipo_documento)
+                ->replace('_', ' ')
+                ->title() }}
+            ·
+            {{ $documento->tamano_legible }}
+        </small>
 
-                                    <span class="portal-document-verified">
-                                        <i class="bi bi-patch-check-fill"></i>
-                                        Verificado
-                                    </span>
+    </div>
 
-                                @else
+    <div class="d-flex align-items-center gap-3">
 
-                                    <span class="portal-document-pending">
-                                        Pendiente
-                                    </span>
+        @if ($documento->verificado)
 
-                                @endif
+            <span class="portal-document-verified">
+                <i class="bi bi-patch-check-fill"></i>
+                Verificado
+            </span>
 
-                            </article>
+        @else
+
+            <span class="portal-document-pending">
+                Pendiente
+            </span>
+
+        @endif
+
+        <div class="dropdown">
+
+            <button
+                type="button"
+                class="portal-table-action"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="Opciones del documento"
+            >
+                <i class="bi bi-three-dots-vertical"></i>
+            </button>
+
+            <ul
+                class="dropdown-menu dropdown-menu-end portal-actions-menu"
+            >
+
+                {{-- Ver --}}
+                <li>
+                    <a
+                        href="{{ route(
+                            'portal.personas.documentos.ver',
+                            [
+                                'persona' => $persona,
+                                'documento' => $documento,
+                            ]
+                        ) }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="dropdown-item"
+                    >
+                        <i class="bi bi-eye"></i>
+                        Ver documento
+                    </a>
+                </li>
+
+                {{-- Descargar --}}
+                <li>
+                    <a
+                        href="{{ route(
+                            'portal.personas.documentos.descargar',
+                            [
+                                'persona' => $persona,
+                                'documento' => $documento,
+                            ]
+                        ) }}"
+                        class="dropdown-item"
+                    >
+                        <i class="bi bi-download"></i>
+                        Descargar
+                    </a>
+                </li>
+
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+
+                {{-- Verificación --}}
+                <li>
+
+                    <form
+                        action="{{ route(
+                            'portal.personas.documentos.cambiar-verificacion',
+                            [
+                                'persona' => $persona,
+                                'documento' => $documento,
+                            ]
+                        ) }}"
+                        method="POST"
+                    >
+                        @csrf
+                        @method('PATCH')
+
+                        <button
+                            type="submit"
+                            class="dropdown-item"
+                        >
+                            <i class="bi
+                                {{ $documento->verificado
+                                    ? 'bi-patch-minus'
+                                    : 'bi-patch-check' }}">
+                            </i>
+
+                            {{ $documento->verificado
+                                ? 'Marcar como pendiente'
+                                : 'Marcar como verificado' }}
+                        </button>
+
+                    </form>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</article>
 
                         @endforeach
 

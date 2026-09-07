@@ -72,9 +72,7 @@
 
                     <div class="p-4">
 
-                        {{-- =================================================
-                             Persona
-                             ================================================= --}}
+                        {{-- Persona --}}
 
                         <div class="mb-4">
 
@@ -100,13 +98,12 @@
                         </div>
 
 
-                        {{-- =================================================
-                             Información de acceso
-                             ================================================= --}}
+                        {{-- Información de acceso --}}
 
                         <div class="row g-3">
 
                             {{-- Tipo --}}
+
                             <div class="col-md-6">
 
                                 <label class="form-label text-muted small">
@@ -120,21 +117,35 @@
                             </div>
 
 
-                            {{-- Rol --}}
+                            {{-- Roles --}}
+
                             <div class="col-md-6">
 
                                 <label class="form-label text-muted small">
-                                    Rol
+                                    {{ count($usuarioCreado['roles'] ?? []) === 1 ? 'Rol' : 'Roles' }}
                                 </label>
 
                                 <div class="form-control bg-light">
-                                    {{ $usuarioCreado['rol'] }}
+
+                                    @forelse ($usuarioCreado['roles'] ?? [] as $rol)
+
+                                        <span class="badge text-bg-light border me-1">
+                                            {{ $rol }}
+                                        </span>
+
+                                    @empty
+
+                                        Sin rol
+
+                                    @endforelse
+
                                 </div>
 
                             </div>
 
 
                             {{-- Código EDMA --}}
+
                             <div class="col-md-6">
 
                                 <label class="form-label text-muted small">
@@ -166,6 +177,7 @@
 
 
                             {{-- Contraseña temporal --}}
+
                             <div class="col-md-6">
 
                                 <label class="form-label text-muted small">
@@ -198,9 +210,7 @@
                         </div>
 
 
-                        {{-- =================================================
-                             Aviso de primer acceso
-                             ================================================= --}}
+                        {{-- Aviso de primer acceso --}}
 
                         <div class="mt-4 p-3 bg-light rounded-3">
 
@@ -228,13 +238,9 @@
                         </div>
 
 
-                        {{-- =================================================
-                             Acciones
-                             ================================================= --}}
+                        {{-- Acciones --}}
 
-                        <div
-                            class="d-flex flex-wrap justify-content-end gap-2 mt-4"
-                        >
+                        <div class="d-flex flex-wrap justify-content-end gap-2 mt-4">
 
                             <button
                                 type="button"
@@ -306,9 +312,7 @@
 
                             @if ($candidatos->isNotEmpty())
 
-                                {{-- =============================================
-                                     Persona
-                                     ============================================= --}}
+                                {{-- Persona --}}
 
                                 <div class="mb-4">
 
@@ -336,7 +340,7 @@
                                                 value="{{ $candidato['persona_id'] }}"
                                                 data-tipo="{{ $candidato['tipo'] }}"
                                                 data-tipo-label="{{ $candidato['tipo_label'] }}"
-                                                data-rol="{{ $candidato['rol'] }}"
+                                                data-rol-fijo="{{ $candidato['rol_fijo'] }}"
                                                 data-codigo="{{ $candidato['codigo'] }}"
                                                 @selected(
                                                     old('persona_id') == $candidato['persona_id']
@@ -369,9 +373,7 @@
                                 </div>
 
 
-                                {{-- =============================================
-                                     Datos de la cuenta
-                                     ============================================= --}}
+                                {{-- Datos de la cuenta --}}
 
                                 <div
                                     id="datosUsuario"
@@ -388,6 +390,7 @@
                                     <div class="row g-3">
 
                                         {{-- Código EDMA --}}
+
                                         <div class="col-md-6">
 
                                             <label class="form-label fw-semibold">
@@ -409,6 +412,7 @@
 
 
                                         {{-- Tipo --}}
+
                                         <div class="col-md-6">
 
                                             <label class="form-label fw-semibold">
@@ -427,13 +431,11 @@
                                     </div>
 
 
-                                    {{-- =========================================
-                                         Rol automático
-                                         ========================================= --}}
+                                    {{-- Rol fijo para estudiante --}}
 
                                     <div
                                         class="mt-4"
-                                        id="rolAutomaticoContainer"
+                                        id="rolFijoContainer"
                                     >
 
                                         <label class="form-label fw-semibold">
@@ -442,77 +444,96 @@
 
                                         <div
                                             class="form-control bg-light"
-                                            id="rolAutomatico"
+                                            id="rolFijoUsuario"
                                         >
                                             —
                                         </div>
 
                                         <div class="form-text">
-                                            El rol se determina automáticamente según
-                                            el expediente de la persona.
+                                            El rol se determina automáticamente
+                                            según el expediente de la persona.
                                         </div>
 
                                     </div>
 
 
-                                    {{-- =========================================
-                                         Rol administrativo
-                                         ========================================= --}}
+                                    {{-- Roles para personal --}}
 
                                     <div
                                         class="mt-4 d-none"
-                                        id="rolAdministrativoContainer"
+                                        id="rolesPersonalContainer"
                                     >
 
-                                        <label
-                                            for="rol_id"
-                                            class="form-label fw-semibold"
-                                        >
-                                            Rol
+                                        <label class="form-label fw-semibold">
+                                            Roles de acceso
                                         </label>
 
-                                        <select
-                                            name="rol_id"
-                                            id="rol_id"
-                                            class="form-select @error('rol_id') is-invalid @enderror"
+                                        <div
+                                            class="border rounded-3 p-3"
+                                            id="rolesPersonalLista"
                                         >
 
-                                            <option value="">
-                                                Seleccione un rol
-                                            </option>
+                                            @foreach ($rolesPersonal as $rol)
 
-                                            @foreach ($rolesAdministrativos as $rol)
-
-                                                <option
-                                                    value="{{ $rol->id }}"
-                                                    @selected(old('rol_id') == $rol->id)
+                                                <div
+                                                    class="form-check mb-2 rol-personal-option"
+                                                    data-rol-nombre="{{ $rol->nombre }}"
                                                 >
-                                                    {{ $rol->nombre }}
-                                                </option>
+
+                                                    <input
+                                                        class="form-check-input rol-personal-checkbox"
+                                                        type="checkbox"
+                                                        name="roles[]"
+                                                        value="{{ $rol->id }}"
+                                                        id="rol_{{ $rol->id }}"
+                                                        @checked(
+                                                            in_array(
+                                                                $rol->id,
+                                                                old('roles', [])
+                                                            )
+                                                        )
+                                                    >
+
+                                                    <label
+                                                        class="form-check-label"
+                                                        for="rol_{{ $rol->id }}"
+                                                    >
+                                                        {{ $rol->nombre }}
+                                                    </label>
+
+                                                </div>
 
                                             @endforeach
 
-                                        </select>
+                                        </div>
 
-                                        @error('rol_id')
+                                        @error('roles')
 
-                                            <div class="invalid-feedback">
+                                            <div class="text-danger small mt-2">
                                                 {{ $message }}
                                             </div>
 
                                         @enderror
 
-                                        <div class="form-text">
-                                            Seleccione el tipo de acceso que tendrá
-                                            este empleado.
+                                        @error('roles.*')
+
+                                            <div class="text-danger small mt-2">
+                                                {{ $message }}
+                                            </div>
+
+                                        @enderror
+
+                                        <div
+                                            class="form-text"
+                                            id="rolesPersonalAyuda"
+                                        >
+                                            Seleccione al menos un rol para esta cuenta.
                                         </div>
 
                                     </div>
 
 
-                                    {{-- =========================================
-                                         Contraseña temporal
-                                         ========================================= --}}
+                                    {{-- Contraseña temporal --}}
 
                                     <div class="mt-4 p-3 bg-light rounded-3">
 
@@ -545,9 +566,7 @@
 
                             @else
 
-                                {{-- =============================================
-                                     Sin candidatos
-                                     ============================================= --}}
+                                {{-- Sin candidatos --}}
 
                                 <div class="text-center py-5">
 
@@ -572,9 +591,7 @@
                         </div>
 
 
-                        {{-- =============================================
-                             Acciones
-                             ============================================= --}}
+                        {{-- Acciones --}}
 
                         <div class="border-top p-3 d-flex justify-content-end gap-2">
 
@@ -638,25 +655,55 @@ document.addEventListener('DOMContentLoaded', function () {
     const tipoUsuario =
         document.getElementById('tipoUsuario');
 
-    const rolAutomaticoContainer =
-        document.getElementById('rolAutomaticoContainer');
+    const rolFijoContainer =
+        document.getElementById('rolFijoContainer');
 
-    const rolAutomatico =
-        document.getElementById('rolAutomatico');
+    const rolFijoUsuario =
+        document.getElementById('rolFijoUsuario');
 
-    const rolAdministrativoContainer =
-        document.getElementById('rolAdministrativoContainer');
+    const rolesPersonalContainer =
+        document.getElementById('rolesPersonalContainer');
 
-    const rolSelect =
-        document.getElementById('rol_id');
+    const rolesPersonalAyuda =
+        document.getElementById('rolesPersonalAyuda');
 
     const botonCrear =
         document.getElementById('botonCrearUsuario');
 
+    const rolesCheckboxes =
+        document.querySelectorAll(
+            '.rol-personal-checkbox'
+        );
 
-    function actualizarFormulario() {
+    const rolOptions =
+        document.querySelectorAll(
+            '.rol-personal-option'
+        );
 
-        if (! personaSelect) {
+
+    function desmarcarRoles() {
+
+        rolesCheckboxes.forEach(
+            function (checkbox) {
+                checkbox.checked = false;
+            }
+        );
+    }
+
+
+    function contarRolesSeleccionados() {
+
+        return Array.from(
+            rolesCheckboxes
+        ).filter(
+            checkbox => checkbox.checked
+        ).length;
+    }
+
+
+    function actualizarBotonCrear() {
+
+        if (! personaSelect || ! botonCrear) {
             return;
         }
 
@@ -667,16 +714,131 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (! option.value) {
 
+            botonCrear.disabled = true;
+
+            return;
+        }
+
+
+        const tipo =
+            option.dataset.tipo;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Estudiante
+        |--------------------------------------------------------------------------
+        */
+
+        if (tipo === 'estudiante') {
+
+            botonCrear.disabled = false;
+
+            return;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | Personal
+        |--------------------------------------------------------------------------
+        */
+
+        botonCrear.disabled =
+            contarRolesSeleccionados() === 0;
+    }
+
+
+    function configurarRolesPorTipo(tipo) {
+
+        rolOptions.forEach(
+            function (option) {
+
+                const nombreRol =
+                    option.dataset.rolNombre;
+
+                /*
+                |--------------------------------------------------------------------------
+                | Docente
+                |--------------------------------------------------------------------------
+                |
+                | Puede seleccionar:
+                | - Docente
+                | - Administrador
+                |
+                */
+
+                if (tipo === 'docente') {
+
+                    option.classList.remove('d-none');
+
+                    return;
+                }
+
+
+                /*
+                |--------------------------------------------------------------------------
+                | Empleado no docente
+                |--------------------------------------------------------------------------
+                |
+                | Por ahora solamente Administrador.
+                |
+                */
+
+                if (tipo === 'empleado') {
+
+                    if (nombreRol === 'Administrador') {
+
+                        option.classList.remove('d-none');
+
+                    } else {
+
+                        option.classList.add('d-none');
+
+                        const checkbox =
+                            option.querySelector(
+                                '.rol-personal-checkbox'
+                            );
+
+                        if (checkbox) {
+                            checkbox.checked = false;
+                        }
+                    }
+
+                    return;
+                }
+
+
+                option.classList.add('d-none');
+
+            }
+        );
+    }
+
+
+    function actualizarFormulario(
+        conservarRoles = false
+    ) {
+
+        if (! personaSelect) {
+            return;
+        }
+
+
+        const option =
+            personaSelect.options[
+                personaSelect.selectedIndex
+            ];
+
+
+        if (! option.value) {
+
             if (datosUsuario) {
                 datosUsuario.classList.add('d-none');
             }
 
             if (botonCrear) {
                 botonCrear.disabled = true;
-            }
-
-            if (rolSelect) {
-                rolSelect.required = false;
             }
 
             return;
@@ -692,20 +854,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const codigo =
             option.dataset.codigo;
 
-        const rol =
-            option.dataset.rol;
+        const rolFijo =
+            option.dataset.rolFijo;
 
 
         if (datosUsuario) {
             datosUsuario.classList.remove('d-none');
         }
 
+
         if (codigoUsuario) {
+
             codigoUsuario.textContent =
                 codigo || 'Sin código EDMA';
         }
 
+
         if (tipoUsuario) {
+
             tipoUsuario.textContent =
                 tipoLabel || '—';
         }
@@ -713,29 +879,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Empleado no docente
+        | Estudiante
         |--------------------------------------------------------------------------
         */
 
-        if (tipo === 'empleado') {
+        if (tipo === 'estudiante') {
 
-            if (rolAutomaticoContainer) {
-                rolAutomaticoContainer.classList.add('d-none');
+            if (! conservarRoles) {
+                desmarcarRoles();
             }
 
-            if (rolAdministrativoContainer) {
-                rolAdministrativoContainer.classList.remove('d-none');
+            if (rolesPersonalContainer) {
+                rolesPersonalContainer.classList.add('d-none');
             }
 
-            if (rolSelect) {
-
-                rolSelect.required = true;
-
-                if (botonCrear) {
-                    botonCrear.disabled =
-                        rolSelect.value === '';
-                }
+            if (rolFijoContainer) {
+                rolFijoContainer.classList.remove('d-none');
             }
+
+            if (rolFijoUsuario) {
+                rolFijoUsuario.textContent =
+                    rolFijo || 'Estudiante';
+            }
+
+            actualizarBotonCrear();
 
             return;
         }
@@ -743,32 +910,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /*
         |--------------------------------------------------------------------------
-        | Estudiante / Docente
+        | Docente / Empleado
         |--------------------------------------------------------------------------
         */
 
-        if (rolAdministrativoContainer) {
-            rolAdministrativoContainer.classList.add('d-none');
+        if (! conservarRoles) {
+            desmarcarRoles();
         }
 
-        if (rolAutomaticoContainer) {
-            rolAutomaticoContainer.classList.remove('d-none');
+
+        if (rolFijoContainer) {
+            rolFijoContainer.classList.add('d-none');
         }
 
-        if (rolAutomatico) {
-            rolAutomatico.textContent =
-                rol || '—';
+
+        if (rolesPersonalContainer) {
+            rolesPersonalContainer.classList.remove('d-none');
         }
 
-        if (rolSelect) {
 
-            rolSelect.required = false;
-            rolSelect.value = '';
+        configurarRolesPorTipo(
+            tipo
+        );
+
+
+        if (rolesPersonalAyuda) {
+
+            if (tipo === 'docente') {
+
+                rolesPersonalAyuda.textContent =
+                    'Seleccione Docente, Administrador o ambos según las funciones que tendrá esta persona.';
+
+            } else {
+
+                rolesPersonalAyuda.textContent =
+                    'Seleccione el rol que tendrá este empleado.';
+            }
         }
 
-        if (botonCrear) {
-            botonCrear.disabled = false;
-        }
+
+        actualizarBotonCrear();
     }
 
 
@@ -776,52 +957,54 @@ document.addEventListener('DOMContentLoaded', function () {
 
         personaSelect.addEventListener(
             'change',
-            actualizarFormulario
+            function () {
+
+                actualizarFormulario(
+                    false
+                );
+
+            }
         );
 
+
+        /*
+        |--------------------------------------------------------------------------
+        | Restaurar old()
+        |--------------------------------------------------------------------------
+        */
+
         if (personaSelect.value) {
-            actualizarFormulario();
+
+            actualizarFormulario(
+                true
+            );
         }
     }
 
 
-    if (rolSelect) {
+    rolesCheckboxes.forEach(
+        function (checkbox) {
 
-        rolSelect.addEventListener(
-            'change',
-            function () {
+            checkbox.addEventListener(
+                'change',
+                actualizarBotonCrear
+            );
 
-                if (! personaSelect) {
-                    return;
-                }
-
-                const option =
-                    personaSelect.options[
-                        personaSelect.selectedIndex
-                    ];
-
-                if (
-                    option.value
-                    && option.dataset.tipo === 'empleado'
-                    && botonCrear
-                ) {
-                    botonCrear.disabled =
-                        this.value === '';
-                }
-
-            }
-        );
-    }
+        }
+    );
 
 
     /*
     |--------------------------------------------------------------------------
-    | Usuario recién creado - Copiar Código EDMA
+    | Copiar Código EDMA
     |--------------------------------------------------------------------------
     */
 
     const copiarCodigoUsuario =
-        document.getElementById('copiarCodigoUsuario');
+        document.getElementById(
+            'copiarCodigoUsuario'
+        );
+
 
     if (copiarCodigoUsuario) {
 
@@ -847,12 +1030,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Usuario recién creado - Copiar contraseña
+    | Copiar contraseña
     |--------------------------------------------------------------------------
     */
 
     const copiarPasswordUsuario =
-        document.getElementById('copiarPasswordUsuario');
+        document.getElementById(
+            'copiarPasswordUsuario'
+        );
+
 
     if (copiarPasswordUsuario) {
 
@@ -878,7 +1064,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Usuario recién creado - Copiar todas las credenciales
+    | Copiar todas las credenciales
     |--------------------------------------------------------------------------
     */
 
@@ -886,6 +1072,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById(
             'copiarCredencialesUsuario'
         );
+
 
     if (copiarCredencialesUsuario) {
 

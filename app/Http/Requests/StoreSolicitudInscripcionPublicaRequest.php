@@ -631,7 +631,11 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
             'metodo_pago' => [
                 'required',
                 'string',
-                'max:30',
+                Rule::in([
+                    'transferencia_bancaria',
+                    'deposito_bancario',
+                    'tigo_money',
+                ]),
             ],
 
             'fecha_pago' => [
@@ -962,6 +966,12 @@ class StoreSolicitudInscripcionPublicaRequest extends FormRequest
 
             'acepta_declaracion.accepted' =>
                 'Debe confirmar que la información proporcionada es correcta antes de enviar la solicitud.',
+
+            'metodo_pago.required' =>
+                'Seleccione el método utilizado para realizar el pago.',
+
+            'metodo_pago.in' =>
+                'El método de pago seleccionado no es válido.',
         ];
     }
 

@@ -762,7 +762,7 @@
                                                 === 'dni'
                                             )
                                         >
-                                            DNI
+                                            DNI - Partida de Nacimiento
                                         </option>
 
                                         <option
@@ -802,8 +802,13 @@
                                         value="{{ old('numero_documento') }}"
                                         class="form-control edma-form-control"
                                         maxlength="50"
+                                        placeholder="Ej. 0801199912345"
                                         required
                                     >
+
+                                    <div class="form-text">
+                                        Si utiliza DNI, ingrese los 13 dígitos sin guiones ni espacios.
+                                    </div>
 
                                 </div>
 
@@ -1500,7 +1505,12 @@
                                             value="{{ old('responsable_numero_documento') }}"
                                             class="form-control edma-form-control responsible-required"
                                             maxlength="50"
+                                            placeholder="Ej. 0801199912345"
                                         >
+
+                                        <div class="form-text">
+                                            Si utiliza DNI, ingrese los 13 dígitos sin guiones ni espacios.
+                                        </div>
 
                                     </div>
 
@@ -1777,15 +1787,7 @@
                                             Tigo Money
                                         </option>
 
-                                        <option
-                                            value="efectivo"
-                                            @selected(
-                                                old('metodo_pago')
-                                                === 'efectivo'
-                                            )
-                                        >
-                                            Efectivo
-                                        </option>
+                                        
 
                                     </select>
 
@@ -1812,7 +1814,7 @@
 
                                 </div>
 
-                                <div class="col-12">
+                               <div class="col-12">
 
                                     <label class="edma-form-label">
                                         Número de referencia
@@ -1824,8 +1826,14 @@
                                         value="{{ old('numero_referencia') }}"
                                         class="form-control edma-form-control"
                                         maxlength="100"
-                                        placeholder="Número de transacción, depósito o referencia"
+                                        placeholder="Ej. 45892173, TRX984521 o referencia del comprobante"
                                     >
+
+                                    <div class="form-text">
+                                        Ingrese el número de transacción, depósito o referencia que aparece
+                                        en su comprobante de pago. Si su comprobante no posee uno, puede
+                                        dejar este campo vacío.
+                                    </div>
 
                                 </div>
 

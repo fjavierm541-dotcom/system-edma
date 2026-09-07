@@ -169,8 +169,8 @@ public function create()
                     'documento' => $persona->numero_documento,
                     'tipo' => 'estudiante',
                     'tipo_label' => 'Estudiante',
-                    'rol' => 'Estudiante',
                     'codigo' => $persona->estudiante->codigo_estudiante,
+                    'rol_fijo' => 'Estudiante',
                 ];
             }
 
@@ -190,8 +190,8 @@ public function create()
                     'documento' => $persona->numero_documento,
                     'tipo' => 'docente',
                     'tipo_label' => 'Docente',
-                    'rol' => 'Docente',
                     'codigo' => $persona->empleado->docente->codigo_docente,
+                    'rol_fijo' => null,
                 ];
             }
 
@@ -208,8 +208,8 @@ public function create()
                     'documento' => $persona->numero_documento,
                     'tipo' => 'empleado',
                     'tipo_label' => 'Empleado',
-                    'rol' => null,
                     'codigo' => $persona->empleado->codigo_empleado,
+                    'rol_fijo' => null,
                 ];
             }
 
@@ -220,16 +220,16 @@ public function create()
 
     /*
     |--------------------------------------------------------------------------
-    | Roles disponibles para empleados no docentes
+    | Roles disponibles para personal
     |--------------------------------------------------------------------------
-    |
-    | Estudiante y Docente nunca se seleccionan manualmente.
-    | Por ahora el único rol administrativo permitido es Administrador.
-    |
     */
 
-    $rolesAdministrativos = Rol::query()
-        ->where('nombre', 'Administrador')
+    $rolesPersonal = Rol::query()
+        ->where('activo', true)
+        ->whereIn('nombre', [
+            'Administrador',
+            'Docente',
+        ])
         ->orderBy('nombre')
         ->get();
 
@@ -237,7 +237,7 @@ public function create()
         'portal.usuarios.create',
         compact(
             'candidatos',
-            'rolesAdministrativos'
+            'rolesPersonal'
         )
     );
 }
@@ -253,8 +253,13 @@ public function store(
             'integer',
             'exists:personas,id',
         ],
-        'rol_id' => [
+
+        'roles' => [
             'nullable',
+            'array',
+        ],
+
+        'roles.*' => [
             'integer',
             'exists:roles,id',
         ],
@@ -265,9 +270,13 @@ public function store(
         'persona_id.exists' =>
             'La persona seleccionada no es válida.',
 
-        'rol_id.exists' =>
-            'El rol seleccionado no es válido.',
+        'roles.array' =>
+            'La selección de roles no es válida.',
+
+        'roles.*.exists' =>
+            'Uno de los roles seleccionados no es válido.',
     ]);
+
 
     $resultado = DB::transaction(
         function () use (
@@ -282,12 +291,14 @@ public function store(
                     'empleado.docente',
                 ])
                 ->lockForUpdate()
-                ->findOrFail($datos['persona_id']);
+                ->findOrFail(
+                    $datos['persona_id']
+                );
 
 
             /*
             |--------------------------------------------------------------------------
-            | La persona no puede tener ya un usuario
+            | Evitar segundo usuario para la misma persona
             |--------------------------------------------------------------------------
             */
 
@@ -299,48 +310,57 @@ public function store(
             }
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | Determinar tipo, código EDMA y rol
-            |--------------------------------------------------------------------------
-            */
-
             $codigo = null;
-            $rol = null;
             $tipo = null;
+            $rolesAsignar = collect();
 
 
             /*
             |--------------------------------------------------------------------------
-            | Estudiante
+            | ESTUDIANTE
             |--------------------------------------------------------------------------
+            |
+            | El rol no puede seleccionarse manualmente.
+            |
             */
 
             if ($persona->estudiante) {
 
                 $codigo =
-                    $persona->estudiante->codigo_estudiante;
+                    $persona->estudiante
+                        ->codigo_estudiante;
 
                 $tipo = 'Estudiante';
 
-                $rol = Rol::query()
+                $rolEstudiante = Rol::query()
                     ->where('nombre', 'Estudiante')
                     ->where('activo', true)
                     ->first();
 
-                if (! $rol) {
+                if (! $rolEstudiante) {
                     throw ValidationException::withMessages([
                         'persona_id' =>
                             'El rol Estudiante no se encuentra disponible.',
                     ]);
                 }
+
+                $rolesAsignar->push(
+                    $rolEstudiante
+                );
             }
 
 
             /*
             |--------------------------------------------------------------------------
-            | Docente
+            | DOCENTE
             |--------------------------------------------------------------------------
+            |
+            | Puede tener:
+            |
+            | - Docente
+            | - Administrador
+            | - ambos
+            |
             */
 
             elseif (
@@ -355,15 +375,46 @@ public function store(
 
                 $tipo = 'Docente';
 
-                $rol = Rol::query()
-                    ->where('nombre', 'Docente')
-                    ->where('activo', true)
-                    ->first();
+                $rolesSeleccionados =
+                    collect(
+                        $datos['roles'] ?? []
+                    )
+                    ->unique()
+                    ->values();
 
-                if (! $rol) {
+
+                if ($rolesSeleccionados->isEmpty()) {
                     throw ValidationException::withMessages([
-                        'persona_id' =>
-                            'El rol Docente no se encuentra disponible.',
+                        'roles' =>
+                            'Seleccione al menos un rol para el docente.',
+                    ]);
+                }
+
+
+                $rolesAsignar = Rol::query()
+                    ->whereIn(
+                        'id',
+                        $rolesSeleccionados
+                    )
+                    ->where('activo', true)
+                    ->whereIn('nombre', [
+                        'Docente',
+                        'Administrador',
+                    ])
+                    ->get();
+
+
+                /*
+                 * Si se envió un rol manipulado o no permitido,
+                 * la cantidad resultante será diferente.
+                 */
+                if (
+                    $rolesAsignar->count()
+                    !== $rolesSeleccionados->count()
+                ) {
+                    throw ValidationException::withMessages([
+                        'roles' =>
+                            'Uno de los roles seleccionados no está permitido para un docente.',
                     ]);
                 }
             }
@@ -371,33 +422,54 @@ public function store(
 
             /*
             |--------------------------------------------------------------------------
-            | Empleado no docente
+            | EMPLEADO NO DOCENTE
             |--------------------------------------------------------------------------
+            |
+            | Por ahora solamente Administrador.
+            | Más adelante aquí podremos incorporar nuevos roles de personal.
+            |
             */
 
             elseif ($persona->empleado) {
 
                 $codigo =
-                    $persona->empleado->codigo_empleado;
+                    $persona->empleado
+                        ->codigo_empleado;
 
                 $tipo = 'Empleado';
 
-                if (empty($datos['rol_id'])) {
+                $rolesSeleccionados =
+                    collect(
+                        $datos['roles'] ?? []
+                    )
+                    ->unique()
+                    ->values();
+
+
+                if ($rolesSeleccionados->isEmpty()) {
                     throw ValidationException::withMessages([
-                        'rol_id' =>
+                        'roles' =>
                             'Seleccione el rol que tendrá este empleado.',
                     ]);
                 }
 
-                $rol = Rol::query()
-                    ->whereKey($datos['rol_id'])
+
+                $rolesAsignar = Rol::query()
+                    ->whereIn(
+                        'id',
+                        $rolesSeleccionados
+                    )
                     ->where('activo', true)
                     ->where('nombre', 'Administrador')
-                    ->first();
+                    ->get();
 
-                if (! $rol) {
+
+                if (
+                    $rolesAsignar->count()
+                    !== $rolesSeleccionados->count()
+                ) {
                     throw ValidationException::withMessages([
-                        'rol_id' =>
+                        'roles' =>
                             'El rol seleccionado no está permitido para este empleado.',
                     ]);
                 }
@@ -420,7 +492,7 @@ public function store(
 
             /*
             |--------------------------------------------------------------------------
-            | Verificar código institucional
+            | Verificar Código EDMA
             |--------------------------------------------------------------------------
             */
 
@@ -434,13 +506,16 @@ public function store(
 
             /*
             |--------------------------------------------------------------------------
-            | Evitar duplicidad del Código EDMA
+            | Evitar Código EDMA duplicado
             |--------------------------------------------------------------------------
             */
 
             if (
                 User::query()
-                    ->where('username', $codigo)
+                    ->where(
+                        'username',
+                        $codigo
+                    )
                     ->exists()
             ) {
                 throw ValidationException::withMessages([
@@ -462,38 +537,75 @@ public function store(
 
             /*
             |--------------------------------------------------------------------------
-            | Crear cuenta
+            | Crear usuario
             |--------------------------------------------------------------------------
             */
 
             $usuario = User::create([
-                'persona_id' => $persona->id,
-                'username' => $codigo,
-                'email' => $persona->correo_personal,
-                'password' => $passwordTemporal,
-                'debe_cambiar_password' => true,
-                'activo' => true,
-                'ultimo_acceso_at' => null,
+                'persona_id' =>
+                    $persona->id,
+
+                'username' =>
+                    $codigo,
+
+                'email' =>
+                    $persona->correo_personal,
+
+                'password' =>
+                    $passwordTemporal,
+
+                'debe_cambiar_password' =>
+                    true,
+
+                'activo' =>
+                    true,
+
+                'ultimo_acceso_at' =>
+                    null,
             ]);
 
 
             /*
             |--------------------------------------------------------------------------
-            | Asignar rol
+            | Asignar roles
             |--------------------------------------------------------------------------
             */
 
-            $usuario->roles()->attach($rol->id);
+            $usuario->roles()->attach(
+                $rolesAsignar->pluck('id')->all()
+            );
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | Resultado
+            |--------------------------------------------------------------------------
+            */
 
             return [
-                'usuario_id' => $usuario->id,
-                'nombre' => $persona->nombre_completo,
-                'documento' => $persona->numero_documento,
-                'tipo' => $tipo,
-                'rol' => $rol->nombre,
-                'codigo' => $codigo,
-                'password_temporal' => $passwordTemporal,
+                'usuario_id' =>
+                    $usuario->id,
+
+                'nombre' =>
+                    $persona->nombre_completo,
+
+                'documento' =>
+                    $persona->numero_documento,
+
+                'tipo' =>
+                    $tipo,
+
+                'roles' =>
+                    $rolesAsignar
+                        ->pluck('nombre')
+                        ->values()
+                        ->all(),
+
+                'codigo' =>
+                    $codigo,
+
+                'password_temporal' =>
+                    $passwordTemporal,
             ];
         }
     );
@@ -501,17 +613,21 @@ public function store(
 
     /*
     |--------------------------------------------------------------------------
-    | Mostrar resultado en la misma pantalla
+    | Mostrar credenciales
     |--------------------------------------------------------------------------
     */
 
     return redirect()
-        ->route('portal.usuarios.create')
+        ->route(
+            'portal.usuarios.create'
+        )
         ->with(
             'usuario_creado',
             $resultado
         );
 }
+
+
 
     public function cambiarEstado(Request $request, User $usuario)
 {
